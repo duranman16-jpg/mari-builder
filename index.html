@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>한베결혼정보 - 한국·베트남 국제결혼 전문</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#C8102E;
+  --gold:#B8860B;
+  --gold-light:#F5D87A;
+  --cream:#FDF8F0;
+  --dark:#1A1A1A;
+  --text:#333;
+  --gray:#666;
+  --light:#F9F5EE;
+  --white:#fff;
+  --radius:12px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;color:var(--text);background:var(--white);overflow-x:hidden}
+
+/* ─── 네비 ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-bottom:1px solid rgba(184,134,11,0.15);padding:0 5%}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--red),#8B0000);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;letter-spacing:-1px;flex-shrink:0}
+.logo-text{display:flex;flex-direction:column;line-height:1.2}
+.logo-main{font-size:17px;font-weight:700;color:var(--dark)}
+.logo-sub{font-size:11px;color:var(--gold);font-weight:500}
+.nav-links{display:flex;gap:2px;align-items:center}
+.nav-links a{text-decoration:none;color:var(--gray);font-size:14px;font-weight:500;padding:8px 14px;border-radius:6px;transition:.2s;white-space:nowrap}
+.nav-links a:hover{color:var(--red);background:rgba(200,16,46,0.06)}
+.nav-cta{background:var(--red)!important;color:#fff!important;border-radius:8px!important;padding:9px 20px!important;font-weight:700!important}
+.nav-cta:hover{background:#a50d26!important;color:#fff!important}
+.menu-btn{display:none;background:none;border:none;cursor:pointer;padding:6px}
+.menu-btn span{display:block;width:24px;height:2px;background:var(--dark);margin:5px 0;transition:.3s}
+
+/* ─── 히어로 ─── */
+.hero{margin-top:68px;min-height:92vh;background:linear-gradient(160deg,#1A0A0A 0%,#3D0B0B 40%,#5C1A00 70%,#7A2E00 100%);position:relative;display:flex;align-items:center;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L35 20 L50 20 L38 30 L43 45 L30 35 L17 45 L22 30 L10 20 L25 20Z' fill='rgba(184,134,11,0.04)'/%3E%3C/svg%3E") repeat;opacity:0.6}
+.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;padding:80px 7% 80px;width:100%}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(184,134,11,0.2);border:1px solid rgba(184,134,11,0.4);border-radius:99px;padding:6px 16px;margin-bottom:24px}
+.hero-badge span{font-size:12px;color:var(--gold-light);font-weight:500;letter-spacing:0.05em}
+.hero-flag{font-size:16px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.4rem);color:#fff;line-height:1.25;margin-bottom:16px}
+.hero h1 em{font-style:italic;color:var(--gold-light)}
+.hero-desc{font-size:15px;color:rgba(255,255,255,0.7);line-height:1.8;margin-bottom:32px;max-width:480px}
+.hero-stats{display:flex;gap:28px;margin-bottom:36px}
+.stat{text-align:center}
+.stat-num{font-size:26px;font-weight:700;color:var(--gold-light);font-family:'Playfair Display',serif}
+.stat-label{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-main{background:var(--red);color:#fff;padding:14px 30px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;transition:.2s;border:none;cursor:pointer;display:inline-block}
+.btn-main:hover{background:#a50d26;transform:translateY(-1px)}
+.btn-outline{background:transparent;color:#fff;padding:14px 30px;border-radius:10px;text-decoration:none;font-weight:500;font-size:15px;border:1px solid rgba(255,255,255,0.35);transition:.2s;display:inline-block}
+.btn-outline:hover{background:rgba(255,255,255,0.1)}
+.hero-img-wrap{position:relative}
+.hero-img-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:28px;backdrop-filter:blur(4px)}
+.couple-box{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.person-card{background:rgba(255,255,255,0.08);border-radius:14px;padding:18px;text-align:center}
+.avatar{width:70px;height:70px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(184,134,11,0.2)}
+.person-name{font-size:14px;font-weight:700;color:#fff}
+.person-info{font-size:11px;color:rgba(255,255,255,0.55);margin-top:3px;line-height:1.5}
+.match-bar{background:rgba(184,134,11,0.15);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.match-label{font-size:12px;color:rgba(255,255,255,0.6)}
+.match-score{font-size:20px;font-weight:700;color:var(--gold-light)}
+.match-icon{font-size:20px}
+.heart-deco{position:absolute;top:-20px;right:-20px;font-size:80px;opacity:0.06;transform:rotate(15deg)}
+
+/* ─── 섹션 공통 ─── */
+section{padding:80px 7%}
+.section-label{font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3vw,2.4rem);color:var(--dark);line-height:1.3;margin-bottom:16px}
+.section-desc{font-size:15px;color:var(--gray);line-height:1.8;max-width:600px;margin-bottom:48px}
+
+/* ─── 공지·신뢰띠 ─── */
+.trust-bar{background:var(--dark);padding:14px 7%;display:flex;align-items:center;gap:0;overflow:hidden}
+.trust-scroll{display:flex;gap:48px;animation:scroll-x 22s linear infinite;white-space:nowrap}
+@keyframes scroll-x{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.trust-item{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.75);font-size:13px;font-weight:500}
+.trust-icon{font-size:16px}
+.trust-divider{color:rgba(255,255,255,0.2);font-size:18px}
+
+/* ─── 절차 ─── */
+.process{background:var(--cream)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;counter-reset:step}
+.step{background:var(--white);border-radius:var(--radius);padding:28px 24px;position:relative;border:1px solid rgba(184,134,11,0.12);transition:.25s}
+.step:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(184,134,11,0.1);transform:translateY(-3px)}
+.step-num{width:36px;height:36px;background:var(--red);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;margin-bottom:16px}
+.step-icon{font-size:28px;margin-bottom:10px}
+.step h3{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:8px}
+.step p{font-size:13px;color:var(--gray);line-height:1.7}
+.step-arrow{position:absolute;right:-14px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--gold);z-index:1}
+
+/* ─── 회원 프로필 ─── */
+.profiles{background:var(--light)}
+.profile-tabs{display:flex;gap:8px;margin-bottom:36px}
+.tab{padding:8px 20px;border-radius:99px;border:1px solid rgba(200,16,46,0.2);background:transparent;color:var(--gray);font-size:13px;font-weight:500;cursor:pointer;transition:.2s;font-family:'Noto Sans KR',sans-serif}
+.tab.active,.tab:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.profile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}
+.profile-card{background:var(--white);border-radius:var(--radius);overflow:hidden;border:1px solid rgba(0,0,0,0.07);transition:.25s;cursor:pointer}
+.profile-card:hover{box-shadow:0 12px 40px rgba(0,0,0,0.1);transform:translateY(-4px)}
+.profile-img{height:200px;background:linear-gradient(135deg,#f0e6d6,#e8d5c0);display:flex;align-items:center;justify-content:center;font-size:64px;position:relative}
+.profile-country{position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.92);border-radius:6px;padding:3px 8px;font-size:12px;font-weight:700}
+.profile-body{padding:16px}
+.profile-name{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.profile-meta{font-size:12px;color:var(--gray);line-height:1.7}
+.profile-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.ptag{font-size:11px;background:rgba(200,16,46,0.06);color:var(--red);border-radius:4px;padding:2px 7px;border:1px solid rgba(200,16,46,0.15)}
+.profile-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-top:1px solid rgba(0,0,0,0.06)}
+.profile-like{color:var(--gray);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.profile-btn{background:var(--red);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
+.profile-btn:hover{background:#a50d26}
+
+/* ─── 성공사례 ─── */
+.success{background:var(--white)}
+.story-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+.story-card{border-radius:var(--radius);overflow:hidden;border:1px solid rgba(184,134,11,0.15);background:var(--cream)}
+.story-top{height:180px;background:linear-gradient(135deg,#8B0000,#C8102E);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.story-couple{display:flex;align-items:center;gap:16px}
+.story-avatar{width:64px;height:64px;border-radius:50%;border:3px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(255,255,255,0.15)}
+.story-heart{font-size:22px;color:rgba(255,255,255,0.8)}
+.story-body{padding:20px}
+.story-date{font-size:11px;color:var(--gold);font-weight:500;letter-spacing:0.05em;margin-bottom:8px}
+.story-title{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:10px}
+.story-text{font-size:13px;color:var(--gray);line-height:1.8}
+.story-flag{position:absolute;bottom:12px;right:12px;font-size:20px}
+
+/* ─── FAQ ─── */
+.faq{background:var(--light)}
+.faq-list{max-width:720px}
+.faq-item{border-bottom:1px solid rgba(0,0,0,0.08);overflow:hidden}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:20px 0;cursor:pointer;gap:16px}
+.faq-q-text{font-size:15px;font-weight:500;color:var(--dark)}
+.faq-icon{font-size:18px;color:var(--red);transition:.3s;flex-shrink:0}
+.faq-a{font-size:14px;color:var(--gray);line-height:1.8;padding:0 0 20px;display:none}
+.faq-a.open{display:block}
+.faq-icon.open{transform:rotate(45deg)}
+
+/* ─── 문의 ─── */
+.inquiry{background:linear-gradient(135deg,#1A0A0A,#5C1A00)}
+.inquiry-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.inquiry h2{font-family:'Playfair Display',serif;color:#fff;font-size:clamp(1.6rem,2.5vw,2.2rem);margin-bottom:12px}
+.inquiry-sub{color:rgba(255,255,255,0.6);font-size:14px;line-height:1.8;margin-bottom:28px}
+.contact-info{display:flex;flex-direction:column;gap:14px}
+.contact-row{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.85);font-size:14px}
+.contact-icon{width:36px;height:36px;background:rgba(184,134,11,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.form-card{background:rgba(255,255,255,0.07);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:32px}
+.form-row{margin-bottom:16px}
+.form-row label{display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:6px;letter-spacing:0.05em}
+.form-row input,.form-row select,.form-row textarea{width:100%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:11px 14px;color:#fff;font-size:14px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:.2s}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--gold-light);background:rgba(255,255,255,0.12)}
+.form-row select option{color:var(--dark)}
+.form-row textarea{resize:vertical;min-height:90px}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-submit{width:100%;background:var(--red);color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:8px;transition:.2s}
+.form-submit:hover{background:#a50d26}
+
+/* ─── 푸터 ─── */
+footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:28px}
+.footer-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.footer-logo-icon{width:36px;height:36px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px}
+.footer-logo-text{font-size:16px;font-weight:700;color:#fff}
+.footer-info{font-size:12px;line-height:1.9}
+.footer-col h4{font-size:13px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:14px}
+.footer-col a{display:block;font-size:12px;color:rgba(255,255,255,0.45);text-decoration:none;margin-bottom:8px;transition:.2s}
+.footer-col a:hover{color:rgba(255,255,255,0.85)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.footer-bottom p{font-size:11px}
+.footer-laws{display:flex;gap:16px}
+.footer-laws a{font-size:11px;color:rgba(255,255,255,0.4);text-decoration:none}
+.footer-laws a:hover{color:rgba(255,255,255,0.7)}
+
+/* ─── 플로팅 버튼 ─── */
+.float-wrap{position:fixed;bottom:28px;right:24px;z-index:99;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.float-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:99px;font-size:13px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 20px rgba(0,0,0,0.2);transition:.2s;white-space:nowrap}
+.float-kakao{background:#FEE500;color:#1B1B1B}
+.float-call{background:var(--red);color:#fff}
+.float-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.25)}
+
+/* ─── 모달 ─── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:460px;width:100%;padding:36px;position:relative;animation:modal-in .25s ease}
+@keyframes modal-in{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--gray)}
+.modal h3{font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--gray);margin-bottom:24px}
+.modal input{width:100%;border:1px solid rgba(0,0,0,0.15);border-radius:8px;padding:11px 14px;font-size:14px;margin-bottom:12px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:.2s}
+.modal input:focus{border-color:var(--red)}
+.modal-submit{width:100%;background:var(--red);color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:4px}
+.modal-note{font-size:11px;color:var(--gray);text-align:center;margin-top:12px;line-height:1.6}
+
+/* ─── 반응형 ─── */
+@media(max-width:860px){
+  .hero-inner{grid-template-columns:1fr;gap:40px;padding:60px 6%}
+  .hero-img-card{display:none}
+  .inquiry-inner{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .nav-links{display:none;position:absolute;top:68px;left:0;right:0;background:#fff;flex-direction:column;border-bottom:1px solid rgba(184,134,11,0.15);padding:12px 20px}
+  .nav-links.open{display:flex}
+  .menu-btn{display:block}
+}
+@media(max-width:560px){
+  section{padding:60px 5%}
+  .steps{grid-template-columns:1fr}
+  .step-arrow{display:none}
+  .footer-top{grid-template-columns:1fr}
+  .form-2col{grid-template-columns:1fr}
+  .hero-stats{gap:16px}
+  .float-btn span{display:none}
+}
+
+/* 애니 */
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- 네비 -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">한베</div>
+      <div class="logo-text">
+        <span class="logo-main">한베결혼정보</span>
+        <span class="logo-sub">Korea · Vietnam Marriage</span>
+      </div>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#process">결혼절차</a>
+      <a href="#profiles">회원소개</a>
+      <a href="#success">성공사례</a>
+      <a href="#faq">자주묻는질문</a>
+      <a href="#inquiry" class="nav-cta">무료상담 신청</a>
+    </div>
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="메뉴">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- 히어로 -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">
+        <span class="hero-flag">🇰🇷</span>
+        <span>한국 · 베트남 국제결혼 전문 20년</span>
+        <span class="hero-flag">🇻🇳</span>
+      </div>
+      <h1>평생의 인연을<br><em>소중하게</em> 연결합니다</h1>
+      <p class="hero-desc">정직하고 투명한 중매로 행복한 가정을 만들어 드립니다. 국제결혼중개업 등록업체, 법적 절차 완벽 지원.</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">1,240+</div>
+          <div class="stat-label">성공 커플</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">98%</div>
+          <div class="stat-label">만족도</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">20년</div>
+          <div class="stat-label">운영 경력</div>
+        </div>
+      </div>
+      <div class="hero-btns">
+        <button class="btn-main" onclick="openModal()">무료 상담 신청</button>
+        <a href="#profiles" class="btn-outline">회원 프로필 보기</a>
+      </div>
+    </div>
+    <div class="hero-img-wrap">
+      <div class="heart-deco">❤</div>
+      <div class="hero-img-card">
+        <div class="couple-box">
+          <div class="person-card">
+            <div class="avatar">🇰🇷</div>
+            <div class="person-name">김○○ 님</div>
+            <div class="person-info">35세 · 경기도<br>회사원</div>
+          </div>
+          <div class="person-card">
+            <div class="avatar">🇻🇳</div>
+            <div class="person-name">Linh ○○ 님</div>
+            <div class="person-info">27세 · 하노이<br>대학 졸업</div>
+          </div>
+        </div>
+        <div class="match-bar">
+          <div>
+            <div class="match-label">매칭 적합도</div>
+          </div>
+          <div class="match-icon">💑</div>
+          <div class="match-score">92%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 신뢰 띠 -->
+<div class="trust-bar">
+  <div class="trust-scroll" id="trustScroll">
+    <div class="trust-item"><span class="trust-icon">✅</span>국제결혼중개업 등록업체</div>
+    <div class="trust-item trust-divider">|</div>
+    <div class="trust-item"><span class="trust-icon">🏢</span>부산시 등록번호 제00-0000호</div>
+    <div class="trust-item trust-divider">|</div>
+    <div class="trust-item"><span class="trust-icon">🔒</span>개인정보 안전 보호</div>
+    <div class="trust-item trust-divider">|</div>
+    <div class="trust-item"><span class="trust-icon">⚖️</span>표준계약서 사용</div>
+    <div class="trust-item trust-divider">|</div>
+    <div class="trust-item"><span class="trust-icon">🛡️</span>보증보험 가입</div>
+    <div class="trust-item trust-divider">|</div>
+    <div class="trust-item"><span class="trust-icon">🌏</span>베트남 현지사무소 운영</div>
+    <div class="trust-item trust-divider">|</div>
+    <!-- 복사본 -->
+    <div class="trust-item"><span class="trust-icon">✅</span>국제결혼중개업 등록업체</div>
+    <div class="trust-item trust-divider">|</div>
+    <div class="trust-item"><span class="trust-icon">🏢</span>부산시 등록번호 제00-0000호</div>
+    <div class="trust-item trust-divider">|</div>
+    <div class="trust-item"><span class="trust-icon">🔒</span>개인정보 안전 보호</div>
+    <div class="trust-item trust-divider">|</div>
+    <div class="trust-item"><span class="trust-icon">⚖️</span>표준계약서 사용</div>
+    <div class="trust-item trust-divider">|</div>
+    <div class="trust-item"><span class="trust-icon">🛡️</span>보증보험 가입</div>
+    <div class="trust-item trust-divider">|</div>
+    <div class="trust-item"><span class="trust-icon">🌏</span>베트남 현지사무소 운영</div>
+  </div>
+</div>
+
+<!-- 결혼 절차 -->
+<section class="process" id="process">
+  <div class="fade-in">
+    <p class="section-label">결혼 절차</p>
+    <h2 class="section-title">한눈에 보는 국제결혼 과정</h2>
+    <p class="section-desc">복잡한 절차도 저희가 처음부터 끝까지 함께합니다.</p>
+  </div>
+  <div class="steps fade-in">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-icon">📞</div>
+      <h3>무료 상담</h3>
+      <p>방문·전화·온라인 상담으로 조건과 희망사항을 말씀해 주세요.</p>
+      <span class="step-arrow">›</span>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-icon">📋</div>
+      <h3>회원 등록</h3>
+      <p>신분증·사진·서류 제출 후 표준계약서 작성, 본인인증 진행.</p>
+      <span class="step-arrow">›</span>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-icon">👤</div>
+      <h3>프로필 매칭</h3>
+      <p>조건에 맞는 베트남 여성 프로필을 엄선해 소개해 드립니다.</p>
+      <span class="step-arrow">›</span>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-icon">✈️</div>
+      <h3>현지 맞선</h3>
+      <p>베트남 현지 방문, 통역사 동행, 안전한 만남 진행.</p>
+      <span class="step-arrow">›</span>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-icon">💍</div>
+      <h3>혼인신고</h3>
+      <p>양국 혼인신고·비자 신청·입국까지 모든 서류를 지원합니다.</p>
+      <span class="step-arrow">›</span>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-icon">🏠</div>
+      <h3>정착 지원</h3>
+      <p>입국 후 생활 적응, 한국어 교육 안내까지 사후관리 제공.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 회원 프로필 -->
+<section class="profiles" id="profiles">
+  <div class="fade-in">
+    <p class="section-label">회원 소개</p>
+    <h2 class="section-title">지금 인연을 기다리고 있어요</h2>
+    <p class="section-desc">모든 회원은 본인인증·신원확인을 완료한 분들입니다.</p>
+    <div class="profile-tabs">
+      <button class="tab active" onclick="filterProfiles(this,'vn')">🇻🇳 베트남 여성</button>
+      <button class="tab" onclick="filterProfiles(this,'kr')">🇰🇷 한국 남성</button>
+    </div>
+  </div>
+  <div class="profile-grid fade-in" id="profileGrid">
+    <!-- 프로필 카드들 (JS로 생성) -->
+  </div>
+  <div style="text-align:center;margin-top:36px">
+    <button class="btn-main" onclick="openModal()">더 많은 프로필 보기 →</button>
+  </div>
+</section>
+
+<!-- 성공사례 -->
+<section class="success" id="success">
+  <div class="fade-in">
+    <p class="section-label">성공 사례</p>
+    <h2 class="section-title">저희가 연결한 행복한 가정들</h2>
+    <p class="section-desc">실제 커플들의 진심 어린 이야기를 들어보세요.</p>
+  </div>
+  <div class="story-grid fade-in">
+    <div class="story-card">
+      <div class="story-top">
+        <div class="story-couple">
+          <div class="story-avatar">🇰🇷</div>
+          <div class="story-heart">❤</div>
+          <div class="story-avatar">🇻🇳</div>
+        </div>
+        <div class="story-flag">🌸</div>
+      </div>
+      <div class="story-body">
+        <div class="story-date">2024년 8월 결혼</div>
+        <div class="story-title">박○○(38) × Nguyen Thi ○○(26)</div>
+        <div class="story-text">"처음엔 걱정이 많았는데, 담당자 분이 처음부터 끝까지 꼼꼼하게 안내해 주셔서 불안 없이 진행했습니다. 지금은 정말 행복하게 잘 살고 있어요."</div>
+      </div>
+    </div>
+    <div class="story-card">
+      <div class="story-top">
+        <div class="story-couple">
+          <div class="story-avatar">🇰🇷</div>
+          <div class="story-heart">❤</div>
+          <div class="story-avatar">🇻🇳</div>
+        </div>
+        <div class="story-flag">🌺</div>
+      </div>
+      <div class="story-body">
+        <div class="story-date">2024년 3월 결혼</div>
+        <div class="story-title">이○○(41) × Tran Thi ○○(29)</div>
+        <div class="story-text">"나이 걱정이 컸는데 배우자가 나이차가 있어도 괜찮다고 했어요. 현지 맞선 때 첫눈에 마음이 통해서 바로 결정했습니다. 정말 고마워요."</div>
+      </div>
+    </div>
+    <div class="story-card">
+      <div class="story-top">
+        <div class="story-couple">
+          <div class="story-avatar">🇰🇷</div>
+          <div class="story-heart">❤</div>
+          <div class="story-avatar">🇻🇳</div>
+        </div>
+        <div class="story-flag">🌻</div>
+      </div>
+      <div class="story-body">
+        <div class="story-date">2023년 11월 결혼</div>
+        <div class="story-title">최○○(36) × Pham Thi ○○(24)</div>
+        <div class="story-text">"비자 서류가 복잡해서 걱정했는데 다 알아서 해주셔서 편했습니다. 지금 아내가 한국어를 열심히 배우고 있어요. 좋은 인연 만들어 주셔서 감사합니다."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="fade-in">
+    <p class="section-label">자주 묻는 질문</p>
+    <h2 class="section-title">궁금한 것을 먼저 확인하세요</h2>
+  </div>
+  <div class="faq-list fade-in" id="faqList">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">비용이 얼마나 드나요?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">서비스 요금은 상담 후 계약서에 명시되며, 표준계약서에 따라 투명하게 안내드립니다. 숨겨진 추가 비용 없이 처음 안내드린 금액 그대로 진행됩니다. 항공·숙박·비자 비용은 별도이며 사전 안내드립니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">나이 제한이 있나요?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">법적 요건에 따라 한국 남성과 베트남 여성 모두 성인(만 18세 이상)이어야 합니다. 나이 차에 대한 제한은 법령에서 정하는 바를 따르며, 상담 시 자세히 안내드립니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">이혼 경력이 있어도 가능한가요?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">가능합니다. 이혼 경력이 있으신 분도 충분히 좋은 인연을 만나실 수 있습니다. 단, 법적 서류 준비 과정이 조금 더 필요할 수 있으니 상담 시 말씀해 주세요.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">현지 방문 없이도 진행 가능한가요?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">국제결혼은 양 당사자의 직접 만남이 법적으로 필요합니다. 현지 맞선은 필수 과정이며, 저희가 일정 조율·통역사 배정·안전한 환경을 완벽히 준비합니다. 보통 3~5일 일정으로 진행됩니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">비자 신청은 얼마나 걸리나요?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">혼인 완료 후 배우자 초청 비자(F-6)는 통상 4~8개월 소요됩니다. 서류 준비가 완벽할수록 기간이 단축됩니다. 저희가 서류 준비부터 제출까지 전 과정을 안내해 드립니다.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span class="faq-q-text">계약 후 환불은 가능한가요?</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">표준계약서에 명시된 환불 규정에 따라 처리됩니다. 계약 체결 전에 환불 조건을 꼭 확인하시고, 궁금한 점은 상담 시 반드시 여쭤보시기 바랍니다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 문의 -->
+<section class="inquiry" id="inquiry">
+  <div class="inquiry-inner">
+    <div>
+      <p class="section-label" style="color:var(--gold-light)">무료 상담</p>
+      <h2>지금 바로<br>상담 신청하세요</h2>
+      <p class="inquiry-sub">부담 없이 연락주세요. 전문 상담사가 친절하게 안내드립니다. 상담은 100% 무료입니다.</p>
+      <div class="contact-info">
+        <div class="contact-row"><div class="contact-icon">📞</div><span>대표전화: 051-000-0000</span></div>
+        <div class="contact-row"><div class="contact-icon">💬</div><span>카카오톡: @한베결혼정보</span></div>
+        <div class="contact-row"><div class="contact-icon">📍</div><span>부산시 ○○구 ○○로 000</span></div>
+        <div class="contact-row"><div class="contact-icon">🕘</div><span>평일 09:00 – 18:00 · 토 09:00 – 15:00</span></div>
+        <div class="contact-row"><div class="contact-icon">🌏</div><span>베트남 현지 직통: +84-00-0000-0000</span></div>
+      </div>
+    </div>
+    <div class="form-card">
+      <div class="form-row">
+        <label>성함</label>
+        <input type="text" placeholder="홍길동">
+      </div>
+      <div class="form-2col">
+        <div class="form-row">
+          <label>연락처</label>
+          <input type="tel" placeholder="010-0000-0000">
+        </div>
+        <div class="form-row">
+          <label>나이</label>
+          <input type="number" placeholder="만 나이" min="20" max="70">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>거주 지역</label>
+        <select>
+          <option value="">선택해 주세요</option>
+          <option>서울</option><option>부산</option><option>대구</option><option>인천</option>
+          <option>광주</option><option>대전</option><option>울산</option><option>경기도</option>
+          <option>기타</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>상담 희망 내용</label>
+        <textarea placeholder="궁금한 점이나 희망 조건을 자유롭게 적어주세요."></textarea>
+      </div>
+      <button class="form-submit" onclick="submitForm()">상담 신청하기</button>
+    </div>
+  </div>
+</section>
+
+<!-- 푸터 -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">
+        <div class="footer-logo-icon">한베</div>
+        <span class="footer-logo-text">한베결혼정보</span>
+      </div>
+      <div class="footer-info">
+        상호: 한베결혼정보 &nbsp;|&nbsp; 대표: ○○○<br>
+        사업자등록번호: 000-00-00000<br>
+        국제결혼중개업 등록번호: 부산-○○-국제-00-0000<br>
+        주소: 부산시 ○○구 ○○로 000, 0층<br>
+        전화: 051-000-0000 &nbsp;|&nbsp; 이메일: info@hanbe.kr<br>
+        <br>
+        <span style="font-size:11px;color:rgba(255,255,255,0.3)">※ 본 사이트는 국제결혼중개업의 관리에 관한 법률에 따라 운영됩니다.<br>
+        허위·과장 광고 없이 표준계약서에 따라 서비스를 제공합니다.</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>서비스</h4>
+      <a href="#">결혼 절차 안내</a>
+      <a href="#">회원 프로필</a>
+      <a href="#">성공 사례</a>
+      <a href="#">무료 상담</a>
+    </div>
+    <div class="footer-col">
+      <h4>법적 안내</h4>
+      <a href="#">이용약관</a>
+      <a href="#">개인정보처리방침</a>
+      <a href="#">표준계약서 안내</a>
+      <a href="#">신상정보 제공서</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 한베결혼정보. All Rights Reserved.</p>
+    <div class="footer-laws">
+      <a href="#">이용약관</a>
+      <a href="#">개인정보처리방침</a>
+    </div>
+  </div>
+</footer>
+
+<!-- 플로팅 -->
+<div class="float-wrap">
+  <button class="float-btn float-kakao">💬 <span>카카오 상담</span></button>
+  <button class="float-btn float-call" onclick="openModal()">📞 <span>무료 상담</span></button>
+</div>
+
+<!-- 모달 -->
+<div class="modal-bg" id="modal" onclick="closeModalBg(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>무료 상담 신청</h3>
+    <p class="modal-sub">연락처를 남겨주시면 전문 상담사가 빠르게 연락드립니다.</p>
+    <input type="text" placeholder="성함" id="mName">
+    <input type="tel" placeholder="연락처 (010-0000-0000)" id="mPhone">
+    <input type="number" placeholder="나이 (만 나이)" min="20" max="70" id="mAge">
+    <button class="modal-submit" onclick="submitModal()">상담 신청하기</button>
+    <p class="modal-note">개인정보는 상담 목적으로만 사용되며 제3자에게 제공되지 않습니다.</p>
+  </div>
+</div>
+
+<script>
+// 프로필 데이터
+const profiles = {
+  vn: [
+    {emoji:'🌸',name:'Nguyen Thi A',age:24,loc:'하노이',job:'회사원',tags:['비흡연','대졸','요리 잘함']},
+    {emoji:'🌺',name:'Tran Thi B',age:26,loc:'호치민',job:'간호사',tags:['대졸','활발','가족적']},
+    {emoji:'🌻',name:'Pham Thi C',age:23,loc:'다낭',job:'교사',tags:['조용함','성실','요리']},
+    {emoji:'🌼',name:'Le Thi D',age:25,loc:'하노이',job:'회계사',tags:['대졸','지적','검소']},
+    {emoji:'🌷',name:'Vo Thi E',age:28,loc:'호치민',job:'디자이너',tags:['감각적','활발','독립적']},
+    {emoji:'🌹',name:'Do Thi F',age:24,loc:'하이퐁',job:'대학원생',tags:['지적','성실','차분']},
+  ],
+  kr: [
+    {emoji:'👨',name:'김○○ 님',age:35,loc:'경기도',job:'회사원',tags:['비흡연','성실','가정적']},
+    {emoji:'👨‍💼',name:'이○○ 님',age:38,loc:'서울',job:'자영업',tags:['안정적','활발','요리 가능']},
+    {emoji:'👨‍🔧',name:'박○○ 님',age:32,loc:'부산',job:'기술직',tags:['성실','책임감','비흡연']},
+    {emoji:'👨‍🏫',name:'최○○ 님',age:40,loc:'대구',job:'공무원',tags:['안정적','가정적','운동']},
+  ]
+};
+
+let currentFilter = 'vn';
+function filterProfiles(btn, type) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = type;
+  renderProfiles(type);
+}
+
+function renderProfiles(type) {
+  const grid = document.getElementById('profileGrid');
+  grid.innerHTML = '';
+  profiles[type].forEach(p => {
+    grid.innerHTML += `
+    <div class="profile-card">
+      <div class="profile-img">
+        <span style="font-size:64px">${p.emoji}</span>
+        <span class="profile-country">${type==='vn'?'🇻🇳':'🇰🇷'}</span>
+      </div>
+      <div class="profile-body">
+        <div class="profile-name">${p.name}</div>
+        <div class="profile-meta">${p.age}세 · ${p.loc} · ${p.job}</div>
+        <div class="profile-tags">${p.tags.map(t=>`<span class="ptag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="profile-footer">
+        <span class="profile-like">♡ 관심</span>
+        <button class="profile-btn" onclick="openModal()">연결 신청</button>
+      </div>
+    </div>`;
+  });
+}
+renderProfiles('vn');
+
+// FAQ 토글
+function toggleFaq(el) {
+  const ans = el.nextElementSibling;
+  const icon = el.querySelector('.faq-icon');
+  const isOpen = ans.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('open'));
+  if (!isOpen) { ans.classList.add('open'); icon.classList.add('open'); }
+}
+
+// 모달
+function openModal() { document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function closeModalBg(e) { if (e.target.id === 'modal') closeModal(); }
+function submitModal() {
+  const n = document.getElementById('mName').value;
+  if (!n.trim()) { alert('성함을 입력해 주세요.'); return; }
+  alert('상담 신청이 완료되었습니다.\n빠른 시간 안에 연락드리겠습니다. 감사합니다 😊');
+  closeModal();
+}
+function submitForm() {
+  alert('상담 신청이 완료되었습니다.\n담당자가 빠르게 연락드리겠습니다.');
+}
+
+// 메뉴 토글
+function toggleMenu() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+
+// 페이드인 애니
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
