@@ -121,28 +121,35 @@ exports.sendVerificationEmail = functions
     });
 
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
       auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASS }
     });
 
-    await transporter.sendMail({
-      from: `"마리 국제결혼" <${process.env.GMAIL_USER}>`,
-      to: email,
-      subject: '[마리 국제결혼] 이메일 인증 코드',
-      html: `
-        <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;border:1px solid #eee;border-radius:12px">
-          <h2 style="color:#C8102E;margin-bottom:4px">마리 국제결혼</h2>
-          <p style="color:#999;font-size:13px;margin-bottom:24px">Mari International Marriage</p>
-          <p style="color:#333;margin-bottom:20px">아래 인증 코드를 10분 이내에 입력해주세요.</p>
-          <div style="background:#f8f8f8;border-radius:10px;padding:28px;text-align:center;margin-bottom:24px;border:1px solid #eee">
-            <span style="font-size:40px;font-weight:800;letter-spacing:10px;color:#1A1A1A">${otp}</span>
-          </div>
-          <p style="color:#aaa;font-size:12px;line-height:1.8">
-            ⏱ 유효시간: 10분<br>
-            본인이 요청하지 않은 경우 이 메일을 무시하세요.
-          </p>
-        </div>`
-    });
+    try {
+      await transporter.sendMail({
+        from: `"마리 국제결혼" <${process.env.GMAIL_USER}>`,
+        to: email,
+        subject: '[마리 국제결혼] 이메일 인증 코드',
+        html: `
+          <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;border:1px solid #eee;border-radius:12px">
+            <h2 style="color:#C8102E;margin-bottom:4px">마리 국제결혼</h2>
+            <p style="color:#999;font-size:13px;margin-bottom:24px">Mari International Marriage</p>
+            <p style="color:#333;margin-bottom:20px">아래 인증 코드를 10분 이내에 입력해주세요.</p>
+            <div style="background:#f8f8f8;border-radius:10px;padding:28px;text-align:center;margin-bottom:24px;border:1px solid #eee">
+              <span style="font-size:40px;font-weight:800;letter-spacing:10px;color:#1A1A1A">${otp}</span>
+            </div>
+            <p style="color:#aaa;font-size:12px;line-height:1.8">
+              ⏱ 유효시간: 10분<br>
+              본인이 요청하지 않은 경우 이 메일을 무시하세요.
+            </p>
+          </div>`
+      });
+    } catch (mailErr) {
+      console.error('sendMail error:', mailErr.message, mailErr.code);
+      throw new functions.https.HttpsError('internal', '이메일 발송 오류: ' + mailErr.message);
+    }
 
     return { success: true };
   });
