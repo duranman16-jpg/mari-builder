@@ -605,6 +605,13 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .comment-delete{margin-left:auto;background:none;border:none;color:rgba(0,0,0,0.28);font-size:12px;cursor:pointer;padding:2px 8px;font-family:'Noto Sans KR',sans-serif;transition:.2s;border-radius:4px}
 .comment-delete:hover{color:var(--red);background:rgba(200,16,46,0.06)}
 .comment-content{font-size:14px;color:var(--text);line-height:1.75;white-space:pre-wrap}
+.comment-reply{margin-left:32px;border-left:3px solid #f5e0e3;padding-left:14px;background:rgba(200,16,46,0.015);border-radius:0 8px 8px 0;margin-top:6px}
+.reply-form{margin-left:32px;border-left:3px solid #f5e0e3;padding:12px 14px;background:rgba(200,16,46,0.015);border-radius:0 8px 8px 0;margin-top:8px}
+.reply-form .comment-textarea{min-height:80px}
+.comment-actions{display:flex;gap:4px;margin-top:8px;justify-content:flex-end}
+.comment-action-btn{background:none;border:1px solid transparent;font-size:12px;color:rgba(0,0,0,0.35);cursor:pointer;padding:3px 10px;border-radius:4px;font-family:'Noto Sans KR',sans-serif;transition:.2s}
+.comment-action-btn:hover{color:var(--red);background:rgba(200,16,46,0.06);border-color:rgba(200,16,46,0.15)}
+.comment-action-btn.btn-reply{color:var(--gray);font-weight:600}
 .no-comments{font-size:14px;color:var(--gray);text-align:center;padding:40px 0}
 .comment-form-wrap{margin-top:28px;background:var(--cream);border-radius:14px;padding:22px 24px;border:1px solid rgba(184,134,11,0.12)}
 .comment-form-header{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:14px}
@@ -1693,6 +1700,10 @@ html.mobile-view .float-btn span{display:none !important}
     <div class="form-group">
       <label class="form-label">비밀번호</label>
       <input type="password" class="auth-input" id="loginPw" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')submitLogin()">
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:10px 0 14px">
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--gray);cursor:pointer"><input type="checkbox" id="chkSaveEmail"> 이메일 저장</label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--gray);cursor:pointer"><input type="checkbox" id="chkAutoLogin"> 자동 로그인</label>
     </div>
     <button class="auth-submit" onclick="submitLogin()">로그인</button>
     <p style="text-align:center;margin-top:10px;font-size:13px"><a onclick="openResetPw()" style="color:var(--gray);cursor:pointer;text-decoration:underline">비밀번호를 잊으셨나요?</a></p>
@@ -2875,7 +2886,7 @@ async function changeRole(email, newRole) {
 }
 
 // ─── 인증 ───
-let currentUser = JSON.parse(localStorage.getItem('maryUser')) || null;
+let currentUser = JSON.parse(localStorage.getItem('maryUser') || sessionStorage.getItem('maryUser'));
 
 function updateAuthUI() {
   const navAuth = document.getElementById('navAuth');
@@ -3049,12 +3060,22 @@ function logout() {
   currentUser = null;
   _msgAllUsers = null;
   localStorage.removeItem('maryUser');
+  localStorage.removeItem('maryAutoLogin');
+  sessionStorage.removeItem('maryUser');
   sessionStorage.removeItem('maryAdminSecret');
   updateAuthUI();
   alert('로그아웃 되었습니다.');
 }
 
-function openLogin() { closeSignup(); document.getElementById('loginModal').classList.add('open'); }
+function openLogin() {
+  closeSignup();
+  const savedEmail = localStorage.getItem('maryLoginEmail');
+  document.getElementById('loginEmail').value = savedEmail || '';
+  document.getElementById('chkSaveEmail').checked = !!savedEmail;
+  document.getElementById('chkAutoLogin').checked = localStorage.getItem('maryAutoLogin') === '1';
+  document.getElementById('loginPw').value = '';
+  document.getElementById('loginModal').classList.add('open');
+}
 function closeLogin() { document.getElementById('loginModal').classList.remove('open'); }
 function closeLoginBg(e) { if (e.target.id==='loginModal') closeLogin(); }
 
@@ -3083,7 +3104,18 @@ async function submitLogin() {
       return;
     }
     currentUser = safeUser(user);
-    localStorage.setItem('maryUser', JSON.stringify(currentUser));
+    const chkSave = document.getElementById('chkSaveEmail')?.checked;
+    const chkAuto = document.getElementById('chkAutoLogin')?.checked;
+    if (chkSave) { localStorage.setItem('maryLoginEmail', email); } else { localStorage.removeItem('maryLoginEmail'); }
+    if (chkAuto) {
+      localStorage.setItem('maryAutoLogin', '1');
+      localStorage.setItem('maryUser', JSON.stringify(currentUser));
+      sessionStorage.removeItem('maryUser');
+    } else {
+      localStorage.removeItem('maryAutoLogin');
+      localStorage.removeItem('maryUser');
+      sessionStorage.setItem('maryUser', JSON.stringify(currentUser));
+    }
     if (user.memberType === 'admin' && user.adminToken) {
       sessionStorage.setItem('maryAdminSecret', user.adminToken);
     }
@@ -3438,28 +3470,62 @@ function loadComments(colName, docId) {
   commentListener = db.collection(colName).doc(docId).collection('comments')
     .orderBy('createdAt','asc')
     .onSnapshot(snap => {
-      const items = [];
-      snap.forEach(doc => items.push({id:doc.id,...doc.data()}));
-      countEl.textContent = items.length;
-      if (!items.length) {
+      const all = [];
+      snap.forEach(doc => all.push({id:doc.id,...doc.data()}));
+      const topLevel = all.filter(c => !c.parentId);
+      const replies = all.filter(c => !!c.parentId);
+      countEl.textContent = all.length;
+      if (!all.length) {
         listEl.innerHTML = '<p class="no-comments">아직 댓글이 없습니다. 첫 댓글을 남겨보세요! 😊</p>';
         return;
       }
-      listEl.innerHTML = items.map(c => {
+      listEl.innerHTML = topLevel.map(c => {
         const date = c.createdAt ? new Date(c.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
         const isOwn = currentUser && (currentUser.userId === c.authorId || currentUser.email === c.authorId);
         const imgHtml = c.imageUrl ? `<img src="${c.imageUrl}" alt="첨부 이미지" style="max-width:100%;max-height:300px;border-radius:8px;margin-top:8px;display:block;border:1px solid rgba(0,0,0,0.08)">` : '';
+        const myReplies = replies.filter(r => r.parentId === c.id);
+        const repliesHtml = myReplies.map(r => {
+          const rDate = r.createdAt ? new Date(r.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
+          const rIsOwn = currentUser && (currentUser.userId === r.authorId || currentUser.email === r.authorId);
+          const rImg = r.imageUrl ? `<img src="${r.imageUrl}" alt="첨부 이미지" style="max-width:100%;max-height:300px;border-radius:8px;margin-top:8px;display:block;border:1px solid rgba(0,0,0,0.08)">` : '';
+          return `<div class="comment-item comment-reply">
+            <div class="comment-header">
+              <span style="color:var(--red);font-size:13px;font-weight:700">↩</span>
+              ${avatarHtml(r.authorPhoto||'',r.author||'?',r.authorType||'member',24)}
+              ${gradeBadge(r.authorType||'member')}
+              <span class="comment-author">${sanitizeText(r.author)}</span>
+              <span class="comment-date">${rDate}</span>
+            </div>
+            <div class="comment-content">${r.content.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
+            ${rImg}
+            ${rIsOwn || currentUser ? `<div class="comment-actions">
+              ${rIsOwn ? `<button class="comment-action-btn" onclick="deleteComment('${colName}','${docId}','${r.id}')">삭제</button>` : ''}
+              ${!rIsOwn && currentUser ? `<button class="comment-action-btn" onclick="openReport('comment','${r.id}')">신고</button>` : ''}
+            </div>` : ''}
+          </div>`;
+        }).join('');
         return `<div class="comment-item">
           <div class="comment-header">
             ${avatarHtml(c.authorPhoto||'',c.author||'?',c.authorType||'member',26)}
             ${gradeBadge(c.authorType||'member')}
             <span class="comment-author">${sanitizeText(c.author)}</span>
             <span class="comment-date">${date}</span>
-            ${isOwn ? `<button class="comment-delete" onclick="deleteComment('${colName}','${docId}','${c.id}')">삭제</button>` : ''}
-            ${!isOwn && currentUser ? `<button class="comment-delete" style="color:#aaa;border-color:#eee" onclick="openReport('comment','${c.id}')">신고</button>` : ''}
           </div>
           <div class="comment-content">${c.content.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
           ${imgHtml}
+          ${isOwn || currentUser ? `<div class="comment-actions">
+            ${isOwn ? `<button class="comment-action-btn" onclick="deleteComment('${colName}','${docId}','${c.id}')">삭제</button>` : ''}
+            ${!isOwn && currentUser ? `<button class="comment-action-btn" onclick="openReport('comment','${c.id}')">신고</button>` : ''}
+            ${currentUser ? `<button class="comment-action-btn btn-reply" onclick="toggleReplyForm('${c.id}','${colName}','${docId}')">↩ 답글</button>` : ''}
+          </div>` : ''}
+          ${repliesHtml}
+          ${currentUser ? `<div id="replyForm-${c.id}" class="reply-form" style="display:none">
+            <textarea class="comment-textarea" id="replyInput-${c.id}" placeholder="답글을 입력하세요..."></textarea>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+              <button class="comment-action-btn" onclick="toggleReplyForm('${c.id}','${colName}','${docId}')">취소</button>
+              <button class="comment-submit-btn" onclick="submitReply('${colName}','${docId}','${c.id}')">답글 등록</button>
+            </div>
+          </div>` : ''}
         </div>`;
       }).join('');
     }, ()=>{});
@@ -3549,6 +3615,38 @@ async function deleteComment(colName, docId, commentId) {
   try {
     await db.collection(colName).doc(docId).collection('comments').doc(commentId).delete();
   } catch(e) { alert('삭제 중 오류: ' + e.message); }
+}
+
+function toggleReplyForm(commentId, colName, docId) {
+  const form = document.getElementById('replyForm-' + commentId);
+  if (!form) return;
+  const showing = form.style.display !== 'none';
+  form.style.display = showing ? 'none' : '';
+  if (!showing) {
+    const inp = document.getElementById('replyInput-' + commentId);
+    if (inp) { inp.value = ''; inp.focus(); }
+  }
+}
+
+async function submitReply(colName, docId, parentId) {
+  const inp = document.getElementById('replyInput-' + parentId);
+  const content = (inp?.value || '').trim();
+  if (!content) { alert('답글 내용을 입력해 주세요.'); return; }
+  if (!currentUser) { openLogin(); return; }
+  try {
+    await db.collection(colName).doc(docId).collection('comments').add({
+      content,
+      parentId,
+      author: currentUser.userId || currentUser.name,
+      authorId: currentUser.userId || currentUser.email,
+      authorPhoto: currentUser.profileImage || '',
+      authorType: currentUser.memberType || 'member',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    if (inp) inp.value = '';
+    const form = document.getElementById('replyForm-' + parentId);
+    if (form) form.style.display = 'none';
+  } catch(e) { alert('답글 등록 오류: ' + e.message); }
 }
 
 // ─── 등급 뱃지 함수 ───
