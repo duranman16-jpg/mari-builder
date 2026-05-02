@@ -669,7 +669,10 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .admin-panel-hd .apanel-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:22px;cursor:pointer;padding:0;line-height:1;transition:.2s}
 .admin-panel-hd .apanel-close:hover{color:#fff}
 /* 상단 탭 네비 */
-.admin-topnav{display:flex;overflow-x:auto;border-bottom:2px solid rgba(0,0,0,0.08);flex-shrink:0;background:#fafafa;scrollbar-width:none}
+.admin-topnav-wrap{display:flex;align-items:stretch;border-bottom:2px solid rgba(0,0,0,0.08);background:#fafafa;flex-shrink:0}
+.admin-nav-arrow{flex-shrink:0;width:32px;border:none;background:#fafafa;color:#aaa;font-size:20px;cursor:pointer;transition:.15s;padding:0;display:flex;align-items:center;justify-content:center}
+.admin-nav-arrow:hover{background:rgba(200,16,46,0.07);color:var(--red)}
+.admin-topnav{display:flex;flex:1;overflow-x:auto;scrollbar-width:none}
 .admin-topnav::-webkit-scrollbar{display:none}
 .admin-topnav-btn{display:flex;align-items:center;gap:5px;padding:12px 15px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:#888;cursor:pointer;border-bottom:3px solid transparent;flex-shrink:0;white-space:nowrap;transition:.15s;margin-bottom:-2px}
 .admin-topnav-btn:hover{color:var(--dark);background:rgba(200,16,46,0.04)}
@@ -1977,19 +1980,23 @@ html.mobile-view .float-btn span{display:none !important}
     </div>
 
     <!-- 상단 탭 -->
-    <nav class="admin-topnav" id="adminSidebar">
-      <button class="admin-topnav-btn active" onclick="showAdminTab('members',this)">👥 회원관리</button>
-      <button class="admin-topnav-btn" onclick="showAdminTab('addvn',this)">📋 회원등록</button>
-      <button class="admin-topnav-btn" onclick="showAdminTab('consult',this)">📞 상담신청</button>
-      <button class="admin-topnav-btn" onclick="showAdminTab('allmsgs',this)">🔍 전체쪽지</button>
-      <button class="admin-topnav-btn" onclick="showAdminTab('content',this)">✨ 콘텐츠</button>
-      <button class="admin-topnav-btn" onclick="showAdminTab('broadcast',this)">📨 전체발송</button>
-      <button class="admin-topnav-btn" onclick="showAdminTab('settings',this)">⚙️ 설정</button>
-      <button id="adminAiImageTabBtn" class="admin-topnav-btn" style="display:none" onclick="showAdminTab('aiimage',this)">🎨 AI이미지</button>
-      <button id="adminProfileTabBtn" class="admin-topnav-btn" style="display:none" onclick="showAdminTab('profile',this)">📷 프로필등록</button>
-      <button class="admin-topnav-btn" onclick="showAdminTab('reports',this)">🚨 신고관리</button>
-      <button class="admin-topnav-btn" onclick="showAdminTab('forbidden',this)">🚫 금칙어</button>
-    </nav>
+    <div class="admin-topnav-wrap">
+      <button class="admin-nav-arrow" id="adminNavLeft" onclick="scrollAdminNav(-1)">&#8249;</button>
+      <nav class="admin-topnav" id="adminSidebar">
+        <button class="admin-topnav-btn active" onclick="showAdminTab('members',this)">👥 회원관리</button>
+        <button class="admin-topnav-btn" onclick="showAdminTab('addvn',this)">📋 회원등록</button>
+        <button class="admin-topnav-btn" onclick="showAdminTab('consult',this)">📞 상담신청</button>
+        <button class="admin-topnav-btn" onclick="showAdminTab('allmsgs',this)">🔍 전체쪽지</button>
+        <button class="admin-topnav-btn" onclick="showAdminTab('content',this)">✨ 콘텐츠</button>
+        <button class="admin-topnav-btn" onclick="showAdminTab('broadcast',this)">📨 전체발송</button>
+        <button class="admin-topnav-btn" onclick="showAdminTab('settings',this)">⚙️ 설정</button>
+        <button id="adminAiImageTabBtn" class="admin-topnav-btn" style="display:none" onclick="showAdminTab('aiimage',this)">🎨 AI이미지</button>
+        <button id="adminProfileTabBtn" class="admin-topnav-btn" style="display:none" onclick="showAdminTab('profile',this)">📷 프로필등록</button>
+        <button class="admin-topnav-btn" onclick="showAdminTab('reports',this)">🚨 신고관리</button>
+        <button class="admin-topnav-btn" onclick="showAdminTab('forbidden',this)">🚫 금칙어</button>
+      </nav>
+      <button class="admin-nav-arrow" id="adminNavRight" onclick="scrollAdminNav(1)">&#8250;</button>
+    </div>
 
     <!-- 콘텐츠 -->
     <div class="admin-content">
@@ -2914,6 +2921,11 @@ function openAdmin() {
 }
 function closeAdmin() { document.getElementById('adminModal').classList.remove('open'); }
 function closeAdminBg(e) { if (e.target.id==='adminModal') closeAdmin(); }
+
+function scrollAdminNav(dir) {
+  const nav = document.getElementById('adminSidebar');
+  if (nav) nav.scrollBy({left: dir * 160, behavior: 'smooth'});
+}
 
 function showAdminTab(tab, btn) {
   document.querySelectorAll('.admin-topnav-btn').forEach(b => b.classList.remove('active'));
