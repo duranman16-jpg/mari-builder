@@ -2106,11 +2106,14 @@ function profileCardHTML(p, type) {
     ? `<img src="${p.photoUrl}" style="width:100%;height:100%;object-fit:cover;display:block" alt="${p.name}">`
     : `<span style="font-size:64px">${p.emoji||'👤'}</span>`;
   const tags = Array.isArray(p.tags) ? p.tags : (p.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
+  const lifeCount = Array.isArray(p.lifePhotos) && p.lifePhotos.length > 0
+    ? `<span style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.55);color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px">📷 +${p.lifePhotos.length}</span>` : '';
+  const birthInfo = p.birthYear ? ` · ${p.birthYear}년생` : '';
   return `<div class="profile-card">
-    <div class="profile-img">${imgArea}<span class="profile-country">${flag}</span></div>
+    <div class="profile-img" style="position:relative">${imgArea}<span class="profile-country">${flag}</span>${lifeCount}</div>
     <div class="profile-body">
       <div class="profile-name">${p.name}</div>
-      <div class="profile-meta">${p.age}세 · ${p.loc} · ${p.job}</div>
+      <div class="profile-meta">${p.age}세${birthInfo} · ${p.loc} · ${p.job}</div>
       ${p.intro ? `<div class="profile-meta" style="margin-top:4px;font-style:italic">"${p.intro}"</div>` : ''}
       <div class="profile-tags">${tags.map(t=>`<span class="ptag">${t}</span>`).join('')}</div>
     </div>
@@ -2125,11 +2128,15 @@ renderProfiles('vn');
 
 // ─── 프로필 등록 탭 ───
 function renderProfileTab() {
+  const curYear = new Date().getFullYear();
+  const yearOpts = Array.from({length: 50}, (_,i) => curYear - 18 - i)
+    .map(y => `<option value="${y}">${y}년생</option>`).join('');
+
   const el = document.getElementById('adminTabProfile');
   el.innerHTML = `
     <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
       <!-- 등록 폼 -->
-      <div style="flex:1;min-width:280px">
+      <div style="flex:1;min-width:300px">
         <h4 style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:16px">새 프로필 등록</h4>
         <div class="form-group">
           <div class="form-label">국적</div>
@@ -2142,14 +2149,18 @@ function renderProfileTab() {
           <div class="form-label">이름</div>
           <input id="pfName" class="auth-input" placeholder="예: Nguyen Thi A">
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
           <div class="form-group">
-            <div class="form-label">나이</div>
-            <input id="pfAge" class="auth-input" type="number" placeholder="만 나이" min="18" max="60">
+            <div class="form-label">만 나이</div>
+            <input id="pfAge" class="auth-input" type="number" placeholder="나이" min="18" max="60">
+          </div>
+          <div class="form-group">
+            <div class="form-label">출생연도</div>
+            <select id="pfBirthYear" class="auth-input" style="padding:10px 8px">${yearOpts}</select>
           </div>
           <div class="form-group">
             <div class="form-label">지역</div>
-            <input id="pfLoc" class="auth-input" placeholder="예: 하노이, 서울">
+            <input id="pfLoc" class="auth-input" placeholder="예: 하노이">
           </div>
         </div>
         <div class="form-group">
@@ -2165,11 +2176,16 @@ function renderProfileTab() {
           <input id="pfTags" class="auth-input" placeholder="예: 비흡연, 대졸, 요리 잘함">
         </div>
         <div class="form-group">
-          <div class="form-label">프로필 사진</div>
-          <div id="pfPhotoPreview" style="width:100px;height:100px;border-radius:50%;background:#f0e6d6;display:flex;align-items:center;justify-content:center;font-size:40px;margin-bottom:10px;overflow:hidden;border:2px solid rgba(184,134,11,0.2)">👤</div>
+          <div class="form-label">대표 프로필 사진 <span style="font-weight:400;color:#aaa">(1장)</span></div>
+          <div id="pfPhotoPreview" style="width:90px;height:90px;border-radius:50%;background:#f0e6d6;display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:10px;overflow:hidden;border:2px solid rgba(184,134,11,0.2)">👤</div>
           <input id="pfPhoto" type="file" accept="image/*" onchange="previewProfilePhoto(this)" style="font-size:13px">
-          <div id="pfPhotoMsg" style="font-size:12px;color:var(--gold);margin-top:4px;display:none">업로드 중...</div>
         </div>
+        <div class="form-group">
+          <div class="form-label">일상 사진 <span style="font-weight:400;color:#aaa">(최대 10장, 복수 선택 가능)</span></div>
+          <input id="pfLifePhotos" type="file" accept="image/*" multiple onchange="previewLifePhotos(this)" style="font-size:13px">
+          <div id="pfLifePreview" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+        </div>
+        <div id="pfPhotoMsg" style="font-size:12px;color:var(--gold);margin-bottom:8px;display:none">사진 업로드 중...</div>
         <div class="form-group" style="display:flex;align-items:center;gap:8px">
           <input id="pfVisible" type="checkbox" checked style="width:16px;height:16px">
           <label for="pfVisible" style="font-size:13px;cursor:pointer">즉시 공개</label>
@@ -2179,7 +2195,7 @@ function renderProfileTab() {
       </div>
       <!-- 등록된 목록 -->
       <div style="flex:1;min-width:260px">
-        <h4 style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:16px">등록된 프로필 <span id="pfListCount" style="color:var(--gray);font-weight:400"></span></h4>
+        <h4 style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px">등록된 프로필 <span id="pfListCount" style="color:var(--gray);font-weight:400"></span></h4>
         <div id="pfList"><div style="color:var(--gray);font-size:13px">불러오는 중...</div></div>
       </div>
     </div>`;
@@ -2196,10 +2212,34 @@ function previewProfilePhoto(input) {
   reader.readAsDataURL(input.files[0]);
 }
 
+function previewLifePhotos(input) {
+  const container = document.getElementById('pfLifePreview');
+  if (!container) return;
+  container.innerHTML = '';
+  const files = Array.from(input.files).slice(0, 10);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.style.cssText = 'width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid rgba(0,0,0,0.1)';
+      container.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+  if (input.files.length > 10) {
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:11px;color:var(--red);width:100%;margin-top:4px';
+    note.textContent = `⚠️ 최대 10장까지만 업로드됩니다. (${input.files.length}장 선택됨)`;
+    container.appendChild(note);
+  }
+}
+
 async function submitProfile() {
   if (!isManager(currentUser)) return;
   const name = document.getElementById('pfName')?.value.trim();
   const age = parseInt(document.getElementById('pfAge')?.value);
+  const birthYear = parseInt(document.getElementById('pfBirthYear')?.value) || null;
   const loc = document.getElementById('pfLoc')?.value.trim();
   const job = document.getElementById('pfJob')?.value.trim();
   const intro = document.getElementById('pfIntro')?.value.trim();
@@ -2208,8 +2248,10 @@ async function submitProfile() {
   const natEl = document.querySelector('input[name="pfNat"]:checked');
   const nationality = natEl ? natEl.value : 'vn';
   const photoFile = document.getElementById('pfPhoto')?.files[0];
+  const lifeFiles = Array.from(document.getElementById('pfLifePhotos')?.files || []).slice(0, 10);
   const btn = document.getElementById('pfSubmitBtn');
   const result = document.getElementById('pfResult');
+  const msg = document.getElementById('pfPhotoMsg');
 
   if (!name) { alert('이름을 입력해 주세요.'); return; }
   if (!age || age < 18) { alert('나이를 확인해 주세요.'); return; }
@@ -2218,45 +2260,55 @@ async function submitProfile() {
 
   btn.disabled = true; btn.textContent = '등록 중...';
   result.style.display = 'none';
+  if (msg) msg.style.display = 'block';
 
+  const storage = firebase.storage();
   let photoUrl = '';
-  if (photoFile) {
-    const msg = document.getElementById('pfPhotoMsg');
-    if (msg) msg.style.display = 'block';
-    try {
-      const storage = firebase.storage();
+  let lifePhotos = [];
+
+  try {
+    if (photoFile) {
+      btn.textContent = '대표사진 업로드 중...';
       const ref = storage.ref(`profile-images/${Date.now()}_${photoFile.name}`);
       const snap = await ref.put(photoFile);
       photoUrl = await snap.ref.getDownloadURL();
-    } catch(e) {
-      alert('사진 업로드 실패: ' + e.message);
-      btn.disabled = false; btn.textContent = '프로필 등록';
-      return;
-    } finally {
-      if (msg) msg.style.display = 'none';
     }
+    if (lifeFiles.length > 0) {
+      for (let i = 0; i < lifeFiles.length; i++) {
+        btn.textContent = `일상사진 업로드 중... (${i+1}/${lifeFiles.length})`;
+        const ref = storage.ref(`profile-life/${Date.now()}_${i}_${lifeFiles[i].name}`);
+        const snap = await ref.put(lifeFiles[i]);
+        lifePhotos.push(await snap.ref.getDownloadURL());
+      }
+    }
+  } catch(e) {
+    alert('사진 업로드 실패: ' + e.message);
+    btn.disabled = false; btn.textContent = '프로필 등록';
+    if (msg) msg.style.display = 'none';
+    return;
+  } finally {
+    if (msg) msg.style.display = 'none';
   }
 
   const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
 
   try {
     await db.collection('profiles').add({
-      nationality, name, age, loc, job, intro, tags, photoUrl, visible,
+      nationality, name, age, birthYear, loc, job, intro, tags,
+      photoUrl, lifePhotos, visible,
       registeredBy: currentUser.email,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     result.style.display = 'block';
     result.style.color = '#2E7D32';
     result.textContent = `✅ "${name}" 프로필이 등록되었습니다.`;
-    document.getElementById('pfName').value = '';
-    document.getElementById('pfAge').value = '';
-    document.getElementById('pfLoc').value = '';
-    document.getElementById('pfJob').value = '';
-    document.getElementById('pfIntro').value = '';
-    document.getElementById('pfTags').value = '';
-    document.getElementById('pfPhoto').value = '';
+    ['pfName','pfAge','pfLoc','pfJob','pfIntro','pfTags','pfPhoto','pfLifePhotos'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
     document.getElementById('pfPhotoPreview').innerHTML = '👤';
+    document.getElementById('pfLifePreview').innerHTML = '';
     loadProfileList();
+    renderProfiles(currentFilter);
   } catch(e) {
     result.style.display = 'block';
     result.style.color = 'var(--red)';
@@ -2269,23 +2321,35 @@ async function submitProfile() {
 function loadProfileList() {
   const el = document.getElementById('pfList');
   if (!el) return;
-  db.collection('profiles').orderBy('createdAt','desc').limit(30).get().then(snap => {
+  db.collection('profiles').orderBy('createdAt','desc').limit(50).get().then(snap => {
+    const fsItems = snap.docs.map(doc => ({id: doc.id, ...doc.data(), _source: 'firestore'}));
+
+    // 하드코딩 샘플 중 Firestore에 없는 것 추가
+    const sampleAll = [...(profiles.vn||[]).map(p=>({...p,nationality:'vn',_source:'sample'})),
+                       ...(profiles.kr||[]).map(p=>({...p,nationality:'kr',_source:'sample'}))];
+
+    const allItems = [...fsItems, ...sampleAll];
     const count = document.getElementById('pfListCount');
-    if (count) count.textContent = `(${snap.size}명)`;
-    if (snap.empty) { el.innerHTML = '<div style="color:var(--gray);font-size:13px;text-align:center;padding:20px">등록된 프로필이 없습니다.</div>'; return; }
-    el.innerHTML = snap.docs.map(doc => {
-      const p = doc.data();
+    if (count) count.textContent = `(Firestore ${fsItems.length}명 + 샘플 ${sampleAll.length}명)`;
+
+    el.innerHTML = allItems.map(p => {
       const flag = p.nationality === 'vn' ? '🇻🇳' : '🇰🇷';
       const thumb = p.photoUrl
         ? `<img src="${p.photoUrl}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0">`
-        : `<div style="width:40px;height:40px;border-radius:50%;background:#f0e6d6;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">👤</div>`;
-      return `<div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid rgba(0,0,0,0.07);border-radius:10px;margin-bottom:8px;background:#fff">
+        : `<div style="width:40px;height:40px;border-radius:50%;background:#f0e6d6;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">${p.emoji||'👤'}</div>`;
+      const lifeLabel = Array.isArray(p.lifePhotos) && p.lifePhotos.length
+        ? `<span style="font-size:10px;color:var(--gold)">📷 일상사진 ${p.lifePhotos.length}장</span>` : '';
+      const badge = p._source === 'sample'
+        ? `<span style="font-size:10px;background:#f0e6d6;color:#8B6309;padding:1px 6px;border-radius:4px;border:1px solid rgba(184,134,11,0.2)">샘플</span>` : '';
+      const delBtn = p._source === 'firestore'
+        ? `<button onclick="deleteProfile('${p.id}')" style="background:none;border:1px solid #eee;border-radius:6px;padding:3px 7px;font-size:11px;color:#aaa;cursor:pointer;font-family:'Noto Sans KR',sans-serif">삭제</button>` : '';
+      return `<div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid rgba(0,0,0,0.07);border-radius:10px;margin-bottom:7px;background:#fff">
         ${thumb}
         <div style="flex:1;min-width:0">
-          <div style="font-size:13px;font-weight:700;color:var(--dark)">${flag} ${p.name} · ${p.age}세</div>
-          <div style="font-size:11px;color:var(--gray)">${p.loc} · ${p.job} · ${p.visible ? '공개' : '비공개'}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--dark)">${flag} ${p.name} · ${p.age}세 ${badge}</div>
+          <div style="font-size:11px;color:var(--gray)">${p.loc||''} · ${p.job||''} ${lifeLabel}</div>
         </div>
-        <button onclick="deleteProfile('${doc.id}')" style="background:none;border:1px solid #eee;border-radius:6px;padding:4px 8px;font-size:11px;color:#aaa;cursor:pointer;font-family:'Noto Sans KR',sans-serif">삭제</button>
+        ${delBtn}
       </div>`;
     }).join('');
   });
