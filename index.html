@@ -1706,7 +1706,10 @@ html.mobile-view .float-btn span{display:none !important}
       <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--gray);cursor:pointer"><input type="checkbox" id="chkAutoLogin"> 자동 로그인</label>
     </div>
     <button class="auth-submit" onclick="submitLogin()">로그인</button>
-    <p style="text-align:center;margin-top:10px;font-size:13px"><a onclick="openResetPw()" style="color:var(--gray);cursor:pointer;text-decoration:underline">비밀번호를 잊으셨나요?</a></p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:0;margin-top:12px;font-size:13px">
+      <a onclick="openFindId()" style="color:var(--gray);cursor:pointer;padding:0 10px;border-right:1px solid #ddd">아이디 찾기</a>
+      <a onclick="openResetPw()" style="color:var(--gray);cursor:pointer;padding:0 10px">비밀번호 찾기</a>
+    </div>
     <p class="auth-switch">아직 회원이 아니신가요? <a onclick="openSignup()">회원가입</a></p>
   </div>
 </div>
@@ -1812,6 +1815,32 @@ html.mobile-view .float-btn span{display:none !important}
       <div class="form-group"><label class="form-label">비밀번호 확인</label><input type="password" class="auth-input" id="pfDeletePw" placeholder="비밀번호 입력"></div>
       <button onclick="submitDeleteAccount()" style="width:100%;padding:13px;border:1.5px solid var(--red);background:transparent;color:var(--red);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s">회원 탈퇴하기</button>
     </div>
+  </div>
+</div>
+
+<!-- ─── 아이디 찾기 모달 ─── -->
+<div class="modal-bg" id="findIdModal">
+  <div class="auth-modal">
+    <button class="modal-close" onclick="closeFindId()">✕</button>
+    <h3>아이디(이메일) 찾기</h3>
+    <p class="modal-sub" style="font-size:13px;color:var(--gray);margin-bottom:20px">가입 시 등록한 이름과 연락처로 이메일을 찾습니다.</p>
+    <div id="findIdForm">
+      <div class="form-group">
+        <label class="form-label">이름</label>
+        <input type="text" class="auth-input" id="findIdName" placeholder="가입 시 입력한 이름">
+      </div>
+      <div class="form-group">
+        <label class="form-label">연락처</label>
+        <input type="tel" class="auth-input" id="findIdPhone" placeholder="010-0000-0000" onkeydown="if(event.key==='Enter')submitFindId()">
+      </div>
+      <button class="auth-submit" onclick="submitFindId()">아이디 찾기</button>
+    </div>
+    <div id="findIdResult" style="display:none;margin-top:20px;padding:18px;background:#fff8f8;border:1px solid rgba(200,16,46,0.2);border-radius:10px;text-align:center">
+      <p style="font-size:13px;color:var(--gray);margin-bottom:8px">가입된 이메일(아이디)</p>
+      <p id="findIdResultEmail" style="font-size:16px;font-weight:700;color:var(--dark)"></p>
+      <button class="auth-submit" style="margin-top:16px;padding:10px" onclick="closeFindId();openLogin()">로그인 하기</button>
+    </div>
+    <p class="auth-switch" style="margin-top:16px"><a onclick="closeFindId();openResetPw()" style="cursor:pointer">비밀번호 찾기</a>로 이동</p>
   </div>
 </div>
 
@@ -3130,6 +3159,36 @@ async function submitLogin() {
 function openSignup() { closeLogin(); document.getElementById('signupModal').classList.add('open'); resetEmailVerify(); }
 function closeSignup() { document.getElementById('signupModal').classList.remove('open'); resetEmailVerify(); }
 function closeSignupBg(e) { if (e.target.id==='signupModal') closeSignup(); }
+
+// ─── 아이디 찾기 ───
+function openFindId() {
+  closeLogin();
+  document.getElementById('findIdName').value = '';
+  document.getElementById('findIdPhone').value = '';
+  document.getElementById('findIdForm').style.display = '';
+  document.getElementById('findIdResult').style.display = 'none';
+  document.getElementById('findIdModal').classList.add('open');
+}
+function closeFindId() { document.getElementById('findIdModal').classList.remove('open'); }
+
+async function submitFindId() {
+  const name = document.getElementById('findIdName').value.trim();
+  const phone = document.getElementById('findIdPhone').value.trim().replace(/\D/g, '');
+  if (!name || !phone) { alert('이름과 연락처를 모두 입력해 주세요.'); return; }
+  try {
+    const snap = await db.collection('users').where('name', '==', name).get();
+    const matched = snap.docs.find(d => {
+      const p = (d.data().phone || '').replace(/\D/g, '');
+      return p === phone;
+    });
+    if (!matched) { alert('일치하는 회원 정보를 찾을 수 없습니다.'); return; }
+    document.getElementById('findIdResultEmail').textContent = matched.data().email;
+    document.getElementById('findIdForm').style.display = 'none';
+    document.getElementById('findIdResult').style.display = '';
+  } catch(e) {
+    alert('오류: ' + e.message);
+  }
+}
 
 // ─── 비밀번호 찾기 ───
 let _resetOtpVerified = false;
