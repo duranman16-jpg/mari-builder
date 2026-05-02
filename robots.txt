@@ -1,0 +1,24 @@
+# 마리 국제결혼 robots.txt
+# https://mari-viet.web.app
+
+User-agent: *
+Allow: /
+Disallow: /post/
+Disallow: /write/
+Disallow: /messages
+Disallow: /matching
+Disallow: /admin
+
+Sitemap: https://mari-viet.web.app/sitemap.xml
+
+# Googlebot
+User-agent: Googlebot
+Allow: /
+
+# Naver Yeti
+User-agent: Yeti
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
