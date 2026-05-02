@@ -1908,7 +1908,8 @@ window.addEventListener('popstate', () => {
 let currentWriteBoard = '';
 
 function openWrite(boardType) {
-  if (!currentUser) { alert('로그인 후 글쓰기가 가능합니다.'); return; }
+  if (!currentUser) { if(confirm('로그인이 필요합니다. 로그인하시겠습니까?')) openLogin(); return; }
+  if (['vn_life','kr_life'].includes(boardType) && !canAccessMarried(currentUser)) { alert('결혼회원만 글을 작성할 수 있습니다.'); return; }
   const base = location.href.split('#')[0];
   window.open(base + '#write/' + boardType, '_blank', 'width=960,height=720,left=80,top=60');
 }
@@ -2853,6 +2854,15 @@ const boardPages = {
 };
 
 function openPost(colName, docId) {
+  const lifeBoards = ['posts_vn_life','posts_kr_life'];
+  const memberBoards = ['posts_free','posts_travel','posts_food','posts_trade'];
+  if (lifeBoards.includes(colName)) {
+    if (!currentUser) { if(confirm('로그인이 필요합니다. 로그인하시겠습니까?')) openLogin(); return; }
+    if (!canAccessMarried(currentUser)) { alert('결혼회원 전용 게시판입니다.\n관리자 또는 매니저에게 결혼회원 등급 승인을 요청하세요.'); return; }
+  }
+  if (memberBoards.includes(colName)) {
+    if (!currentUser) { if(confirm('로그인이 필요합니다. 로그인하시겠습니까?')) openLogin(); return; }
+  }
   currentPostCol = colName;
   currentPostId = docId;
   currentBoardPage = boardPages[colName] || 'home';
@@ -3217,50 +3227,23 @@ function switchLifeTab(tab, btn) {
 }
 
 function renderBoards() {
-  const lifeAccess = !currentUser ? 'login' : !canAccessMarried(currentUser) ? 'married' : 'ok';
-  const memberAccess = !currentUser ? 'login' : 'ok';
-
   const vnEl = document.getElementById('board-life-vn-content');
-  if (vnEl && lifeAccess !== boardStates.vn_life) {
-    boardStates.vn_life = lifeAccess;
-    if (lifeAccess==='ok') attachBoardTable(vnEl, 'posts_vn_life');
-    else { stopListener('posts_vn_life'); vnEl.innerHTML = authWall(lifeAccess); }
-  }
+  if (vnEl) attachBoardTable(vnEl, 'posts_vn_life');
 
   const krEl = document.getElementById('board-life-kr-content');
-  if (krEl && lifeAccess !== boardStates.kr_life) {
-    boardStates.kr_life = lifeAccess;
-    if (lifeAccess==='ok') attachBoardTable(krEl, 'posts_kr_life');
-    else { stopListener('posts_kr_life'); krEl.innerHTML = authWall(lifeAccess); }
-  }
+  if (krEl) attachBoardTable(krEl, 'posts_kr_life');
 
   const freeEl = document.getElementById('board-free-content');
-  if (freeEl && memberAccess !== boardStates.free) {
-    boardStates.free = memberAccess;
-    if (memberAccess==='ok') attachBoardTable(freeEl, 'posts_free');
-    else { stopListener('posts_free'); freeEl.innerHTML = authWall('login'); }
-  }
+  if (freeEl) attachBoardTable(freeEl, 'posts_free');
 
   const travelEl = document.getElementById('board-travel-content');
-  if (travelEl && memberAccess !== boardStates.travel) {
-    boardStates.travel = memberAccess;
-    if (memberAccess==='ok') attachPhotoBoard(travelEl, 'posts_travel');
-    else { stopListener('posts_travel'); travelEl.innerHTML = authWall('login'); }
-  }
+  if (travelEl) attachPhotoBoard(travelEl, 'posts_travel');
 
   const foodEl = document.getElementById('board-food-content');
-  if (foodEl && memberAccess !== boardStates.food) {
-    boardStates.food = memberAccess;
-    if (memberAccess==='ok') attachBoardTable(foodEl, 'posts_food');
-    else { stopListener('posts_food'); foodEl.innerHTML = authWall('login'); }
-  }
+  if (foodEl) attachBoardTable(foodEl, 'posts_food');
 
   const tradeEl = document.getElementById('board-trade-content');
-  if (tradeEl && memberAccess !== boardStates.trade) {
-    boardStates.trade = memberAccess;
-    if (memberAccess==='ok') attachBoardTable(tradeEl, 'posts_trade');
-    else { stopListener('posts_trade'); tradeEl.innerHTML = authWall('login'); }
-  }
+  if (tradeEl) attachBoardTable(tradeEl, 'posts_trade');
 }
 
 // ─── 홈 회원 소개 미리보기 ───
