@@ -612,6 +612,18 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .comment-action-btn{background:none;border:1px solid transparent;font-size:12px;color:rgba(0,0,0,0.35);cursor:pointer;padding:3px 10px;border-radius:4px;font-family:'Noto Sans KR',sans-serif;transition:.2s}
 .comment-action-btn:hover{color:var(--red);background:rgba(200,16,46,0.06);border-color:rgba(200,16,46,0.15)}
 .comment-action-btn.btn-reply{color:var(--gray);font-weight:600}
+.post-cards{margin-top:4px}
+.post-card{display:flex;gap:14px;padding:14px 8px;border-bottom:1px solid rgba(0,0,0,0.07);cursor:pointer;align-items:center;transition:background .15s}
+.post-card:last-child{border-bottom:none}
+.post-card:hover{background:rgba(184,134,11,0.04)}
+.pc-thumb{width:80px;height:64px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid rgba(0,0,0,0.08)}
+.pc-thumb-ph{width:80px;height:64px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,#f7e8ea,#fdf6f6);display:flex;align-items:center;justify-content:center;font-size:26px;border:1px solid rgba(0,0,0,0.06)}
+.pc-body{flex:1;min-width:0}
+.pc-title{font-size:14px;font-weight:600;color:var(--dark);line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px}
+.pc-meta{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gray);flex-wrap:wrap}
+.pc-right{text-align:center;flex-shrink:0;min-width:42px}
+.pc-right b{display:block;font-size:16px;font-weight:700;color:var(--dark);line-height:1.2}
+.pc-right span{font-size:11px;color:var(--gray)}
 .no-comments{font-size:14px;color:var(--gray);text-align:center;padding:40px 0}
 .comment-form-wrap{margin-top:28px;background:var(--cream);border-radius:14px;padding:22px 24px;border:1px solid rgba(184,134,11,0.12)}
 .comment-form-header{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:14px}
@@ -750,6 +762,8 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
   .comment-form-wrap{padding:16px}
   .comment-header{gap:6px;flex-wrap:wrap}
   .comment-item{padding:12px 0}
+  .pc-thumb,.pc-thumb-ph{width:60px;height:50px}
+  .pc-title{font-size:13px}
 
   /* 서브페이지 헤로 */
   .page-hero{padding:32px 5% 24px}
@@ -1907,6 +1921,7 @@ html.mobile-view .float-btn span{display:none !important}
       <div class="post-detail-meta-info" id="postMetaInfo"></div>
       <div style="display:flex;gap:8px;align-items:center">
         <button id="postReportBtn" class="post-back-btn" style="background:transparent;border:1px solid #ddd;color:var(--gray);font-size:12px;display:none" onclick="openReport('post',null)">🚨 신고</button>
+        <button id="postDeleteBtn" class="post-back-btn" style="display:none;background:transparent;border:1px solid rgba(200,16,46,0.3);color:var(--red);font-size:12px" onclick="">🗑 삭제</button>
         <button class="post-back-btn" onclick="backToBoard()">← 목록으로</button>
       </div>
     </div>
@@ -1952,6 +1967,7 @@ html.mobile-view .float-btn span{display:none !important}
       <button id="adminAiImageTabBtn" class="admin-tab-btn" onclick="showAdminTab('aiimage',this)" style="display:none;padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">🎨 AI 이미지</button>
       <button id="adminProfileTabBtn" class="admin-tab-btn" onclick="showAdminTab('profile',this)" style="display:none;padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">📷 프로필 등록</button>
       <button class="admin-tab-btn" onclick="showAdminTab('reports',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">🚨 신고</button>
+      <button class="admin-tab-btn" onclick="showAdminTab('forbidden',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">🚫 금칙어</button>
     </div>
     <div id="adminTabMembers" class="admin-tab-panel">
       <div id="adminUserList"></div>
@@ -1965,6 +1981,7 @@ html.mobile-view .float-btn span{display:none !important}
     <div id="adminTabAiimage" class="admin-tab-panel" style="display:none"></div>
     <div id="adminTabProfile" class="admin-tab-panel" style="display:none"></div>
     <div id="adminTabReports" class="admin-tab-panel" style="display:none"></div>
+    <div id="adminTabForbidden" class="admin-tab-panel" style="display:none"></div>
   </div>
 </div>
 
@@ -2771,6 +2788,52 @@ async function submitReport() {
   }
 }
 
+async function renderAdminForbidden() {
+  const el = document.getElementById('adminTabForbidden');
+  if (!el) return;
+  el.innerHTML = '<p style="text-align:center;padding:20px;color:var(--gray)">불러오는 중...</p>';
+  try {
+    const doc = await db.collection('settings').doc('forbidden_words').get();
+    const words = doc.exists ? (doc.data().words || []) : [];
+    _forbiddenWords = words;
+    const chips = words.length
+      ? words.map(w => `<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#fff3f3;border:1px solid rgba(200,16,46,0.2);border-radius:20px;font-size:13px;font-weight:600;color:var(--dark)">${sanitizeText(w)}<button onclick="removeForbiddenWord('${w.replace(/'/g,"\\'")}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;line-height:1;padding:0">✕</button></span>`).join('')
+      : '<p style="color:var(--gray);font-size:13px">등록된 금칙어가 없습니다.</p>';
+    el.innerHTML = `
+      <div>
+        <h4 style="margin:0 0 6px">🚫 금칙어 관리</h4>
+        <p style="font-size:13px;color:var(--gray);margin:0 0 16px">설정된 단어가 댓글·게시글에 포함되면 자동 차단됩니다.</p>
+        <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+          <input type="text" id="newForbiddenWord" placeholder="금칙어 입력..." onkeydown="if(event.key==='Enter')addForbiddenWord()"
+            style="flex:1;min-width:140px;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none">
+          <button onclick="addForbiddenWord()" style="padding:9px 18px;background:var(--red);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif">추가</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">${chips}</div>
+      </div>`;
+  } catch(e) { el.innerHTML = `<p style="color:red;padding:20px">오류: ${e.message}</p>`; }
+}
+
+async function addForbiddenWord() {
+  if (!isAdmin(currentUser)) { alert('최고관리자만 설정할 수 있습니다.'); return; }
+  const inp = document.getElementById('newForbiddenWord');
+  const word = (inp?.value || '').trim();
+  if (!word) return;
+  try {
+    await db.collection('settings').doc('forbidden_words').set({ words: firebase.firestore.FieldValue.arrayUnion(word) }, { merge: true });
+    if (inp) inp.value = '';
+    renderAdminForbidden();
+  } catch(e) { alert('오류: ' + e.message); }
+}
+
+async function removeForbiddenWord(word) {
+  if (!isAdmin(currentUser)) { alert('최고관리자만 설정할 수 있습니다.'); return; }
+  if (!confirm(`"${word}" 금칙어를 삭제하시겠습니까?`)) return;
+  try {
+    await db.collection('settings').doc('forbidden_words').update({ words: firebase.firestore.FieldValue.arrayRemove(word) });
+    renderAdminForbidden();
+  } catch(e) { alert('오류: ' + e.message); }
+}
+
 async function renderAdminReports() {
   const el = document.getElementById('adminTabReports');
   el.innerHTML = '<p style="text-align:center;padding:24px;color:var(--gray)">불러오는 중...</p>';
@@ -2846,6 +2909,7 @@ function showAdminTab(tab, btn) {
   else if (tab==='aiimage') renderAdminAiImage();
   else if (tab==='profile') renderProfileTab();
   else if (tab==='reports') renderAdminReports();
+  else if (tab==='forbidden') renderAdminForbidden();
 }
 
 async function renderAdminMembers() {
@@ -2912,6 +2976,25 @@ async function changeRole(email, newRole) {
   } catch(e) {
     alert('등급 변경 오류: ' + (e.message || e.details || '서버 오류'));
   }
+}
+
+// ─── 금칙어 ───
+let _forbiddenWords = [];
+
+function checkForbiddenWords(text) {
+  if (!_forbiddenWords.length) return null;
+  const lower = text.toLowerCase();
+  for (const w of _forbiddenWords) {
+    if (w && lower.includes(w.toLowerCase())) return w;
+  }
+  return null;
+}
+
+async function loadForbiddenWords() {
+  try {
+    const doc = await db.collection('settings').doc('forbidden_words').get();
+    if (doc.exists) _forbiddenWords = doc.data().words || [];
+  } catch(e) {}
 }
 
 // ─── 인증 ───
@@ -3479,6 +3562,13 @@ async function loadPostDetail(colName, docId) {
     const reportBtn = document.getElementById('postReportBtn');
     if (reportBtn) reportBtn.style.display = currentUser ? 'inline-block' : 'none';
 
+    const deleteBtn = document.getElementById('postDeleteBtn');
+    if (deleteBtn) {
+      const canDeletePost = currentUser && (isManager(currentUser) || currentUser.userId === p.authorId || currentUser.email === p.authorId || p.author === (currentUser.userId || currentUser.name));
+      deleteBtn.style.display = canDeletePost ? 'inline-block' : 'none';
+      deleteBtn.onclick = () => deletePost(colName, docId);
+    }
+
     loadAdjacentPosts(colName, docId, p.createdAt);
     loadComments(colName, docId);
     renderCommentForm(colName, docId);
@@ -3490,6 +3580,15 @@ async function loadPostDetail(colName, docId) {
 function backToBoard() {
   if (commentListener) { commentListener(); commentListener = null; }
   navigate(currentBoardPage || 'home');
+}
+
+async function deletePost(colName, docId) {
+  if (!confirm('게시글을 삭제하시겠습니까?\n삭제된 게시글은 복구할 수 없습니다.')) return;
+  try {
+    await db.collection(colName).doc(docId).delete();
+    alert('게시글이 삭제되었습니다.');
+    backToBoard();
+  } catch(e) { alert('삭제 오류: ' + e.message); }
 }
 
 async function loadAdjacentPosts(colName, docId, createdAt) {
@@ -3559,13 +3658,13 @@ function loadComments(colName, docId) {
       }
       listEl.innerHTML = topLevel.map(c => {
         const date = c.createdAt ? new Date(c.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
-        const isOwn = currentUser && (currentUser.userId === c.authorId || currentUser.email === c.authorId);
+        const canDelete = currentUser && (isManager(currentUser) || currentUser.userId === c.authorId || currentUser.email === c.authorId);
         const imgHtml = c.imageUrl ? `<img src="${c.imageUrl}" alt="첨부 이미지" style="max-width:100%;max-height:300px;border-radius:8px;margin-top:8px;display:block;border:1px solid rgba(0,0,0,0.08)">` : '';
         // rootId 기반 + 구버전 parentId 기반 양쪽 수집
         const myReplies = replies.filter(r => r.rootId === c.id || (!r.rootId && r.parentId === c.id));
         const repliesHtml = myReplies.map(r => {
           const rDate = r.createdAt ? new Date(r.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
-          const rIsOwn = currentUser && (currentUser.userId === r.authorId || currentUser.email === r.authorId);
+          const rCanDelete = currentUser && (isManager(currentUser) || currentUser.userId === r.authorId || currentUser.email === r.authorId);
           const rImg = r.imageUrl ? `<img src="${r.imageUrl}" alt="첨부 이미지" style="max-width:100%;max-height:300px;border-radius:8px;margin-top:8px;display:block;border:1px solid rgba(0,0,0,0.08)">` : '';
           const parentCmt = r.parentId !== c.id ? all.find(x => x.id === r.parentId) : null;
           const atMention = parentCmt ? `<span style="color:var(--red);font-weight:600">@${sanitizeText(parentCmt.author)}</span> ` : '';
@@ -3580,8 +3679,8 @@ function loadComments(colName, docId) {
             <div class="comment-content">${atMention}${r.content.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
             ${rImg}
             <div class="comment-actions">
-              ${rIsOwn ? `<button class="comment-action-btn" onclick="deleteComment('${colName}','${docId}','${r.id}')">삭제</button>` : ''}
-              ${!rIsOwn && currentUser ? `<button class="comment-action-btn" onclick="openReport('comment','${r.id}')">신고</button>` : ''}
+              ${rCanDelete ? `<button class="comment-action-btn" onclick="deleteComment('${colName}','${docId}','${r.id}')">삭제</button>` : ''}
+              ${!rCanDelete && currentUser ? `<button class="comment-action-btn" onclick="openReport('comment','${r.id}')">신고</button>` : ''}
               ${currentUser ? `<button class="comment-action-btn btn-reply" onclick="toggleReplyForm('${r.id}')">↩ 답글</button>` : ''}
             </div>
             ${mkReplyForm(r.id, c.id, r.author)}
@@ -3597,8 +3696,8 @@ function loadComments(colName, docId) {
           <div class="comment-content">${c.content.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
           ${imgHtml}
           <div class="comment-actions">
-            ${isOwn ? `<button class="comment-action-btn" onclick="deleteComment('${colName}','${docId}','${c.id}')">삭제</button>` : ''}
-            ${!isOwn && currentUser ? `<button class="comment-action-btn" onclick="openReport('comment','${c.id}')">신고</button>` : ''}
+            ${canDelete ? `<button class="comment-action-btn" onclick="deleteComment('${colName}','${docId}','${c.id}')">삭제</button>` : ''}
+            ${!canDelete && currentUser ? `<button class="comment-action-btn" onclick="openReport('comment','${c.id}')">신고</button>` : ''}
             ${currentUser ? `<button class="comment-action-btn btn-reply" onclick="toggleReplyForm('${c.id}')">↩ 답글</button>` : ''}
           </div>
           ${repliesHtml}
@@ -3652,6 +3751,8 @@ async function submitComment(colName, docId) {
   const content = (input?.value || '').trim();
   if (!content) { alert('댓글 내용을 입력해 주세요.'); return; }
   if (!currentUser) { openLogin(); return; }
+  const blocked = checkForbiddenWords(content);
+  if (blocked) { alert(`금칙어가 포함되어 있습니다: "${blocked}"\n해당 단어를 제거 후 다시 작성해 주세요.`); return; }
   btn.disabled = true; btn.textContent = '등록 중...';
   try {
     const imgInput = document.getElementById('commentImgInput');
@@ -3674,6 +3775,7 @@ async function submitComment(colName, docId) {
     };
     if (imageUrl) commentData.imageUrl = imageUrl;
     await db.collection(colName).doc(docId).collection('comments').add(commentData);
+    db.collection(colName).doc(docId).update({ commentCount: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
     input.value = '';
     const preview = document.getElementById('commentImgPreview');
     const status = document.getElementById('commentImgStatus');
@@ -3691,6 +3793,7 @@ async function deleteComment(colName, docId, commentId) {
   if (!confirm('댓글을 삭제하시겠습니까?')) return;
   try {
     await db.collection(colName).doc(docId).collection('comments').doc(commentId).delete();
+    db.collection(colName).doc(docId).update({ commentCount: firebase.firestore.FieldValue.increment(-1) }).catch(()=>{});
   } catch(e) { alert('삭제 중 오류: ' + e.message); }
 }
 
@@ -3728,6 +3831,8 @@ async function submitReply(colName, docId, parentId, rootId) {
   const content = (inp?.value || '').trim();
   if (!content) { alert('답글 내용을 입력해 주세요.'); return; }
   if (!currentUser) { openLogin(); return; }
+  const blocked = checkForbiddenWords(content);
+  if (blocked) { alert(`금칙어가 포함되어 있습니다: "${blocked}"\n해당 단어를 제거 후 다시 작성해 주세요.`); return; }
   if (btn) { btn.disabled = true; btn.textContent = '등록 중...'; }
   try {
     const imgInput = document.getElementById('replyImgInput-' + parentId);
@@ -3751,6 +3856,7 @@ async function submitReply(colName, docId, parentId, rootId) {
       authorType: currentUser.memberType || 'member',
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
+    db.collection(colName).doc(docId).update({ commentCount: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
     if (inp) inp.value = '';
     const imgInput2 = document.getElementById('replyImgInput-' + parentId);
     if (imgInput2) imgInput2.value = '';
@@ -3809,6 +3915,11 @@ function attachBoardTable(el, colName, writeBtnLabel) {
     }, err => { el.innerHTML = `<div class="post-loading">❌ 오류: ${err.message}</div>`; });
 }
 
+function extractFirstImg(html) {
+  const m = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+  return m ? m[1] : '';
+}
+
 function _renderBoardTable(colName) {
   const state = boardPageState[colName];
   if (!state) return;
@@ -3825,18 +3936,33 @@ function _renderBoardTable(colName) {
   const pagePosts = posts.slice(pg * BOARD_PAGE_SIZE, (pg+1) * BOARD_PAGE_SIZE);
 
   const rows = pagePosts.length === 0
-    ? '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--gray)">게시물이 없습니다.</td></tr>'
-    : pagePosts.map((p,i) => {
-        const num = data.length - (pg * BOARD_PAGE_SIZE) - i;
-        const date = p.createdAt ? new Date(p.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
+    ? '<p style="text-align:center;padding:40px;color:var(--gray)">게시물이 없습니다.</p>'
+    : pagePosts.map(p => {
+        const dt = p.createdAt ? new Date(p.createdAt.seconds*1000) : null;
+        const date = dt ? dt.toLocaleDateString('ko-KR') : '';
+        const timeStr = dt ? dt.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}) : '';
         const prefixTag = p.prefix ? `<span style="display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:700;background:rgba(200,16,46,0.08);color:var(--red);border:1px solid rgba(200,16,46,0.15);margin-right:5px">${sanitizeText(p.prefix)}</span>` : '';
-        return `<tr>
-          <td class="post-meta" style="text-align:center">${num}</td>
-          <td><span class="post-title" onclick="openPost('${colName}','${p.id}')">${badgeMap[p.badge]||''}${prefixTag}${sanitizeText(p.title)}</span></td>
-          <td class="post-meta" style="white-space:nowrap">${avatarHtml(p.authorPhoto||'',p.author||'?',p.authorType||'member',22)} ${gradeBadge(p.authorType||'member')} ${sanitizeText(p.author)}</td>
-          <td class="post-meta">${date}</td>
-          <td class="post-meta" style="text-align:center">${p.views||0}</td>
-        </tr>`;
+        const firstImg = extractFirstImg(p.content || '');
+        const thumbHtml = firstImg
+          ? `<img class="pc-thumb" src="${firstImg}" alt="" loading="lazy">`
+          : `<div class="pc-thumb-ph">📝</div>`;
+        const cnt = p.commentCount || 0;
+        return `<div class="post-card" onclick="openPost('${colName}','${p.id}')">
+          ${thumbHtml}
+          <div class="pc-body">
+            <div class="pc-title">${badgeMap[p.badge]||''}${prefixTag}${sanitizeText(p.title)}</div>
+            <div class="pc-meta">
+              ${avatarHtml(p.authorPhoto||'',p.author||'?',p.authorType||'member',20)}
+              ${gradeBadge(p.authorType||'member')}
+              <span>${sanitizeText(p.author)}</span>
+              <span style="color:#ddd">·</span>
+              <span>${date} ${timeStr}</span>
+              <span style="color:#ddd">·</span>
+              <span>👁 ${p.views||0}</span>
+            </div>
+          </div>
+          <div class="pc-right"><b>${cnt}</b><span>댓글</span></div>
+        </div>`;
       }).join('');
 
   let pageNav = '';
@@ -3864,10 +3990,7 @@ function _renderBoardTable(colName) {
         <button class="board-write-btn" onclick="openWrite('${boardKey}')">${btnLabel}</button>
       </div>
     </div>
-    <table class="board-table">
-      <thead><tr><th style="width:50px">번호</th><th>제목</th><th style="width:110px">작성자</th><th style="width:100px">날짜</th><th style="width:60px">조회</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
+    <div class="post-cards">${rows}</div>
     ${pageNav}`;
 }
 
@@ -5160,6 +5283,7 @@ function toggleMobileView() {
 // ─── 초기화 ───
 (async function() {
   const initPath = (location.pathname.replace(/^\//, '') || location.hash.replace(/^#/, '')) || 'home';
+  loadForbiddenWords();
   if (initPath.startsWith('write/')) {
     initWriteTab(initPath.split('/')[1]);
   } else {
