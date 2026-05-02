@@ -1630,8 +1630,8 @@ html.mobile-view .float-btn span{display:none !important}
     <h3>로그인</h3>
     <p class="modal-sub" style="font-size:13px;color:var(--gray);margin-bottom:20px">마리 국제 결혼 회원이시면 로그인해 주세요.</p>
     <div class="form-group">
-      <label class="form-label">이메일 (아이디)</label>
-      <input type="email" class="auth-input" id="loginEmail" placeholder="example@email.com">
+      <label class="form-label">아이디</label>
+      <input type="text" class="auth-input" id="loginEmail" placeholder="아이디 입력">
     </div>
     <div class="form-group">
       <label class="form-label">비밀번호</label>
@@ -2599,16 +2599,16 @@ function closeLoginBg(e) { if (e.target.id==='loginModal') closeLogin(); }
 async function submitLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const pw = document.getElementById('loginPw').value;
-  if (!email||!pw) { alert('이메일과 비밀번호를 입력해 주세요.'); return; }
+  if (!email||!pw) { alert('아이디와 비밀번호를 입력해 주세요.'); return; }
   try {
     const doc = await db.collection('users').doc(email).get();
-    if (!doc.exists) { alert('이메일 또는 비밀번호가 일치하지 않습니다.'); return; }
+    if (!doc.exists) { alert('아이디 또는 비밀번호가 일치하지 않습니다.'); return; }
     const user = doc.data();
     // 해시 비교 (기존 평문 자동 마이그레이션)
     const hashedInput = await hashPassword(pw);
     const isHashed = /^[0-9a-f]{64}$/.test(user.pw);
     const match = isHashed ? (user.pw === hashedInput) : (user.pw === pw);
-    if (!match) { alert('이메일 또는 비밀번호가 일치하지 않습니다.'); return; }
+    if (!match) { alert('아이디 또는 비밀번호가 일치하지 않습니다.'); return; }
     // 평문 저장된 경우 자동으로 해시로 업그레이드
     if (!isHashed) await db.collection('users').doc(email).update({ pw: hashedInput });
     if (user.tempPassword) {
