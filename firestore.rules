@@ -47,7 +47,8 @@ service cloud.firestore {
     // ─── 상담 신청 ───
     match /consultations/{docId} {
       allow create: if true;
-      allow read, update, delete: if false; // 관리자는 Functions/콘솔에서
+      allow read: if true;   // 관리자 패널에서 조회
+      allow update, delete: if false;
     }
 
     // ─── 성공사례 / FAQ ───

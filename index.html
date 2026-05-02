@@ -662,7 +662,7 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 /* ─── 관리자 패널 (슬라이드 사이드패널) ─── */
 #adminModal{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.55)}
 #adminModal.open{display:flex;align-items:stretch;justify-content:flex-end}
-.admin-panel{display:flex;flex-direction:column;width:min(980px,100%);height:100%;background:#fff;box-shadow:-6px 0 40px rgba(0,0,0,0.2);transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1)}
+.admin-panel{display:flex;flex-direction:column;width:clamp(340px,78vw,920px);height:100%;background:#fff;box-shadow:-6px 0 40px rgba(0,0,0,0.2);transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1)}
 #adminModal.open .admin-panel{transform:translateX(0)}
 .admin-panel-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:var(--dark);flex-shrink:0;gap:16px}
 .admin-panel-hd .apanel-title{font-size:17px;font-weight:700;color:#fff;margin:0}
