@@ -1605,8 +1605,8 @@ html.mobile-view .float-btn span{display:none !important}
     <h3>로그인</h3>
     <p class="modal-sub" style="font-size:13px;color:var(--gray);margin-bottom:20px">마리 국제 결혼 회원이시면 로그인해 주세요.</p>
     <div class="form-group">
-      <label class="form-label">아이디</label>
-      <input type="text" class="auth-input" id="loginUserId" placeholder="아이디 입력" autocomplete="username">
+      <label class="form-label">이메일</label>
+      <input type="email" class="auth-input" id="loginEmail" placeholder="example@email.com" autocomplete="email">
     </div>
     <div class="form-group">
       <label class="form-label">비밀번호</label>
@@ -1626,12 +1626,12 @@ html.mobile-view .float-btn span{display:none !important}
     <p class="modal-sub" style="font-size:13px;color:var(--gray);margin-bottom:20px">마리 국제 결혼 커뮤니티에 오신 것을 환영합니다.</p>
     <div class="form-group"><label class="form-label">이름</label><input type="text" class="auth-input" id="signupName" placeholder="이름 입력"></div>
     <div class="form-group">
-      <label class="form-label">아이디</label>
+      <label class="form-label">아이디 <span style="font-size:11px;color:var(--gray);font-weight:400">(활동명 — 게시판·댓글에 표시됩니다)</span></label>
       <input type="text" class="auth-input" id="signupUserId" placeholder="한글/영문/숫자, 2~20자" maxlength="20" oninput="onUserIdInput()">
       <p style="font-size:11px;color:var(--gray);margin-top:6px;line-height:1.7">※ 한글·영문·숫자만 가능, 특수문자 불가 (2~20자)</p>
     </div>
     <div class="form-group">
-      <label class="form-label">이메일 <span style="font-size:11px;color:var(--gray);font-weight:400">(인증용 — 로그인에 사용되지 않습니다)</span></label>
+      <label class="form-label">이메일 <span style="font-size:11px;color:var(--gray);font-weight:400">(로그인용)</span></label>
       <input type="email" class="auth-input" id="signupEmail" placeholder="example@email.com" oninput="onEmailInput()">
     </div>
     <div class="form-group" id="emailVerifyGroup">
@@ -2813,28 +2813,18 @@ function closeLogin() { document.getElementById('loginModal').classList.remove('
 function closeLoginBg(e) { if (e.target.id==='loginModal') closeLogin(); }
 
 async function submitLogin() {
-  const inputId = document.getElementById('loginUserId').value.trim();
+  const email = document.getElementById('loginEmail').value.trim();
   const pw = document.getElementById('loginPw').value;
-  if (!inputId||!pw) { alert('아이디와 비밀번호를 입력해 주세요.'); return; }
+  if (!email||!pw) { alert('이메일과 비밀번호를 입력해 주세요.'); return; }
   try {
-    // 아이디(userId)로 회원 조회 → 없으면 이메일로 레거시 조회
-    let userDoc = null;
-    const byUserId = await db.collection('users').where('userId', '==', inputId).limit(1).get();
-    if (!byUserId.empty) {
-      userDoc = byUserId.docs[0];
-    } else {
-      // 레거시: 이메일 직접 조회 (userId 없는 기존 회원 대비)
-      const byEmail = await db.collection('users').doc(inputId).get();
-      if (byEmail.exists) userDoc = byEmail;
-    }
-    if (!userDoc) { alert('아이디 또는 비밀번호가 일치하지 않습니다.'); return; }
-    const user = userDoc.data();
+    const doc = await db.collection('users').doc(email).get();
+    if (!doc.exists) { alert('이메일 또는 비밀번호가 일치하지 않습니다.'); return; }
+    const user = doc.data();
     // 해시 비교 (기존 평문 자동 마이그레이션)
     const hashedInput = await hashPassword(pw);
     const isHashed = /^[0-9a-f]{64}$/.test(user.pw);
     const match = isHashed ? (user.pw === hashedInput) : (user.pw === pw);
-    if (!match) { alert('아이디 또는 비밀번호가 일치하지 않습니다.'); return; }
-    const email = user.email;
+    if (!match) { alert('이메일 또는 비밀번호가 일치하지 않습니다.'); return; }
     // 평문 저장된 경우 자동으로 해시로 업그레이드
     if (!isHashed) await db.collection('users').doc(email).update({ pw: hashedInput });
     if (user.tempPassword) {
