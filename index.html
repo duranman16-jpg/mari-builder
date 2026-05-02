@@ -3040,42 +3040,208 @@ function showAdminTab(tab, btn) {
 
 async function renderAdminMembers() {
   const el = document.getElementById('adminUserList');
-  el.innerHTML = '<p style="text-align:center;padding:20px;color:var(--gray)">불러오는 중...</p>';
+  el.innerHTML = '<p style="text-align:center;padding:24px;color:var(--gray)">⏳ 불러오는 중...</p>';
   try {
-    const snapshot = await db.collection('users').get();
-    const users = snapshot.docs.map(d => d.data());
-    if (!users.length) { el.innerHTML = '<p style="color:var(--gray);text-align:center;padding:20px">등록된 회원이 없습니다.</p>'; return; }
-  const roleStyle = {admin:'background:#1A1A1A;color:#FFD700',manager:'background:#1A4B8B;color:#fff',married:'background:#1A6B3C;color:#fff',member:'background:#e0e0e0;color:#333'};
-  const rows = users.map(u => {
-    const isSelf = currentUser && currentUser.email === u.email;
-    const canEdit = !isSelf && (isAdmin(currentUser)||(isManager(currentUser)&&u.memberType!=='admin'&&u.memberType!=='manager'));
-    let btns = '';
-    if (canEdit) {
-      if (isAdmin(currentUser)&&u.memberType==='member') btns += `<button onclick="changeRole('${u.email}','manager')" style="margin:2px;padding:4px 9px;border:none;border-radius:4px;font-size:11px;cursor:pointer;background:#1A4B8B;color:#fff;font-family:'Noto Sans KR',sans-serif">매니저↑</button>`;
-      if (isAdmin(currentUser)&&u.memberType==='manager') btns += `<button onclick="changeRole('${u.email}','member')" style="margin:2px;padding:4px 9px;border:none;border-radius:4px;font-size:11px;cursor:pointer;background:#888;color:#fff;font-family:'Noto Sans KR',sans-serif">일반↓</button>`;
-      if (u.memberType==='member') btns += `<button onclick="changeRole('${u.email}','married')" style="margin:2px;padding:4px 9px;border:none;border-radius:4px;font-size:11px;cursor:pointer;background:#1A6B3C;color:#fff;font-family:'Noto Sans KR',sans-serif">결혼회원↑</button>`;
-      if (u.memberType==='married') btns += `<button onclick="changeRole('${u.email}','member')" style="margin:2px;padding:4px 9px;border:none;border-radius:4px;font-size:11px;cursor:pointer;background:#888;color:#fff;font-family:'Noto Sans KR',sans-serif">일반↓</button>`;
-    }
-    const badge = `<span style="display:inline-block;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700;${roleStyle[u.memberType]||roleStyle.member}">${roleLabel(u.memberType)}</span>`;
-    return `<tr>
-      <td style="padding:10px 8px;font-size:13px;border-bottom:1px solid rgba(0,0,0,0.07)">${u.name}${isSelf?' <span style="font-size:10px;color:var(--gold)">(본인)</span>':''}</td>
-      <td style="padding:10px 8px;font-size:12px;color:var(--gray);border-bottom:1px solid rgba(0,0,0,0.07)">${u.userId || '(미설정)'}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid rgba(0,0,0,0.07)">${badge}</td>
-      <td style="padding:10px 8px;border-bottom:1px solid rgba(0,0,0,0.07)">${btns||'<span style="font-size:11px;color:rgba(0,0,0,0.25)">-</span>'}</td>
-    </tr>`;
-  }).join('');
-  el.innerHTML = `<table style="width:100%;border-collapse:collapse">
-    <thead><tr>
-      <th style="text-align:left;padding:10px 8px;background:var(--dark);color:rgba(255,255,255,0.7);font-size:12px">이름</th>
-      <th style="text-align:left;padding:10px 8px;background:var(--dark);color:rgba(255,255,255,0.7);font-size:12px">아이디</th>
-      <th style="text-align:left;padding:10px 8px;background:var(--dark);color:rgba(255,255,255,0.7);font-size:12px">등급</th>
-      <th style="text-align:left;padding:10px 8px;background:var(--dark);color:rgba(255,255,255,0.7);font-size:12px">등급 변경</th>
-    </tr></thead>
-    <tbody>${rows}</tbody>
-  </table>
-  <p style="font-size:11px;color:var(--gray);margin-top:12px;line-height:1.7">※ 최고 관리자: 모든 등급 변경 가능 &nbsp;|&nbsp; 매니저: 일반 ↔ 결혼회원 변경 가능</p>`;
+    const snap = await db.collection('users').get();
+    window._adminUsers = snap.docs.map(d => ({ _docId: d.id, ...d.data() }));
+    _buildMemberTable(window._adminUsers, document.getElementById('adminMemberSearch')?.value || '');
   } catch(e) {
     el.innerHTML = '<p style="color:red;text-align:center;padding:20px">오류: ' + e.message + '</p>';
+  }
+}
+
+function filterAdminMembers(q) {
+  const lq = (q||'').toLowerCase();
+  const filtered = (window._adminUsers||[]).filter(u =>
+    (u.name||'').toLowerCase().includes(lq) ||
+    (u.userId||'').toLowerCase().includes(lq) ||
+    (u.email||'').toLowerCase().includes(lq) ||
+    (u.phone||'').includes(lq)
+  );
+  _buildMemberTable(filtered, q);
+}
+
+function _buildMemberTable(users, q) {
+  const el = document.getElementById('adminUserList');
+  const RS = {admin:'background:#1a1a1a;color:#FFD700',manager:'background:#1A4B8B;color:#fff',married:'background:#1A6B3C;color:#fff',member:'background:#e0e0e0;color:#444',couple:'background:#8B1A6B;color:#fff'};
+  const total = (window._adminUsers||[]).length;
+
+  const rows = users.map((u, i) => {
+    const isSelf = currentUser && currentUser.email === u.email;
+    const jd = u.createdAt ? new Date(u.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '-';
+    const ll = u.lastLogin ? new Date(u.lastLogin.seconds*1000).toLocaleDateString('ko-KR') : '-';
+    const badge = `<span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;${RS[u.memberType]||RS.member}">${roleLabel(u.memberType)}</span>`;
+    const td = 'padding:9px 10px;font-size:12px;border-bottom:1px solid rgba(0,0,0,0.05);vertical-align:middle';
+    return `<tr id="mrow-${i}">
+      <td style="${td};color:#bbb;text-align:center">${i+1}</td>
+      <td style="${td};font-weight:600">${sanitizeText(u.name||'-')}${isSelf?'<span style="font-size:10px;color:var(--gold);margin-left:3px">(본인)</span>':''}</td>
+      <td style="${td};color:var(--gray)">${sanitizeText(u.userId||'-')}</td>
+      <td style="${td};color:var(--gray);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${sanitizeText(u.email||'')}">${sanitizeText(u.email||'-')}</td>
+      <td style="${td};color:var(--gray);white-space:nowrap">${sanitizeText(u.phone||'-')}</td>
+      <td style="${td}">${badge}</td>
+      <td style="${td};text-align:center">${u.postCount||0}</td>
+      <td style="${td};text-align:center">${u.commentCount||0}</td>
+      <td style="${td};text-align:center;color:var(--red);font-weight:700">${u.totalLikesReceived||0}</td>
+      <td style="${td};white-space:nowrap">${jd}</td>
+      <td style="${td};white-space:nowrap">${ll}</td>
+      <td style="${td};color:var(--gray)">${sanitizeText(u.authMethod||'이메일')}</td>
+      <td style="${td};text-align:center">
+        <button onclick="openMemberEdit('${u._docId||u.email}',${i})"
+          style="padding:5px 12px;border:none;border-radius:5px;font-size:12px;cursor:pointer;background:var(--dark);color:#fff;font-family:'Noto Sans KR',sans-serif">편집</button>
+      </td>
+    </tr>
+    <tr id="medit-${i}" style="display:none">
+      <td colspan="13" style="padding:0;background:#f7f7f8;border-bottom:2px solid rgba(200,16,46,0.1)">
+        <div id="meditForm-${i}" style="padding:18px 20px"></div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+      <div style="font-size:14px;font-weight:700">전체 <span style="color:var(--red)">${total}</span>명 / 표시 <b>${users.length}</b>명</div>
+      <input id="adminMemberSearch" type="text" placeholder="이름 · 아이디 · 이메일 · 전화번호 검색"
+        value="${(q||'').replace(/"/g,'&quot;')}" oninput="filterAdminMembers(this.value)"
+        style="padding:7px 13px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:'Noto Sans KR',sans-serif;width:260px;outline:none">
+    </div>
+    ${users.length === 0
+      ? '<p style="text-align:center;padding:32px;color:var(--gray)">검색 결과가 없습니다.</p>'
+      : `<div style="overflow-x:auto;border-radius:10px;border:1px solid rgba(0,0,0,0.08)">
+        <table style="width:100%;border-collapse:collapse;min-width:960px">
+          <thead><tr style="background:var(--dark)">
+            ${['#','이름','아이디','이메일','전화번호','등급','글','댓글','❤️','가입일','최종접속','인증','관리'].map(h =>
+              `<th style="padding:10px 10px;color:rgba(255,255,255,0.65);font-size:11px;font-weight:600;text-align:${['글','댓글','❤️','관리','#'].includes(h)?'center':'left'};white-space:nowrap">${h}</th>`
+            ).join('')}
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`}
+    <p style="font-size:11px;color:var(--gray);margin-top:10px">※ 최고관리자: 모든 등급 변경 가능 &nbsp;|&nbsp; 매니저: 일반 ↔ 결혼회원 변경 가능</p>`;
+}
+
+function openMemberEdit(email, idx) {
+  const allEdits = document.querySelectorAll('[id^="medit-"]');
+  const target = document.getElementById('medit-' + idx);
+  const isOpen = target && target.style.display !== 'none';
+  allEdits.forEach(el => el.style.display = 'none');
+  if (isOpen) return;
+
+  const u = (window._adminUsers||[]).find(x => (x._docId||x.email) === email);
+  if (!u) return;
+
+  const formEl = document.getElementById('meditForm-' + idx);
+  if (!formEl) return;
+
+  const canRoleChange = isAdmin(currentUser) || (isManager(currentUser) && u.memberType !== 'admin' && u.memberType !== 'manager');
+  const roles = [
+    {v:'member',l:'일반 회원'},{v:'married',l:'결혼 회원'},{v:'couple',l:'부부 회원'},
+    {v:'manager',l:'매니저'},{v:'admin',l:'최고관리자'}
+  ];
+  const roleOpts = roles.map(r => {
+    const dis = (!isAdmin(currentUser) && (r.v==='admin'||r.v==='manager')) ? 'disabled' : '';
+    return `<option value="${r.v}" ${u.memberType===r.v?'selected':''} ${dis}>${r.l}</option>`;
+  }).join('');
+
+  const inp = (id,label,val,type='text',ph='') =>
+    `<div><label style="font-size:11px;color:var(--gray);font-weight:600;display:block;margin-bottom:4px">${label}</label>
+    <input id="${id}" type="${type}" value="${sanitizeText(val||'')}" placeholder="${ph}"
+      style="width:100%;padding:7px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px;font-family:'Noto Sans KR',sans-serif;box-sizing:border-box"></div>`;
+
+  const jd = u.createdAt ? new Date(u.createdAt.seconds*1000).toLocaleString('ko-KR') : '-';
+  const ll = u.lastLogin ? new Date(u.lastLogin.seconds*1000).toLocaleString('ko-KR') : '미기록';
+
+  formEl.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:6px">
+      <b style="font-size:14px">✏️ ${sanitizeText(u.name||u.email)} 편집</b>
+      <div style="font-size:11px;color:var(--gray);display:flex;gap:12px;flex-wrap:wrap">
+        <span>📧 ${sanitizeText(u.email||'-')}</span>
+        <span>🗓 가입: ${jd}</span>
+        <span>🕐 접속: ${ll}</span>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px">
+      ${inp(`me-name-${idx}`,'이름',u.name)}
+      ${inp(`me-userid-${idx}`,'아이디 (로그인용)',u.userId)}
+      ${inp(`me-phone-${idx}`,'전화번호',u.phone)}
+      <div>
+        <label style="font-size:11px;color:var(--gray);font-weight:600;display:block;margin-bottom:4px">등급</label>
+        <select id="me-role-${idx}" ${canRoleChange?'':'disabled'}
+          style="width:100%;padding:7px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px;font-family:'Noto Sans KR',sans-serif;background:#fff;box-sizing:border-box">
+          ${roleOpts}
+        </select>
+      </div>
+      ${inp(`me-pw-${idx}`,'새 비밀번호 (변경 시만)','','password','6자 이상')}
+      <div>
+        <label style="font-size:11px;color:var(--gray);font-weight:600;display:block;margin-bottom:4px">인증방식</label>
+        <select id="me-auth-${idx}"
+          style="width:100%;padding:7px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px;font-family:'Noto Sans KR',sans-serif;background:#fff;box-sizing:border-box">
+          <option value="이메일" ${(u.authMethod||'이메일')==='이메일'?'selected':''}>이메일</option>
+          <option value="전화번호" ${u.authMethod==='전화번호'?'selected':''}>전화번호</option>
+          <option value="카카오" ${u.authMethod==='카카오'?'selected':''}>카카오</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="saveMemberEdit('${u._docId||u.email}',${idx})"
+        style="padding:8px 22px;background:var(--red);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif">💾 저장</button>
+      <button onclick="document.getElementById('medit-${idx}').style.display='none'"
+        style="padding:8px 16px;background:#e8e8e8;color:var(--dark);border:none;border-radius:7px;font-size:13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">취소</button>
+    </div>`;
+
+  target.style.display = '';
+  formEl.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+async function saveMemberEdit(email, idx) {
+  const name   = document.getElementById(`me-name-${idx}`)?.value.trim();
+  const userId = document.getElementById(`me-userid-${idx}`)?.value.trim();
+  const phone  = document.getElementById(`me-phone-${idx}`)?.value.trim();
+  const role   = document.getElementById(`me-role-${idx}`)?.value;
+  const newPw  = document.getElementById(`me-pw-${idx}`)?.value;
+  const auth   = document.getElementById(`me-auth-${idx}`)?.value;
+
+  if (!name) { alert('이름을 입력해 주세요.'); return; }
+
+  const u = (window._adminUsers||[]).find(x => (x._docId||x.email) === email);
+  const updates = { name, userId: userId||'', phone: phone||'', authMethod: auth||'이메일' };
+
+  // 비밀번호 변경
+  if (newPw) {
+    if (newPw.length < 6) { alert('비밀번호는 6자 이상이어야 합니다.'); return; }
+    const salt = generateSalt();
+    const hash = await hashPasswordPBKDF2(newPw, salt);
+    updates.pw = hash;
+    updates.salt = salt;
+    updates.tempPassword = false;
+  }
+
+  try {
+    // 등급 변경 (Cloud Function 경유)
+    if (u && role && u.memberType !== role) {
+      const payload = { callerEmail: currentUser.email, targetEmail: email, newRole: role };
+      if (isAdmin(currentUser)) payload.adminSecret = sessionStorage.getItem('maryAdminSecret') || '';
+      await firebase.functions().httpsCallable('changeRole')(payload);
+      updates.memberType = role;
+    }
+
+    await db.collection('users').doc(email).update(updates);
+
+    // 로컬 캐시 갱신
+    if (u) Object.assign(u, updates);
+
+    // 본인 정보면 세션도 갱신
+    if (currentUser && currentUser.email === email) {
+      Object.assign(currentUser, updates);
+      const store = localStorage.getItem('maryUser') ? localStorage : sessionStorage;
+      store.setItem('maryUser', JSON.stringify(currentUser));
+      updateAuthUI();
+    }
+
+    document.getElementById('medit-' + idx).style.display = 'none';
+    _buildMemberTable(window._adminUsers || [], document.getElementById('adminMemberSearch')?.value || '');
+    alert('저장되었습니다.');
+  } catch(e) {
+    alert('저장 오류: ' + (e.message || e.details || '서버 오류'));
   }
 }
 
@@ -3357,6 +3523,7 @@ async function submitLogin() {
     if (user.memberType === 'admin' && user.adminToken) {
       sessionStorage.setItem('maryAdminSecret', user.adminToken);
     }
+    db.collection('users').doc(email).update({ lastLogin: firebase.firestore.FieldValue.serverTimestamp() }).catch(()=>{});
     closeLogin();
     updateAuthUI();
     alert((user.userId || user.name) + '님, 환영합니다!');
