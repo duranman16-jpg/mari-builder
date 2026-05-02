@@ -1814,6 +1814,7 @@ html.mobile-view .float-btn span{display:none !important}
       <button class="admin-tab-btn active" onclick="showAdminTab('members',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--red);cursor:pointer;border-bottom:3px solid var(--red);margin-bottom:-2px;transition:.2s">👥 회원 관리</button>
       <button class="admin-tab-btn" onclick="showAdminTab('addvn',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">📋 회원 등록</button>
       <button class="admin-tab-btn" onclick="showAdminTab('consult',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">📞 상담신청</button>
+      <button class="admin-tab-btn" onclick="showAdminTab('allmsgs',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">🔍 전체쪽지</button>
       <button class="admin-tab-btn" onclick="showAdminTab('content',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">✨ 콘텐츠</button>
       <button class="admin-tab-btn" onclick="showAdminTab('broadcast',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">📨 전체 발송</button>
       <button class="admin-tab-btn" onclick="showAdminTab('settings',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">⚙️ 설정</button>
@@ -1825,6 +1826,7 @@ html.mobile-view .float-btn span{display:none !important}
     </div>
     <div id="adminTabAddvn" class="admin-tab-panel" style="display:none"></div>
     <div id="adminTabConsult" class="admin-tab-panel" style="display:none"></div>
+    <div id="adminTabAllmsgs" class="admin-tab-panel" style="display:none"></div>
     <div id="adminTabContent" class="admin-tab-panel" style="display:none"></div>
     <div id="adminTabBroadcast" class="admin-tab-panel" style="display:none"></div>
     <div id="adminTabSettings" class="admin-tab-panel" style="display:none"></div>
@@ -2552,6 +2554,7 @@ function showAdminTab(tab, btn) {
   if (tab==='members') renderAdminMembers();
   else if (tab==='addvn') renderAdminAddVN();
   else if (tab==='consult') renderAdminConsult();
+  else if (tab==='allmsgs') renderAdminAllMsgs();
   else if (tab==='content') renderAdminContent();
   else if (tab==='broadcast') renderAdminBroadcast();
   else if (tab==='settings') renderAdminSettings();
@@ -2648,6 +2651,14 @@ function updateAuthUI() {
 }
 
 // ─── 아바타 헬퍼 ───
+// 이메일 마스킹 (외부 노출 금지)
+function maskEmail(email) {
+  if (!email) return '';
+  const [user] = email.split('@');
+  if (user.length <= 2) return user[0] + '**';
+  return user.slice(0, 3) + '***';
+}
+
 const _avatarBg = {admin:'#1A1A1A', manager:'#1A4B8B', married:'#1A6B3C', member:'var(--red)'};
 function avatarHtml(photo, name, type, size=28) {
   const bg = _avatarBg[type] || 'var(--red)';
@@ -3943,6 +3954,76 @@ async function renderMatchingPage() {
   }
 }
 
+// ─── 관리자: 전체 쪽지 감시 탭 ───
+async function renderAdminAllMsgs() {
+  const el = document.getElementById('adminTabAllmsgs');
+  el.innerHTML = '<p style="text-align:center;padding:20px;color:var(--gray)">불러오는 중...</p>';
+  try {
+    const snap = await db.collection('messages').orderBy('createdAt','desc').limit(100).get();
+    if (snap.empty) { el.innerHTML = '<p style="text-align:center;color:var(--gray);padding:30px">쪽지가 없습니다.</p>'; return; }
+
+    const rows = snap.docs.map(d => {
+      const m = d.data();
+      const date = m.createdAt ? new Date(m.createdAt.seconds*1000).toLocaleString('ko-KR') : '';
+      const isRead = m.read ? '<span style="color:#9E9E9E;font-size:11px">읽음</span>' : '<span style="color:var(--red);font-size:11px;font-weight:700">미읽음</span>';
+      const bodyPreview = (m.body||'').replace(/</g,'&lt;').substring(0,60) + ((m.body||'').length>60?'…':'');
+      return `<tr style="border-bottom:1px solid #f0f0f0">
+        <td style="padding:10px 8px;font-size:12px;color:#777;white-space:nowrap">${date}</td>
+        <td style="padding:10px 8px;font-size:13px">
+          <div style="font-weight:600">${m.fromName||''}</div>
+          <div style="font-size:11px;color:#999">${m.from||''}</div>
+        </td>
+        <td style="padding:10px 8px;font-size:13px">
+          <div style="font-weight:600">${m.toName||''}</div>
+          <div style="font-size:11px;color:#999">${m.to||''}</div>
+        </td>
+        <td style="padding:10px 8px">
+          <div style="font-size:13px;font-weight:600">${m.subject||''}</div>
+          <div style="font-size:12px;color:#777;margin-top:2px">${bodyPreview}</div>
+        </td>
+        <td style="padding:10px 8px;text-align:center">${isRead}</td>
+        <td style="padding:10px 8px;text-align:center">
+          <button onclick="adminDeleteMsg('${d.id}')" style="padding:4px 10px;border:1px solid rgba(200,16,46,0.3);border-radius:6px;background:transparent;color:var(--red);font-size:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">삭제</button>
+        </td>
+      </tr>`;
+    }).join('');
+
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+        <h4 style="margin:0">🔍 전체 쪽지 감시 (최근 100건)</h4>
+        <input type="text" placeholder="발신자/수신자/내용 검색" oninput="filterAdminMsgs(this.value)" style="padding:7px 12px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;width:220px">
+      </div>
+      <div style="overflow-x:auto">
+        <table id="adminMsgTable" style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="background:#f5f5f5">
+            <th style="padding:10px 8px;text-align:left;white-space:nowrap">일시</th>
+            <th style="padding:10px 8px;text-align:left">발신자</th>
+            <th style="padding:10px 8px;text-align:left">수신자</th>
+            <th style="padding:10px 8px;text-align:left">내용</th>
+            <th style="padding:10px 8px;text-align:center">상태</th>
+            <th style="padding:10px 8px;text-align:center">삭제</th>
+          </tr></thead>
+          <tbody id="adminMsgBody">${rows}</tbody>
+        </table>
+      </div>`;
+  } catch(e) { el.innerHTML = `<p style="color:red;padding:20px">오류: ${e.message}</p>`; }
+}
+
+function filterAdminMsgs(val) {
+  const q = val.toLowerCase();
+  document.querySelectorAll('#adminMsgBody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+async function adminDeleteMsg(docId) {
+  if (!confirm('이 쪽지를 삭제하시겠습니까?')) return;
+  try {
+    await db.collection('messages').doc(docId).delete();
+    renderAdminAllMsgs();
+  } catch(e) { alert('삭제 오류: ' + e.message); }
+}
+
 // ─── 관리자: 상담 신청 탭 ───
 async function renderAdminConsult() {
   const el = document.getElementById('adminTabConsult');
@@ -4303,7 +4384,7 @@ async function openComposeMsgModal(toEmail, toName) {
   if (sel) {
     sel.innerHTML = '<option value="">-- 받는 회원 선택 --</option>' +
       users.filter(u => u.email !== currentUser.email)
-           .map(u => `<option value="${u.email}" data-name="${u.name}">${u.name} (${u.email})</option>`).join('');
+           .map(u => `<option value="${u.email}" data-name="${u.name}">${u.name} (${maskEmail(u.email)})</option>`).join('');
     if (toEmail) sel.value = toEmail;
   }
   const sub = document.getElementById('msgSubject');
