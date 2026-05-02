@@ -852,6 +852,7 @@ html.mobile-view .float-btn span{display:none !important}
     <div class="nav-links" id="navLinks">
       <a data-page="process" onclick="navigate('process')">결혼절차</a>
       <a data-page="profiles" onclick="navigate('profiles')">회원소개</a>
+      <a data-page="matching" onclick="navigate('matching')">💑 매칭</a>
       <a data-page="success" onclick="navigate('success')">성공사례</a>
       <a data-page="faq" onclick="navigate('faq')">자주묻는질문</a>
       <span class="nav-sep">|</span>
@@ -1294,52 +1295,8 @@ html.mobile-view .float-btn span{display:none !important}
     </div>
   </div>
   <section class="success" style="margin-top:0">
-    <div class="story-grid fade-in">
-      <div class="story-card">
-        <div class="story-top">
-          <div class="story-couple">
-            <div class="story-avatar">🇰🇷</div>
-            <div class="story-heart">❤</div>
-            <div class="story-avatar">🇻🇳</div>
-          </div>
-          <div class="story-flag">🌸</div>
-        </div>
-        <div class="story-body">
-          <div class="story-date">2024년 8월 결혼</div>
-          <div class="story-title">박○○(38) × Nguyen Thi ○○(26)</div>
-          <div class="story-text">"처음엔 걱정이 많았는데, 담당자 분이 처음부터 끝까지 꼼꼼하게 안내해 주셔서 불안 없이 진행했습니다. 지금은 정말 행복하게 잘 살고 있어요."</div>
-        </div>
-      </div>
-      <div class="story-card">
-        <div class="story-top">
-          <div class="story-couple">
-            <div class="story-avatar">🇰🇷</div>
-            <div class="story-heart">❤</div>
-            <div class="story-avatar">🇻🇳</div>
-          </div>
-          <div class="story-flag">🌺</div>
-        </div>
-        <div class="story-body">
-          <div class="story-date">2024년 3월 결혼</div>
-          <div class="story-title">이○○(41) × Tran Thi ○○(29)</div>
-          <div class="story-text">"나이 걱정이 컸는데 배우자가 나이차가 있어도 괜찮다고 했어요. 현지 맞선 때 첫눈에 마음이 통해서 바로 결정했습니다. 정말 고마워요."</div>
-        </div>
-      </div>
-      <div class="story-card">
-        <div class="story-top">
-          <div class="story-couple">
-            <div class="story-avatar">🇰🇷</div>
-            <div class="story-heart">❤</div>
-            <div class="story-avatar">🇻🇳</div>
-          </div>
-          <div class="story-flag">🌻</div>
-        </div>
-        <div class="story-body">
-          <div class="story-date">2023년 11월 결혼</div>
-          <div class="story-title">최○○(36) × Pham Thi ○○(24)</div>
-          <div class="story-text">"비자 서류가 복잡해서 걱정했는데 다 알아서 해주셔서 편했습니다. 지금 아내가 한국어를 열심히 배우고 있어요. 좋은 인연 만들어 주셔서 감사합니다."</div>
-        </div>
-      </div>
+    <div id="storyGrid" class="story-grid fade-in">
+      <div class="post-loading">⏳ 로딩 중...</div>
     </div>
   </section>
 </div>
@@ -1356,14 +1313,25 @@ html.mobile-view .float-btn span{display:none !important}
     </div>
   </div>
   <section class="faq" style="margin-top:0">
-    <div class="faq-list fade-in">
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">비용이 얼마나 드나요?</span><span class="faq-icon">+</span></div><div class="faq-a">서비스 요금은 상담 후 계약서에 명시되며, 표준계약서에 따라 투명하게 안내드립니다. 숨겨진 추가 비용 없이 처음 안내드린 금액 그대로 진행됩니다. 항공·숙박·비자 비용은 별도이며 사전 안내드립니다.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">나이 제한이 있나요?</span><span class="faq-icon">+</span></div><div class="faq-a">법적 요건에 따라 한국 남성과 베트남 여성 모두 성인(만 18세 이상)이어야 합니다. 나이 차에 대한 제한은 법령에서 정하는 바를 따르며, 상담 시 자세히 안내드립니다.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">이혼 경력이 있어도 가능한가요?</span><span class="faq-icon">+</span></div><div class="faq-a">가능합니다. 이혼 경력이 있으신 분도 충분히 좋은 인연을 만나실 수 있습니다. 단, 법적 서류 준비 과정이 조금 더 필요할 수 있으니 상담 시 말씀해 주세요.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">현지 방문 없이도 진행 가능한가요?</span><span class="faq-icon">+</span></div><div class="faq-a">국제결혼은 양 당사자의 직접 만남이 법적으로 필요합니다. 현지 맞선은 필수 과정이며, 저희가 일정 조율·통역사 배정·안전한 환경을 완벽히 준비합니다. 보통 3~5일 일정으로 진행됩니다.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">비자 신청은 얼마나 걸리나요?</span><span class="faq-icon">+</span></div><div class="faq-a">혼인 완료 후 배우자 초청 비자(F-6)는 통상 4~8개월 소요됩니다. 서류 준비가 완벽할수록 기간이 단축됩니다. 저희가 서류 준비부터 제출까지 전 과정을 안내해 드립니다.</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">계약 후 환불은 가능한가요?</span><span class="faq-icon">+</span></div><div class="faq-a">표준계약서에 명시된 환불 규정에 따라 처리됩니다. 계약 체결 전에 환불 조건을 꼭 확인하시고, 궁금한 점은 상담 시 반드시 여쭤보시기 바랍니다.</div></div>
+    <div id="faqList" class="faq-list fade-in">
+      <div class="post-loading">⏳ 로딩 중...</div>
     </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE: 회원 매칭                        -->
+<!-- ══════════════════════════════════════ -->
+<div id="page-matching" class="page">
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a onclick="navigate('home')">홈</a><span>›</span>회원 매칭</div>
+      <h1>💑 회원 매칭</h1>
+      <p>나와 어울리는 인연을 찾아보세요.</p>
+    </div>
+  </div>
+  <section style="margin-top:0;padding:60px 7%">
+    <div id="matchingContent"><div class="post-loading">⏳ 로딩 중...</div></div>
   </section>
 </div>
 
@@ -1784,6 +1752,8 @@ html.mobile-view .float-btn span{display:none !important}
     <div class="admin-tabs" style="display:flex;gap:0;border-bottom:2px solid rgba(0,0,0,0.08);margin-bottom:20px">
       <button class="admin-tab-btn active" onclick="showAdminTab('members',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--red);cursor:pointer;border-bottom:3px solid var(--red);margin-bottom:-2px;transition:.2s">👥 회원 관리</button>
       <button class="admin-tab-btn" onclick="showAdminTab('addvn',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">📋 회원 등록</button>
+      <button class="admin-tab-btn" onclick="showAdminTab('consult',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">📞 상담신청</button>
+      <button class="admin-tab-btn" onclick="showAdminTab('content',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">✨ 콘텐츠</button>
       <button class="admin-tab-btn" onclick="showAdminTab('broadcast',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">📨 전체 발송</button>
       <button class="admin-tab-btn" onclick="showAdminTab('settings',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">⚙️ 설정</button>
       <button id="adminAiImageTabBtn" class="admin-tab-btn" onclick="showAdminTab('aiimage',this)" style="display:none;padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">🎨 AI 이미지</button>
@@ -1793,6 +1763,8 @@ html.mobile-view .float-btn span{display:none !important}
       <div id="adminUserList"></div>
     </div>
     <div id="adminTabAddvn" class="admin-tab-panel" style="display:none"></div>
+    <div id="adminTabConsult" class="admin-tab-panel" style="display:none"></div>
+    <div id="adminTabContent" class="admin-tab-panel" style="display:none"></div>
     <div id="adminTabBroadcast" class="admin-tab-panel" style="display:none"></div>
     <div id="adminTabSettings" class="admin-tab-panel" style="display:none"></div>
     <div id="adminTabAiimage" class="admin-tab-panel" style="display:none"></div>
@@ -1903,6 +1875,9 @@ function showPage(page) {
 
   if (page.startsWith('board-')) renderBoards();
   if (page === 'messages') loadMessages(currentMsgTab);
+  if (page === 'success') renderSuccessStories();
+  if (page === 'faq') renderFaqList();
+  if (page === 'matching') renderMatchingPage();
 
   document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
     a.classList.toggle('nav-active', a.dataset.page === page);
@@ -2413,16 +2388,38 @@ function toggleFaq(el) {
 function openModal() { document.getElementById('modal').classList.add('open'); }
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 function closeModalBg(e) { if (e.target.id === 'modal') closeModal(); }
-function submitModal() {
-  const n = document.getElementById('mName').value;
-  if (!n.trim()) { alert('성함을 입력해 주세요.'); return; }
-  alert('상담 신청이 완료되었습니다.\n빠른 시간 안에 연락드리겠습니다. 감사합니다 😊');
-  closeModal();
-}
-function submitInquiry() {
-  const n = document.getElementById('iqName').value.trim();
+async function submitModal() {
+  const n = document.getElementById('mName').value.trim();
+  const p = document.getElementById('mPhone').value.trim();
+  const a = document.getElementById('mAge').value.trim();
   if (!n) { alert('성함을 입력해 주세요.'); return; }
-  alert('상담 신청이 완료되었습니다.\n담당자가 빠르게 연락드리겠습니다.');
+  const btn = document.querySelector('#modal .modal-submit');
+  btn.disabled = true; btn.textContent = '접수 중...';
+  try {
+    await db.collection('consultations').add({ name: n, phone: p, age: a, region: '', message: '', status: '접수', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    try { await firebase.functions().httpsCallable('notifyConsultation')({ name: n, phone: p, age: a, region: '', message: '' }); } catch(e) { console.warn('알림 실패:', e); }
+    alert('상담 신청이 완료되었습니다.\n빠른 시간 안에 연락드리겠습니다. 감사합니다!');
+    closeModal();
+  } catch(e) { alert('접수 오류: ' + e.message); }
+  finally { btn.disabled = false; btn.textContent = '상담 신청하기'; }
+}
+async function submitInquiry() {
+  const n = document.getElementById('iqName').value.trim();
+  const p = document.getElementById('iqPhone').value.trim();
+  const a = document.getElementById('iqAge').value.trim();
+  const r = document.getElementById('iqRegion').value;
+  const m = document.getElementById('iqMsg').value.trim();
+  if (!n) { alert('성함을 입력해 주세요.'); return; }
+  const btn = document.querySelector('#page-inquiry .form-submit');
+  btn.disabled = true; btn.textContent = '접수 중...';
+  try {
+    await db.collection('consultations').add({ name: n, phone: p, age: a, region: r, message: m, status: '접수', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    try { await firebase.functions().httpsCallable('notifyConsultation')({ name: n, phone: p, age: a, region: r, message: m }); } catch(e) { console.warn('알림 실패:', e); }
+    alert('상담 신청이 완료되었습니다.\n담당자가 빠르게 연락드리겠습니다.');
+    ['iqName','iqPhone','iqAge','iqMsg'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+    document.getElementById('iqRegion').value = '';
+  } catch(e) { alert('접수 오류: ' + e.message); }
+  finally { btn.disabled = false; btn.textContent = '상담 신청하기'; }
 }
 
 // ─── 메뉴 ───
@@ -2491,6 +2488,8 @@ function showAdminTab(tab, btn) {
   if (panel) panel.style.display='block';
   if (tab==='members') renderAdminMembers();
   else if (tab==='addvn') renderAdminAddVN();
+  else if (tab==='consult') renderAdminConsult();
+  else if (tab==='content') renderAdminContent();
   else if (tab==='broadcast') renderAdminBroadcast();
   else if (tab==='settings') renderAdminSettings();
   else if (tab==='aiimage') renderAdminAiImage();
@@ -3086,37 +3085,99 @@ function authWall(type) {
   return `<div class="auth-wall"><div class="auth-wall-icon">🔒</div><h3>로그인이 필요합니다</h3><p>이 게시판은 회원만 이용하실 수 있습니다.<br>로그인 또는 회원가입 후 이용해 주세요.</p><div class="auth-wall-btns"><button class="btn-login" style="padding:10px 24px;font-size:14px" onclick="openLogin()">로그인</button><button class="btn-signup" style="padding:10px 24px;font-size:14px" onclick="openSignup()">회원가입</button></div></div>`;
 }
 
+const boardPageState = {};
+const BOARD_PAGE_SIZE = 20;
+
 function attachBoardTable(el, colName, writeBtnLabel) {
   if (boardListeners[colName]) return;
-  const boardKey = colName.replace('posts_','');
   const btnLabel = writeBtnLabel || '✏️ 글쓰기';
-  boardListeners[colName] = db.collection(colName).orderBy('createdAt','desc').limit(30)
+  boardPageState[colName] = { page: 0, search: '', sort: 'newest', data: [], el, btnLabel };
+  boardListeners[colName] = db.collection(colName).orderBy('createdAt','desc').limit(200)
     .onSnapshot(snap => {
       const posts = [];
       snap.forEach(doc => posts.push({id:doc.id,...doc.data()}));
-      const rows = posts.length===0
-        ? '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--gray)">아직 게시물이 없습니다. 첫 글을 작성해 보세요!</td></tr>'
-        : posts.map((p,i) => {
-            const date = p.createdAt ? new Date(p.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
-            const prefixTag = p.prefix ? `<span style="display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:700;background:rgba(200,16,46,0.08);color:var(--red);border:1px solid rgba(200,16,46,0.15);margin-right:5px">${p.prefix}</span>` : '';
-            return `<tr>
-              <td class="post-meta" style="text-align:center">${posts.length-i}</td>
-              <td><span class="post-title" onclick="openPost('${colName}','${p.id}')">${badgeMap[p.badge]||''}${prefixTag}${p.title}</span></td>
-              <td class="post-meta">${gradeBadge(p.authorType||'member')} ${p.author}</td>
-              <td class="post-meta">${date}</td>
-              <td class="post-meta" style="text-align:center">${p.views||0}</td>
-            </tr>`;
-          }).join('');
-      el.innerHTML = `
-        <div class="board-header">
-          <span style="font-size:14px;color:var(--gray)">총 <b>${posts.length}</b>개의 게시물</span>
-          <button class="board-write-btn" onclick="openWrite('${boardKey}')">${btnLabel}</button>
-        </div>
-        <table class="board-table">
-          <thead><tr><th style="width:50px">번호</th><th>제목</th><th style="width:110px">작성자</th><th style="width:100px">날짜</th><th style="width:60px">조회</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>`;
+      boardPageState[colName].data = posts;
+      _renderBoardTable(colName);
     }, err => { el.innerHTML = `<div class="post-loading">❌ 오류: ${err.message}</div>`; });
+}
+
+function _renderBoardTable(colName) {
+  const state = boardPageState[colName];
+  if (!state) return;
+  const { el, btnLabel, sort, search, data } = state;
+  const boardKey = colName.replace('posts_','');
+
+  let posts = [...data];
+  if (search) { const q = search.toLowerCase(); posts = posts.filter(p => (p.title||'').toLowerCase().includes(q) || (p.author||'').toLowerCase().includes(q)); }
+  if (sort === 'views') posts.sort((a,b) => (b.views||0)-(a.views||0));
+
+  const totalPages = Math.max(1, Math.ceil(posts.length / BOARD_PAGE_SIZE));
+  const pg = Math.min(state.page, totalPages - 1);
+  state.page = pg;
+  const pagePosts = posts.slice(pg * BOARD_PAGE_SIZE, (pg+1) * BOARD_PAGE_SIZE);
+
+  const rows = pagePosts.length === 0
+    ? '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--gray)">게시물이 없습니다.</td></tr>'
+    : pagePosts.map((p,i) => {
+        const num = data.length - (pg * BOARD_PAGE_SIZE) - i;
+        const date = p.createdAt ? new Date(p.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
+        const prefixTag = p.prefix ? `<span style="display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:700;background:rgba(200,16,46,0.08);color:var(--red);border:1px solid rgba(200,16,46,0.15);margin-right:5px">${p.prefix}</span>` : '';
+        return `<tr>
+          <td class="post-meta" style="text-align:center">${num}</td>
+          <td><span class="post-title" onclick="openPost('${colName}','${p.id}')">${badgeMap[p.badge]||''}${prefixTag}${p.title}</span></td>
+          <td class="post-meta">${gradeBadge(p.authorType||'member')} ${p.author}</td>
+          <td class="post-meta">${date}</td>
+          <td class="post-meta" style="text-align:center">${p.views||0}</td>
+        </tr>`;
+      }).join('');
+
+  let pageNav = '';
+  if (totalPages > 1) {
+    const btnStyle = (active) => `padding:5px 11px;border:1px solid ${active?'var(--red)':'#ddd'};border-radius:6px;cursor:pointer;background:${active?'var(--red)':'#fff'};color:${active?'#fff':'inherit'};font-family:'Noto Sans KR',sans-serif;font-size:13px`;
+    const nums = Array.from({length:totalPages},(_,i) => `<button onclick="boardGotoPage('${colName}',${i})" style="${btnStyle(i===pg)}">${i+1}</button>`).join('');
+    pageNav = `<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;flex-wrap:wrap">
+      <button onclick="boardGotoPage('${colName}',${pg-1})" ${pg===0?'disabled':''} style="${btnStyle(false)}">◀</button>
+      ${nums}
+      <button onclick="boardGotoPage('${colName}',${pg+1})" ${pg===totalPages-1?'disabled':''} style="${btnStyle(false)}">▶</button>
+    </div>`;
+  }
+
+  el.innerHTML = `
+    <div class="board-header" style="flex-wrap:wrap;gap:8px">
+      <div style="display:flex;gap:8px;align-items:center;flex:1;min-width:180px">
+        <input type="text" placeholder="검색" value="${state.search.replace(/"/g,'&quot;')}" oninput="boardDoSearch('${colName}',this.value)" style="padding:7px 11px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:'Noto Sans KR',sans-serif;flex:1;max-width:180px;outline:none">
+        <select onchange="boardDoSort('${colName}',this.value)" style="padding:7px 9px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:'Noto Sans KR',sans-serif;background:#fff;cursor:pointer">
+          <option value="newest" ${sort==='newest'?'selected':''}>최신순</option>
+          <option value="views" ${sort==='views'?'selected':''}>조회순</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:13px;color:var(--gray)">총 <b>${search?posts.length+'/'+data.length:data.length}</b>개</span>
+        <button class="board-write-btn" onclick="openWrite('${boardKey}')">${btnLabel}</button>
+      </div>
+    </div>
+    <table class="board-table">
+      <thead><tr><th style="width:50px">번호</th><th>제목</th><th style="width:110px">작성자</th><th style="width:100px">날짜</th><th style="width:60px">조회</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    ${pageNav}`;
+}
+
+function boardDoSearch(colName, val) {
+  if (boardPageState[colName]) { boardPageState[colName].search = val; boardPageState[colName].page = 0; _renderBoardTable(colName); }
+}
+function boardDoSort(colName, val) {
+  if (boardPageState[colName]) { boardPageState[colName].sort = val; boardPageState[colName].page = 0; _renderBoardTable(colName); }
+}
+function boardGotoPage(colName, pg) {
+  if (!boardPageState[colName]) return;
+  const state = boardPageState[colName];
+  const filtered = state.search ? state.data.filter(p => (p.title||'').toLowerCase().includes(state.search.toLowerCase())) : state.data;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / BOARD_PAGE_SIZE));
+  if (pg < 0 || pg >= totalPages) return;
+  state.page = pg;
+  _renderBoardTable(colName);
+  state.el.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function attachPhotoBoard(el, colName) {
@@ -3579,6 +3640,307 @@ async function renderSystemStats() {
       <div style="font-size:12px;color:var(--gray)">💍 부부회원</div>
     </div>
   </div>`;
+}
+
+// ─── 성공사례 (Firestore 동적) ───
+const DEFAULT_STORIES = [
+  {flag:'🌸',date:'2024년 8월 결혼',title:'박○○(38) × Nguyen Thi ○○(26)',text:'"처음엔 걱정이 많았는데, 담당자 분이 처음부터 끝까지 꼼꼼하게 안내해 주셔서 불안 없이 진행했습니다. 지금은 정말 행복하게 잘 살고 있어요."'},
+  {flag:'🌺',date:'2024년 3월 결혼',title:'이○○(41) × Tran Thi ○○(29)',text:'"나이 걱정이 컸는데 배우자가 나이차가 있어도 괜찮다고 했어요. 현지 맞선 때 첫눈에 마음이 통해서 바로 결정했습니다."'},
+  {flag:'🌻',date:'2023년 11월 결혼',title:'최○○(36) × Pham Thi ○○(24)',text:'"비자 서류가 복잡해서 걱정했는데 다 알아서 해주셔서 편했습니다. 좋은 인연 만들어 주셔서 감사합니다."'}
+];
+const DEFAULT_FAQS = [
+  {q:'비용이 얼마나 드나요?',a:'서비스 요금은 상담 후 계약서에 명시되며, 표준계약서에 따라 투명하게 안내드립니다. 숨겨진 추가 비용 없이 처음 안내드린 금액 그대로 진행됩니다.'},
+  {q:'나이 제한이 있나요?',a:'법적 요건에 따라 한국 남성과 베트남 여성 모두 성인(만 18세 이상)이어야 합니다. 상담 시 자세히 안내드립니다.'},
+  {q:'이혼 경력이 있어도 가능한가요?',a:'가능합니다. 이혼 경력이 있으신 분도 충분히 좋은 인연을 만나실 수 있습니다. 법적 서류 준비가 조금 더 필요할 수 있으니 상담 시 말씀해 주세요.'},
+  {q:'현지 방문 없이도 진행 가능한가요?',a:'국제결혼은 양 당사자의 직접 만남이 법적으로 필요합니다. 보통 3~5일 일정으로 진행되며, 저희가 일정·통역·환경을 완벽히 준비합니다.'},
+  {q:'비자 신청은 얼마나 걸리나요?',a:'혼인 완료 후 배우자 초청 비자(F-6)는 통상 4~8개월 소요됩니다. 서류 준비부터 제출까지 전 과정을 안내해 드립니다.'},
+  {q:'계약 후 환불은 가능한가요?',a:'표준계약서에 명시된 환불 규정에 따라 처리됩니다. 계약 체결 전에 환불 조건을 꼭 확인하세요.'}
+];
+
+async function renderSuccessStories() {
+  const grid = document.getElementById('storyGrid');
+  if (!grid) return;
+  try {
+    const snap = await db.collection('success_stories').orderBy('order','asc').get();
+    const stories = snap.empty ? DEFAULT_STORIES : snap.docs.map(d=>d.data());
+    grid.innerHTML = stories.map(s=>`
+      <div class="story-card">
+        <div class="story-top">
+          <div class="story-couple"><div class="story-avatar">🇰🇷</div><div class="story-heart">❤</div><div class="story-avatar">🇻🇳</div></div>
+          <div class="story-flag">${s.flag||'🌸'}</div>
+        </div>
+        <div class="story-body">
+          <div class="story-date">${s.date||''}</div>
+          <div class="story-title">${s.title||''}</div>
+          <div class="story-text">${s.text||''}</div>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    grid.innerHTML = DEFAULT_STORIES.map(s=>`
+      <div class="story-card">
+        <div class="story-top"><div class="story-couple"><div class="story-avatar">🇰🇷</div><div class="story-heart">❤</div><div class="story-avatar">🇻🇳</div></div><div class="story-flag">${s.flag}</div></div>
+        <div class="story-body"><div class="story-date">${s.date}</div><div class="story-title">${s.title}</div><div class="story-text">${s.text}</div></div>
+      </div>`).join('');
+  }
+}
+
+async function renderFaqList() {
+  const el = document.getElementById('faqList');
+  if (!el) return;
+  try {
+    const snap = await db.collection('faqs').orderBy('order','asc').get();
+    const faqs = snap.empty ? DEFAULT_FAQS : snap.docs.map(d=>({id:d.id,...d.data()}));
+    el.innerHTML = faqs.map(f=>`
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">${f.q}</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">${f.a}</div>
+      </div>`).join('');
+  } catch(e) {
+    el.innerHTML = DEFAULT_FAQS.map(f=>`
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">${f.q}</span><span class="faq-icon">+</span></div>
+        <div class="faq-a">${f.a}</div>
+      </div>`).join('');
+  }
+}
+
+// ─── 회원 매칭 페이지 ───
+async function renderMatchingPage() {
+  const el = document.getElementById('matchingContent');
+  if (!el) return;
+  if (!currentUser) {
+    el.innerHTML = `<div class="auth-wall"><div class="auth-wall-icon">🔒</div><h3>로그인이 필요합니다</h3><p>회원 매칭은 로그인 후 이용하실 수 있습니다.</p><div class="auth-wall-btns"><button class="btn-login" style="padding:10px 24px;font-size:14px" onclick="openLogin()">로그인</button></div></div>`;
+    return;
+  }
+  el.innerHTML = '<div class="post-loading">⏳ 매칭 정보 불러오는 중...</div>';
+  try {
+    const myGender = currentUser.gender;
+    const myNationality = currentUser.nationality || 'kr';
+    let targetGender = myGender === 'male' ? 'female' : 'male';
+    let targetNationality = myNationality === 'kr' ? 'vn' : 'kr';
+
+    const snap = await db.collection('users').get();
+    const members = snap.docs.map(d=>d.data()).filter(u =>
+      u.memberType !== 'admin' &&
+      (u.gender === targetGender || u.nationality === targetNationality) &&
+      u.email !== currentUser.email
+    );
+
+    if (!members.length) {
+      el.innerHTML = '<p style="text-align:center;color:var(--gray);padding:60px 0">현재 매칭 가능한 회원이 없습니다.<br>관리자에게 문의해 주세요.</p>';
+      return;
+    }
+
+    const nationFlag = {kr:'🇰🇷', vn:'🇻🇳'};
+    const cards = members.map(m => {
+      const birth = m.birth ? new Date().getFullYear() - new Date(m.birth).getFullYear() : '?';
+      const flag = nationFlag[m.nationality] || (m.gender==='female'?'🇻🇳':'🇰🇷');
+      const grade = gradeBadge(m.memberType||'member');
+      return `
+        <div style="background:#fff;border-radius:16px;padding:28px 24px;box-shadow:0 2px 16px rgba(0,0,0,0.08);display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+          <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-size:32px">${flag}</div>
+          <div>
+            <div style="font-weight:700;font-size:16px">${m.name}</div>
+            <div style="color:var(--gray);font-size:13px;margin-top:4px">${birth}세 · ${m.gender==='male'?'남':'여'} · ${grade}</div>
+          </div>
+          <button onclick="openComposeMsgModal('${m.email}')" style="padding:8px 20px;background:var(--red);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600">💌 쪽지 보내기</button>
+        </div>`;
+    }).join('');
+
+    el.innerHTML = `
+      <div style="margin-bottom:24px">
+        <h2 style="font-size:20px;font-weight:700;margin-bottom:8px">나에게 맞는 인연 ${members.length}명</h2>
+        <p style="color:var(--gray);font-size:14px">관심 있는 분께 쪽지를 보내 인연을 시작해보세요.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px">${cards}</div>`;
+  } catch(e) {
+    el.innerHTML = `<p style="text-align:center;color:var(--gray);padding:40px">오류: ${e.message}</p>`;
+  }
+}
+
+// ─── 관리자: 상담 신청 탭 ───
+async function renderAdminConsult() {
+  const el = document.getElementById('adminTabConsult');
+  el.innerHTML = '<p style="text-align:center;padding:20px;color:var(--gray)">불러오는 중...</p>';
+  try {
+    const snap = await db.collection('consultations').orderBy('createdAt','desc').limit(50).get();
+    if (snap.empty) { el.innerHTML = '<p style="text-align:center;color:var(--gray);padding:30px">접수된 상담이 없습니다.</p>'; return; }
+    const statusColor = {'접수':'#2196F3','확인':'#FF9800','완료':'#4CAF50','취소':'#9E9E9E'};
+    const rows = snap.docs.map(d=>{
+      const c = d.data();
+      const date = c.createdAt ? new Date(c.createdAt.seconds*1000).toLocaleString('ko-KR') : '';
+      const sc = statusColor[c.status]||'#9E9E9E';
+      return `<tr>
+        <td style="padding:10px 8px;font-size:13px">${date}</td>
+        <td style="padding:10px 8px;font-weight:600">${c.name||''}</td>
+        <td style="padding:10px 8px">${c.phone||''}</td>
+        <td style="padding:10px 8px">${c.age||''}${c.age?'세':''}</td>
+        <td style="padding:10px 8px">${c.region||''}</td>
+        <td style="padding:10px 8px;max-width:180px;font-size:12px;color:#555">${(c.message||'').substring(0,60)}${c.message?.length>60?'…':''}</td>
+        <td style="padding:10px 8px">
+          <select onchange="updateConsultStatus('${d.id}',this.value)" style="padding:4px 8px;border:1px solid ${sc};border-radius:6px;color:${sc};font-weight:600;font-size:12px;font-family:'Noto Sans KR',sans-serif;background:#fff;cursor:pointer">
+            ${['접수','확인','완료','취소'].map(s=>`<option ${s===c.status?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </td>
+      </tr>`;
+    }).join('');
+    el.innerHTML = `
+      <h4 style="margin-bottom:16px">📞 상담 신청 목록 (최근 50건)</h4>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="background:#f5f5f5">
+            <th style="padding:10px 8px;text-align:left;white-space:nowrap">신청일시</th>
+            <th style="padding:10px 8px;text-align:left">성함</th>
+            <th style="padding:10px 8px;text-align:left">연락처</th>
+            <th style="padding:10px 8px;text-align:left">나이</th>
+            <th style="padding:10px 8px;text-align:left">지역</th>
+            <th style="padding:10px 8px;text-align:left">내용</th>
+            <th style="padding:10px 8px;text-align:left">상태</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  } catch(e) { el.innerHTML = `<p style="color:red;padding:20px">오류: ${e.message}</p>`; }
+}
+
+async function updateConsultStatus(docId, status) {
+  try { await db.collection('consultations').doc(docId).update({ status }); }
+  catch(e) { alert('상태 변경 오류: ' + e.message); }
+}
+
+// ─── 관리자: 콘텐츠 관리 탭 (성공사례 + FAQ) ───
+function renderAdminContent() {
+  const el = document.getElementById('adminTabContent');
+  el.innerHTML = `
+    <div style="display:flex;gap:12px;margin-bottom:20px;border-bottom:1px solid #eee;padding-bottom:12px">
+      <button onclick="showContentTab('story',this)" id="ctStoryBtn" style="padding:8px 18px;border:none;border-radius:8px;background:var(--red);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600">✨ 성공사례</button>
+      <button onclick="showContentTab('faq',this)" id="ctFaqBtn" style="padding:8px 18px;border:none;border-radius:8px;background:#f5f5f5;color:#555;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600">❓ FAQ</button>
+    </div>
+    <div id="ctStoryPanel"></div>
+    <div id="ctFaqPanel" style="display:none"></div>`;
+  loadContentStories();
+}
+
+function showContentTab(tab, btn) {
+  document.getElementById('ctStoryPanel').style.display = tab==='story'?'':'none';
+  document.getElementById('ctFaqPanel').style.display = tab==='faq'?'':'none';
+  document.getElementById('ctStoryBtn').style.background = tab==='story'?'var(--red)':'#f5f5f5';
+  document.getElementById('ctStoryBtn').style.color = tab==='story'?'#fff':'#555';
+  document.getElementById('ctFaqBtn').style.background = tab==='faq'?'var(--red)':'#f5f5f5';
+  document.getElementById('ctFaqBtn').style.color = tab==='faq'?'#fff':'#555';
+  if (tab==='faq') loadContentFaqs();
+  else loadContentStories();
+}
+
+async function loadContentStories() {
+  const el = document.getElementById('ctStoryPanel');
+  if (!el) return;
+  el.innerHTML = '<p style="color:var(--gray)">불러오는 중...</p>';
+  const snap = await db.collection('success_stories').orderBy('order','asc').get();
+  const stories = snap.empty ? [] : snap.docs.map(d=>({id:d.id,...d.data()}));
+  const iStyle = 'width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:"Noto Sans KR",sans-serif;margin-bottom:8px;box-sizing:border-box';
+  const rows = stories.map((s,i)=>`
+    <div style="border:1px solid #eee;border-radius:10px;padding:16px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <b style="font-size:13px">사례 ${i+1}</b>
+        <button onclick="deleteStory('${s.id}')" style="padding:4px 12px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:12px;color:#e53935">삭제</button>
+      </div>
+      <input style="${iStyle}" id="sf_${s.id}_flag" value="${s.flag||'🌸'}" placeholder="이모지">
+      <input style="${iStyle}" id="sf_${s.id}_date" value="${s.date||''}" placeholder="날짜 (예: 2024년 8월 결혼)">
+      <input style="${iStyle}" id="sf_${s.id}_title" value="${s.title||''}" placeholder="제목 (예: 박○○(38) × Nguyen Thi ○○(26))">
+      <textarea style="${iStyle}min-height:80px;resize:vertical" id="sf_${s.id}_text" placeholder="내용">${s.text||''}</textarea>
+      <button onclick="saveStory('${s.id}',${i})" style="padding:7px 18px;background:var(--red);color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:13px;font-family:'Noto Sans KR',sans-serif">저장</button>
+    </div>`).join('');
+  el.innerHTML = `
+    ${rows}
+    <div style="border:2px dashed #ddd;border-radius:10px;padding:16px;margin-bottom:12px">
+      <b style="font-size:13px;color:var(--gray)">새 성공사례 추가</b>
+      <input style="${iStyle}margin-top:10px" id="ns_flag" value="🌸" placeholder="이모지">
+      <input style="${iStyle}" id="ns_date" placeholder="날짜 (예: 2024년 8월 결혼)">
+      <input style="${iStyle}" id="ns_title" placeholder="제목">
+      <textarea style="${iStyle}min-height:80px;resize:vertical" id="ns_text" placeholder="내용"></textarea>
+      <button onclick="addStory(${stories.length})" style="padding:7px 18px;background:#1A6B3C;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:13px;font-family:'Noto Sans KR',sans-serif">추가하기</button>
+    </div>`;
+}
+
+async function saveStory(id, order) {
+  try {
+    await db.collection('success_stories').doc(id).set({
+      flag: document.getElementById(`sf_${id}_flag`).value.trim(),
+      date: document.getElementById(`sf_${id}_date`).value.trim(),
+      title: document.getElementById(`sf_${id}_title`).value.trim(),
+      text: document.getElementById(`sf_${id}_text`).value.trim(),
+      order
+    });
+    alert('저장되었습니다.');
+  } catch(e) { alert('오류: '+e.message); }
+}
+async function deleteStory(id) {
+  if (!confirm('삭제하시겠습니까?')) return;
+  await db.collection('success_stories').doc(id).delete();
+  loadContentStories();
+}
+async function addStory(order) {
+  const flag = document.getElementById('ns_flag').value.trim();
+  const date = document.getElementById('ns_date').value.trim();
+  const title = document.getElementById('ns_title').value.trim();
+  const text = document.getElementById('ns_text').value.trim();
+  if (!title) { alert('제목을 입력해 주세요.'); return; }
+  await db.collection('success_stories').add({ flag, date, title, text, order });
+  loadContentStories();
+}
+
+async function loadContentFaqs() {
+  const el = document.getElementById('ctFaqPanel');
+  if (!el) return;
+  el.innerHTML = '<p style="color:var(--gray)">불러오는 중...</p>';
+  const snap = await db.collection('faqs').orderBy('order','asc').get();
+  const faqs = snap.empty ? [] : snap.docs.map(d=>({id:d.id,...d.data()}));
+  const iStyle = 'width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:7px;font-size:13px;font-family:"Noto Sans KR",sans-serif;margin-bottom:8px;box-sizing:border-box';
+  const rows = faqs.map((f,i)=>`
+    <div style="border:1px solid #eee;border-radius:10px;padding:16px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <b style="font-size:13px">FAQ ${i+1}</b>
+        <button onclick="deleteFaq('${f.id}')" style="padding:4px 12px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:12px;color:#e53935">삭제</button>
+      </div>
+      <input style="${iStyle}" id="ff_${f.id}_q" value="${f.q||''}" placeholder="질문">
+      <textarea style="${iStyle}min-height:80px;resize:vertical" id="ff_${f.id}_a" placeholder="답변">${f.a||''}</textarea>
+      <button onclick="saveFaq('${f.id}',${i})" style="padding:7px 18px;background:var(--red);color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:13px;font-family:'Noto Sans KR',sans-serif">저장</button>
+    </div>`).join('');
+  el.innerHTML = `
+    ${rows}
+    <div style="border:2px dashed #ddd;border-radius:10px;padding:16px;margin-bottom:12px">
+      <b style="font-size:13px;color:var(--gray)">새 FAQ 추가</b>
+      <input style="${iStyle}margin-top:10px" id="nf_q" placeholder="질문">
+      <textarea style="${iStyle}min-height:80px;resize:vertical" id="nf_a" placeholder="답변"></textarea>
+      <button onclick="addFaq(${faqs.length})" style="padding:7px 18px;background:#1A6B3C;color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:13px;font-family:'Noto Sans KR',sans-serif">추가하기</button>
+    </div>`;
+}
+
+async function saveFaq(id, order) {
+  try {
+    await db.collection('faqs').doc(id).set({
+      q: document.getElementById(`ff_${id}_q`).value.trim(),
+      a: document.getElementById(`ff_${id}_a`).value.trim(),
+      order
+    });
+    alert('저장되었습니다.');
+  } catch(e) { alert('오류: '+e.message); }
+}
+async function deleteFaq(id) {
+  if (!confirm('삭제하시겠습니까?')) return;
+  await db.collection('faqs').doc(id).delete();
+  loadContentFaqs();
+}
+async function addFaq(order) {
+  const q = document.getElementById('nf_q').value.trim();
+  const a = document.getElementById('nf_a').value.trim();
+  if (!q) { alert('질문을 입력해 주세요.'); return; }
+  await db.collection('faqs').add({ q, a, order });
+  loadContentFaqs();
 }
 
 // ─── 관리자 전체 발송 탭 ───

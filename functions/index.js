@@ -186,3 +186,42 @@ exports.verifyEmailOtp = functions.https.onCall(async (data, context) => {
   await docRef.delete();
   return { success: true };
 });
+
+// ─── 상담 신청 알림 이메일 ───
+exports.notifyConsultation = functions
+  .runWith({ secrets: ['GMAIL_USER', 'GMAIL_APP_PASS'] })
+  .https.onCall(async (data, context) => {
+    const { name, phone, age, region, message } = data;
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: { user: process.env.GMAIL_USER, pass: process.env.GMAIL_APP_PASS }
+    });
+
+    try {
+      await transporter.sendMail({
+        from: `"마리 국제결혼" <${process.env.GMAIL_USER}>`,
+        to: process.env.GMAIL_USER,
+        subject: '[마리 국제결혼] 새 무료상담 신청이 접수되었습니다',
+        html: `
+          <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px;border:1px solid #eee;border-radius:12px">
+            <h2 style="color:#C8102E;margin-bottom:4px">마리 국제결혼</h2>
+            <p style="color:#999;font-size:13px;margin-bottom:24px">새 무료상담 신청이 접수되었습니다.</p>
+            <table style="width:100%;border-collapse:collapse;font-size:14px">
+              <tr><td style="padding:10px 8px;color:#999;width:80px">성함</td><td style="padding:10px 8px;font-weight:700">${name}</td></tr>
+              <tr style="background:#f8f8f8"><td style="padding:10px 8px;color:#999">연락처</td><td style="padding:10px 8px;font-weight:700">${phone || '-'}</td></tr>
+              <tr><td style="padding:10px 8px;color:#999">나이</td><td style="padding:10px 8px">${age ? age + '세' : '-'}</td></tr>
+              <tr style="background:#f8f8f8"><td style="padding:10px 8px;color:#999">지역</td><td style="padding:10px 8px">${region || '-'}</td></tr>
+              <tr><td style="padding:10px 8px;color:#999;vertical-align:top">상담내용</td><td style="padding:10px 8px">${(message || '-').replace(/\n/g,'<br>')}</td></tr>
+            </table>
+            <p style="margin-top:24px;color:#aaa;font-size:12px">📅 ${new Date().toLocaleString('ko-KR')}</p>
+          </div>`
+      });
+    } catch (mailErr) {
+      console.error('notifyConsultation mail error:', mailErr.message);
+      throw new functions.https.HttpsError('internal', '알림 발송 오류: ' + mailErr.message);
+    }
+    return { success: true };
+  });
