@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2133 340" width="2133" height="340">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#001A00"/>
+      <stop offset="40%" stop-color="#003800"/>
+      <stop offset="75%" stop-color="#005200"/>
+      <stop offset="100%" stop-color="#006600"/>
+    </linearGradient>
+    <radialGradient id="gl1" cx="74%" cy="45%" r="40%">
+      <stop offset="0%" stop-color="#32CD32" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#001A00" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gl2" cx="16%" cy="58%" r="28%">
+      <stop offset="0%" stop-color="#228B22" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#001A00" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="2133" height="340" fill="url(#g)"/>
+  <rect width="2133" height="340" fill="url(#gl1)"/>
+  <rect width="2133" height="340" fill="url(#gl2)"/>
+  <!-- Stars -->
+  <circle cx="140" cy="36" r="2" fill="#90EE90" opacity="0.5"/><circle cx="460" cy="22" r="2" fill="#FFD700" opacity="0.4"/><circle cx="870" cy="74" r="2" fill="#90EE90" opacity="0.55"/><circle cx="1170" cy="62" r="2" fill="#FFD700" opacity="0.4"/><circle cx="1630" cy="24" r="2" fill="#90EE90" opacity="0.5"/><circle cx="1880" cy="50" r="2" fill="#FFD700" opacity="0.45"/><circle cx="2040" cy="70" r="2" fill="#90EE90" opacity="0.5"/>
+  <circle cx="380" cy="182" r="2" fill="#90EE90" opacity="0.3"/><circle cx="680" cy="200" r="2" fill="#FFD700" opacity="0.35"/><circle cx="980" cy="218" r="2" fill="#90EE90" opacity="0.3"/><circle cx="1280" cy="238" r="2" fill="#FFD700" opacity="0.35"/>
+  <circle cx="300" cy="68" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="730" cy="42" r="1.5" fill="#90EE90" opacity="0.45"/><circle cx="1030" cy="28" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="1480" cy="78" r="1.5" fill="#90EE90" opacity="0.35"/><circle cx="230" cy="255" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="530" cy="245" r="1.5" fill="#90EE90" opacity="0.4"/><circle cx="830" cy="275" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="1730" cy="270" r="1.5" fill="#90EE90" opacity="0.3"/>
+  <circle cx="180" cy="114" r="1" fill="#90EE90" opacity="0.35"/><circle cx="580" cy="154" r="1" fill="#FFD700" opacity="0.3"/><circle cx="1080" cy="154" r="1" fill="#90EE90" opacity="0.3"/><circle cx="1580" cy="202" r="1" fill="#FFD700" opacity="0.3"/>
+  <!-- Lotus flower (left side) -->
+  <g transform="translate(310,175)" opacity="0.16">
+    <!-- Petals: 8 petals around center -->
+    <ellipse cx="0" cy="-38" rx="12" ry="32" fill="#90EE90" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-38" rx="12" ry="32" fill="#98FB98" transform="rotate(45)"/>
+    <ellipse cx="0" cy="-38" rx="12" ry="32" fill="#90EE90" transform="rotate(90)"/>
+    <ellipse cx="0" cy="-38" rx="12" ry="32" fill="#98FB98" transform="rotate(135)"/>
+    <ellipse cx="0" cy="-38" rx="12" ry="32" fill="#90EE90" transform="rotate(180)"/>
+    <ellipse cx="0" cy="-38" rx="12" ry="32" fill="#98FB98" transform="rotate(225)"/>
+    <ellipse cx="0" cy="-38" rx="12" ry="32" fill="#90EE90" transform="rotate(270)"/>
+    <ellipse cx="0" cy="-38" rx="12" ry="32" fill="#98FB98" transform="rotate(315)"/>
+    <!-- Inner petals -->
+    <ellipse cx="0" cy="-22" rx="8" ry="20" fill="#FFD700" transform="rotate(22.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-22" rx="8" ry="20" fill="#FFD700" transform="rotate(67.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-22" rx="8" ry="20" fill="#FFD700" transform="rotate(112.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-22" rx="8" ry="20" fill="#FFD700" transform="rotate(157.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-22" rx="8" ry="20" fill="#FFD700" transform="rotate(202.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-22" rx="8" ry="20" fill="#FFD700" transform="rotate(247.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-22" rx="8" ry="20" fill="#FFD700" transform="rotate(292.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-22" rx="8" ry="20" fill="#FFD700" transform="rotate(337.5)" opacity="0.6"/>
+    <circle cx="0" cy="0" r="14" fill="#FFD700" opacity="0.8"/>
+  </g>
+  <!-- Lotus flower (right side, larger) -->
+  <g transform="translate(1790,170)" opacity="0.15">
+    <ellipse cx="0" cy="-52" rx="16" ry="44" fill="#90EE90" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-52" rx="16" ry="44" fill="#98FB98" transform="rotate(45)"/>
+    <ellipse cx="0" cy="-52" rx="16" ry="44" fill="#90EE90" transform="rotate(90)"/>
+    <ellipse cx="0" cy="-52" rx="16" ry="44" fill="#98FB98" transform="rotate(135)"/>
+    <ellipse cx="0" cy="-52" rx="16" ry="44" fill="#90EE90" transform="rotate(180)"/>
+    <ellipse cx="0" cy="-52" rx="16" ry="44" fill="#98FB98" transform="rotate(225)"/>
+    <ellipse cx="0" cy="-52" rx="16" ry="44" fill="#90EE90" transform="rotate(270)"/>
+    <ellipse cx="0" cy="-52" rx="16" ry="44" fill="#98FB98" transform="rotate(315)"/>
+    <ellipse cx="0" cy="-30" rx="11" ry="28" fill="#FFD700" transform="rotate(22.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-30" rx="11" ry="28" fill="#FFD700" transform="rotate(67.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-30" rx="11" ry="28" fill="#FFD700" transform="rotate(112.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-30" rx="11" ry="28" fill="#FFD700" transform="rotate(157.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-30" rx="11" ry="28" fill="#FFD700" transform="rotate(202.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-30" rx="11" ry="28" fill="#FFD700" transform="rotate(247.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-30" rx="11" ry="28" fill="#FFD700" transform="rotate(292.5)" opacity="0.6"/>
+    <ellipse cx="0" cy="-30" rx="11" ry="28" fill="#FFD700" transform="rotate(337.5)" opacity="0.6"/>
+    <circle cx="0" cy="0" r="20" fill="#FFD700" opacity="0.8"/>
+  </g>
+  <!-- Chopsticks (pair, subtle) -->
+  <g opacity="0.12">
+    <line x1="900" y1="60" x2="1020" y2="300" stroke="#90EE90" stroke-width="4" stroke-linecap="round"/>
+    <line x1="928" y1="60" x2="1048" y2="300" stroke="#90EE90" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <!-- Diamond accents -->
+  <polygon points="580,165 592,149 604,165 592,181" fill="#32CD32" opacity="0.22"/>
+  <polygon points="1250,58 1258,48 1266,58 1258,68" fill="#228B22" opacity="0.28"/>
+  <polygon points="750,285 758,273 766,285 758,297" fill="#32CD32" opacity="0.2"/>
+  <polygon points="1500,292 1508,280 1516,292 1508,304" fill="#228B22" opacity="0.18"/>
+  <!-- Accent lines -->
+  <line x1="0" y1="338" x2="2133" y2="338" stroke="#32CD32" stroke-width="1.5" opacity="0.35"/>
+  <line x1="0" y1="2" x2="2133" y2="2" stroke="#32CD32" stroke-width="1" opacity="0.15"/>
+</svg>

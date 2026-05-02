@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2133 340" width="2133" height="340">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A0A1E"/>
+      <stop offset="40%" stop-color="#14143D"/>
+      <stop offset="75%" stop-color="#1E0A32"/>
+      <stop offset="100%" stop-color="#2A0A4A"/>
+    </linearGradient>
+    <radialGradient id="gl1" cx="74%" cy="46%" r="40%">
+      <stop offset="0%" stop-color="#7B2FBE" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#0A0A1E" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gl2" cx="18%" cy="58%" r="30%">
+      <stop offset="0%" stop-color="#4A0E8F" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0A0A1E" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="2133" height="340" fill="url(#g)"/>
+  <rect width="2133" height="340" fill="url(#gl1)"/>
+  <rect width="2133" height="340" fill="url(#gl2)"/>
+  <!-- Stars -->
+  <circle cx="120" cy="40" r="2" fill="#C8A0FF" opacity="0.5"/><circle cx="350" cy="25" r="2" fill="#FFD700" opacity="0.4"/><circle cx="680" cy="70" r="2" fill="#C8A0FF" opacity="0.55"/><circle cx="950" cy="35" r="2" fill="#FFD700" opacity="0.45"/><circle cx="1280" cy="60" r="2" fill="#C8A0FF" opacity="0.4"/><circle cx="1580" cy="30" r="2" fill="#FFD700" opacity="0.5"/><circle cx="1900" cy="55" r="2" fill="#C8A0FF" opacity="0.45"/><circle cx="2080" cy="40" r="2" fill="#FFD700" opacity="0.4"/>
+  <circle cx="200" cy="190" r="2" fill="#C8A0FF" opacity="0.3"/><circle cx="520" cy="215" r="2" fill="#FFD700" opacity="0.35"/><circle cx="820" cy="240" r="2" fill="#C8A0FF" opacity="0.3"/><circle cx="1120" cy="200" r="2" fill="#FFD700" opacity="0.35"/><circle cx="1420" cy="230" r="2" fill="#C8A0FF" opacity="0.3"/>
+  <circle cx="420" cy="80" r="1.5" fill="#C8A0FF" opacity="0.4"/><circle cx="760" cy="50" r="1.5" fill="#FFD700" opacity="0.45"/><circle cx="1100" cy="85" r="1.5" fill="#C8A0FF" opacity="0.4"/><circle cx="1450" cy="45" r="1.5" fill="#FFD700" opacity="0.35"/><circle cx="300" cy="270" r="1.5" fill="#C8A0FF" opacity="0.3"/><circle cx="650" cy="285" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="980" cy="295" r="1.5" fill="#C8A0FF" opacity="0.25"/><circle cx="1800" cy="275" r="1.5" fill="#FFD700" opacity="0.3"/>
+  <circle cx="100" cy="160" r="1" fill="#C8A0FF" opacity="0.35"/><circle cx="450" cy="150" r="1" fill="#FFD700" opacity="0.3"/><circle cx="780" cy="130" r="1" fill="#C8A0FF" opacity="0.3"/><circle cx="1350" cy="170" r="1" fill="#FFD700" opacity="0.3"/><circle cx="1900" cy="140" r="1" fill="#C8A0FF" opacity="0.35"/><circle cx="2050" cy="200" r="1" fill="#FFD700" opacity="0.3"/>
+  <!-- Constellation connecting lines -->
+  <line x1="120" y1="40" x2="350" y2="25" stroke="#C8A0FF" stroke-width="0.5" opacity="0.12"/>
+  <line x1="350" y1="25" x2="680" y2="70" stroke="#C8A0FF" stroke-width="0.5" opacity="0.12"/>
+  <line x1="680" y1="70" x2="950" y2="35" stroke="#C8A0FF" stroke-width="0.5" opacity="0.12"/>
+  <line x1="950" y1="35" x2="1280" y2="60" stroke="#C8A0FF" stroke-width="0.5" opacity="0.12"/>
+  <line x1="1280" y1="60" x2="1580" y2="30" stroke="#C8A0FF" stroke-width="0.5" opacity="0.12"/>
+  <line x1="1580" y1="30" x2="1900" y2="55" stroke="#C8A0FF" stroke-width="0.5" opacity="0.12"/>
+  <!-- Person silhouettes (couple, left side) -->
+  <circle cx="330" cy="138" r="30" fill="none" stroke="#9B59B6" stroke-width="2" opacity="0.2"/>
+  <path d="M 282,205 Q 330,168 378,205" fill="none" stroke="#9B59B6" stroke-width="2" opacity="0.16"/>
+  <circle cx="408" cy="132" r="30" fill="none" stroke="#7B2FBE" stroke-width="2" opacity="0.2"/>
+  <path d="M 360,200 Q 408,163 456,200" fill="none" stroke="#7B2FBE" stroke-width="2" opacity="0.16"/>
+  <!-- Overlapping Venn circles (two people meeting — right side) -->
+  <circle cx="1680" cy="170" r="112" fill="none" stroke="#7B2FBE" stroke-width="22" opacity="0.18"/>
+  <circle cx="1680" cy="170" r="124" fill="none" stroke="#C8A0FF" stroke-width="1.2" opacity="0.1"/>
+  <circle cx="1680" cy="170" r="102" fill="#7B2FBE" opacity="0.04"/>
+  <circle cx="1858" cy="170" r="112" fill="none" stroke="#9B59B6" stroke-width="22" opacity="0.18"/>
+  <circle cx="1858" cy="170" r="124" fill="none" stroke="#C8A0FF" stroke-width="1.2" opacity="0.1"/>
+  <circle cx="1858" cy="170" r="102" fill="#9B59B6" opacity="0.04"/>
+  <!-- Diamond accents -->
+  <polygon points="600,162 612,146 624,162 612,178" fill="#9B59B6" opacity="0.25"/>
+  <polygon points="1050,55 1058,45 1066,55 1058,65" fill="#7B2FBE" opacity="0.3"/>
+  <polygon points="800,285 808,273 816,285 808,297" fill="#9B59B6" opacity="0.22"/>
+  <polygon points="1500,290 1508,278 1516,290 1508,302" fill="#7B2FBE" opacity="0.2"/>
+  <!-- Accent lines -->
+  <line x1="0" y1="338" x2="2133" y2="338" stroke="#9B59B6" stroke-width="1.5" opacity="0.35"/>
+  <line x1="0" y1="2" x2="2133" y2="2" stroke="#9B59B6" stroke-width="1" opacity="0.15"/>
+</svg>

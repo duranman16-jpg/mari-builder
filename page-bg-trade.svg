@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2133 340" width="2133" height="340">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A0D00"/>
+      <stop offset="40%" stop-color="#3D1A00"/>
+      <stop offset="75%" stop-color="#5C2800"/>
+      <stop offset="100%" stop-color="#7A3800"/>
+    </linearGradient>
+    <radialGradient id="gl1" cx="75%" cy="44%" r="40%">
+      <stop offset="0%" stop-color="#CD7F32" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#1A0D00" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gl2" cx="17%" cy="58%" r="28%">
+      <stop offset="0%" stop-color="#B8860B" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#1A0D00" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="2133" height="340" fill="url(#g)"/>
+  <rect width="2133" height="340" fill="url(#gl1)"/>
+  <rect width="2133" height="340" fill="url(#gl2)"/>
+  <!-- Stars -->
+  <circle cx="148" cy="38" r="2" fill="#CD7F32" opacity="0.5"/><circle cx="468" cy="24" r="2" fill="#FFD700" opacity="0.4"/><circle cx="878" cy="76" r="2" fill="#CD7F32" opacity="0.55"/><circle cx="1178" cy="65" r="2" fill="#FFD700" opacity="0.4"/><circle cx="1638" cy="26" r="2" fill="#CD7F32" opacity="0.5"/><circle cx="1888" cy="52" r="2" fill="#FFD700" opacity="0.45"/><circle cx="2048" cy="72" r="2" fill="#CD7F32" opacity="0.5"/>
+  <circle cx="388" cy="185" r="2" fill="#CD7F32" opacity="0.3"/><circle cx="688" cy="204" r="2" fill="#FFD700" opacity="0.35"/><circle cx="988" cy="222" r="2" fill="#CD7F32" opacity="0.3"/><circle cx="1288" cy="242" r="2" fill="#FFD700" opacity="0.35"/>
+  <circle cx="308" cy="72" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="738" cy="46" r="1.5" fill="#CD7F32" opacity="0.45"/><circle cx="1038" cy="32" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="1488" cy="82" r="1.5" fill="#CD7F32" opacity="0.35"/><circle cx="238" cy="260" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="538" cy="250" r="1.5" fill="#CD7F32" opacity="0.4"/><circle cx="838" cy="280" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="1738" cy="276" r="1.5" fill="#CD7F32" opacity="0.3"/>
+  <circle cx="188" cy="118" r="1" fill="#CD7F32" opacity="0.35"/><circle cx="588" cy="158" r="1" fill="#FFD700" opacity="0.3"/><circle cx="1088" cy="158" r="1" fill="#CD7F32" opacity="0.3"/><circle cx="1588" cy="206" r="1" fill="#FFD700" opacity="0.3"/>
+  <!-- Exchange arrows symbol (left side) -->
+  <g transform="translate(310,170)" opacity="0.18" fill="none" stroke="#CD7F32" stroke-width="3" stroke-linecap="round">
+    <!-- Top arc arrow (left to right) -->
+    <path d="M -70,-22 A 75,55 0 0,1 70,-22"/>
+    <polygon points="70,-22 56,-38 84,-38" fill="#CD7F32" stroke="none"/>
+    <!-- Bottom arc arrow (right to left) -->
+    <path d="M 70,22 A 75,55 0 0,1 -70,22"/>
+    <polygon points="-70,22 -56,38 -84,38" fill="#CD7F32" stroke="none"/>
+  </g>
+  <!-- Large exchange arrows (right side) -->
+  <g transform="translate(1790,170)" opacity="0.18" fill="none" stroke="#B8860B" stroke-width="4" stroke-linecap="round">
+    <path d="M -100,-30 A 108,78 0 0,1 100,-30"/>
+    <polygon points="100,-30 82,-50 118,-50" fill="#B8860B" stroke="none"/>
+    <path d="M 100,30 A 108,78 0 0,1 -100,30"/>
+    <polygon points="-100,30 -82,50 -118,50" fill="#B8860B" stroke="none"/>
+  </g>
+  <!-- Circular rings (coins/medallions) -->
+  <circle cx="780" cy="170" r="80" fill="none" stroke="#CD7F32" stroke-width="18" opacity="0.16"/>
+  <circle cx="780" cy="170" r="90" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.1"/>
+  <circle cx="780" cy="170" r="68" fill="#CD7F32" opacity="0.04"/>
+  <circle cx="1050" cy="170" r="80" fill="none" stroke="#B8860B" stroke-width="18" opacity="0.16"/>
+  <circle cx="1050" cy="170" r="90" fill="none" stroke="#FFD700" stroke-width="1" opacity="0.1"/>
+  <circle cx="1050" cy="170" r="68" fill="#B8860B" opacity="0.04"/>
+  <!-- Small coin -->
+  <circle cx="580" cy="210" r="45" fill="none" stroke="#CD7F32" stroke-width="10" opacity="0.14"/>
+  <!-- Diamond accents -->
+  <polygon points="490,162 502,146 514,162 502,178" fill="#CD7F32" opacity="0.25"/>
+  <polygon points="1260,58 1268,48 1276,58 1268,68" fill="#B8860B" opacity="0.28"/>
+  <polygon points="680,285 688,273 696,285 688,297" fill="#CD7F32" opacity="0.2"/>
+  <polygon points="1480,292 1488,280 1496,292 1488,304" fill="#B8860B" opacity="0.18"/>
+  <!-- Accent lines -->
+  <line x1="0" y1="338" x2="2133" y2="338" stroke="#CD7F32" stroke-width="1.5" opacity="0.35"/>
+  <line x1="0" y1="2" x2="2133" y2="2" stroke="#CD7F32" stroke-width="1" opacity="0.15"/>
+</svg>

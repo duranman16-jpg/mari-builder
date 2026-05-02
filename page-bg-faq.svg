@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2133 340" width="2133" height="340">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#001A1A"/>
+      <stop offset="40%" stop-color="#003D3D"/>
+      <stop offset="75%" stop-color="#005055"/>
+      <stop offset="100%" stop-color="#006A6A"/>
+    </linearGradient>
+    <radialGradient id="gl1" cx="76%" cy="44%" r="38%">
+      <stop offset="0%" stop-color="#00CED1" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#001A1A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gl2" cx="16%" cy="60%" r="28%">
+      <stop offset="0%" stop-color="#008080" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#001A1A" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="2133" height="340" fill="url(#g)"/>
+  <rect width="2133" height="340" fill="url(#gl1)"/>
+  <rect width="2133" height="340" fill="url(#gl2)"/>
+  <!-- Stars -->
+  <circle cx="140" cy="38" r="2" fill="#00CED1" opacity="0.5"/><circle cx="460" cy="25" r="2" fill="#FFD700" opacity="0.4"/><circle cx="880" cy="80" r="2" fill="#00CED1" opacity="0.55"/><circle cx="1180" cy="70" r="2" fill="#FFD700" opacity="0.4"/><circle cx="1640" cy="30" r="2" fill="#00CED1" opacity="0.5"/><circle cx="1890" cy="55" r="2" fill="#FFD700" opacity="0.45"/><circle cx="2040" cy="75" r="2" fill="#00CED1" opacity="0.5"/>
+  <circle cx="390" cy="182" r="2" fill="#00CED1" opacity="0.3"/><circle cx="690" cy="202" r="2" fill="#FFD700" opacity="0.35"/><circle cx="990" cy="222" r="2" fill="#00CED1" opacity="0.3"/><circle cx="1290" cy="242" r="2" fill="#FFD700" opacity="0.35"/>
+  <circle cx="310" cy="75" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="740" cy="48" r="1.5" fill="#00CED1" opacity="0.45"/><circle cx="1040" cy="35" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="1490" cy="85" r="1.5" fill="#00CED1" opacity="0.35"/><circle cx="240" cy="262" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="540" cy="252" r="1.5" fill="#00CED1" opacity="0.4"/><circle cx="840" cy="282" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="1740" cy="278" r="1.5" fill="#00CED1" opacity="0.3"/>
+  <circle cx="190" cy="120" r="1" fill="#00CED1" opacity="0.35"/><circle cx="590" cy="160" r="1" fill="#FFD700" opacity="0.3"/><circle cx="1090" cy="160" r="1" fill="#00CED1" opacity="0.3"/><circle cx="1590" cy="208" r="1" fill="#FFD700" opacity="0.3"/><circle cx="2090" cy="148" r="1" fill="#00CED1" opacity="0.35"/>
+  <!-- Large decorative question marks (text-based, very subtle) -->
+  <text x="220" y="230" font-size="180" font-family="Georgia, serif" font-weight="700" fill="#00CED1" opacity="0.07" transform="rotate(-12,220,230)">?</text>
+  <text x="800" y="260" font-size="140" font-family="Georgia, serif" font-weight="700" fill="#00A0A0" opacity="0.07" transform="rotate(8,800,260)">?</text>
+  <text x="1400" y="240" font-size="160" font-family="Georgia, serif" font-weight="700" fill="#00CED1" opacity="0.06" transform="rotate(-6,1400,240)">?</text>
+  <text x="1900" y="250" font-size="130" font-family="Georgia, serif" font-weight="700" fill="#00A0A0" opacity="0.07" transform="rotate(10,1900,250)">?</text>
+  <!-- Speech bubble outlines (FAQ chat bubbles) -->
+  <rect x="90" y="80" width="160" height="80" rx="14" ry="14" fill="none" stroke="#00CED1" stroke-width="1.5" opacity="0.14"/>
+  <polygon points="110,160 130,160 110,182" fill="none" stroke="#00CED1" stroke-width="1.5" opacity="0.14"/>
+  <rect x="1820" y="90" width="180" height="85" rx="14" ry="14" fill="none" stroke="#00CED1" stroke-width="1.5" opacity="0.14"/>
+  <polygon points="1980,175 2000,175 2000,198" fill="none" stroke="#00CED1" stroke-width="1.5" opacity="0.14"/>
+  <!-- Diamond accents -->
+  <polygon points="600,165 612,149 624,165 612,181" fill="#00CED1" opacity="0.22"/>
+  <polygon points="1380,58 1388,48 1396,58 1388,68" fill="#008080" opacity="0.28"/>
+  <polygon points="700,282 708,270 716,282 708,294" fill="#00CED1" opacity="0.2"/>
+  <polygon points="1540,292 1548,280 1556,292 1548,304" fill="#008080" opacity="0.18"/>
+  <!-- Accent lines -->
+  <line x1="0" y1="338" x2="2133" y2="338" stroke="#00CED1" stroke-width="1.5" opacity="0.35"/>
+  <line x1="0" y1="2" x2="2133" y2="2" stroke="#00CED1" stroke-width="1" opacity="0.15"/>
+</svg>

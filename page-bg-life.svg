@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2133 340" width="2133" height="340">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A0E00"/>
+      <stop offset="40%" stop-color="#3D2000"/>
+      <stop offset="75%" stop-color="#5C3000"/>
+      <stop offset="100%" stop-color="#7A4200"/>
+    </linearGradient>
+    <radialGradient id="gl1" cx="74%" cy="45%" r="42%">
+      <stop offset="0%" stop-color="#FFA500" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#1A0E00" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gl2" cx="16%" cy="58%" r="28%">
+      <stop offset="0%" stop-color="#D2691E" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#1A0E00" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="2133" height="340" fill="url(#g)"/>
+  <rect width="2133" height="340" fill="url(#gl1)"/>
+  <rect width="2133" height="340" fill="url(#gl2)"/>
+  <!-- Stars -->
+  <circle cx="150" cy="40" r="2" fill="#FFD700" opacity="0.55"/><circle cx="470" cy="26" r="2" fill="#FFA500" opacity="0.4"/><circle cx="880" cy="78" r="2" fill="#FFD700" opacity="0.6"/><circle cx="1180" cy="68" r="2" fill="#FFA500" opacity="0.4"/><circle cx="1640" cy="28" r="2" fill="#FFD700" opacity="0.5"/><circle cx="1890" cy="56" r="2" fill="#FFA500" opacity="0.45"/><circle cx="2050" cy="76" r="2" fill="#FFD700" opacity="0.5"/>
+  <circle cx="390" cy="186" r="2" fill="#FFA500" opacity="0.3"/><circle cx="690" cy="205" r="2" fill="#FFD700" opacity="0.35"/><circle cx="990" cy="225" r="2" fill="#FFA500" opacity="0.3"/><circle cx="1290" cy="245" r="2" fill="#FFD700" opacity="0.35"/>
+  <circle cx="310" cy="74" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="740" cy="48" r="1.5" fill="#FFA500" opacity="0.45"/><circle cx="1040" cy="34" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="1490" cy="84" r="1.5" fill="#FFA500" opacity="0.35"/><circle cx="240" cy="264" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="540" cy="254" r="1.5" fill="#FFA500" opacity="0.4"/><circle cx="840" cy="284" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="1740" cy="280" r="1.5" fill="#FFA500" opacity="0.3"/>
+  <circle cx="190" cy="120" r="1" fill="#FFD700" opacity="0.35"/><circle cx="590" cy="162" r="1" fill="#FFA500" opacity="0.3"/><circle cx="1090" cy="162" r="1" fill="#FFD700" opacity="0.3"/><circle cx="1590" cy="210" r="1" fill="#FFA500" opacity="0.3"/>
+  <!-- House silhouette (left area) -->
+  <g transform="translate(320,165)" opacity="0.16">
+    <!-- Roof -->
+    <polygon points="-55,0 0,-52 55,0" fill="none" stroke="#FFA500" stroke-width="2.5"/>
+    <!-- Chimney -->
+    <rect x="18" y="-62" width="14" height="26" fill="none" stroke="#FFA500" stroke-width="2"/>
+    <!-- Body -->
+    <rect x="-42" y="0" width="84" height="68" fill="none" stroke="#FFA500" stroke-width="2.5"/>
+    <!-- Door -->
+    <rect x="-12" y="30" width="24" height="38" fill="none" stroke="#FFA500" stroke-width="1.5"/>
+    <!-- Windows -->
+    <rect x="-36" y="10" width="20" height="18" fill="none" stroke="#FFA500" stroke-width="1.5"/>
+    <rect x="16" y="10" width="20" height="18" fill="none" stroke="#FFA500" stroke-width="1.5"/>
+  </g>
+  <!-- Flower decoration (right of house) -->
+  <g transform="translate(520,180)" opacity="0.14">
+    <ellipse cx="0" cy="-20" rx="9" ry="22" fill="#FFD700" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-20" rx="9" ry="22" fill="#FFD700" transform="rotate(60)"/>
+    <ellipse cx="0" cy="-20" rx="9" ry="22" fill="#FFD700" transform="rotate(120)"/>
+    <ellipse cx="0" cy="-20" rx="9" ry="22" fill="#FFA500" transform="rotate(180)"/>
+    <ellipse cx="0" cy="-20" rx="9" ry="22" fill="#FFA500" transform="rotate(240)"/>
+    <ellipse cx="0" cy="-20" rx="9" ry="22" fill="#FFA500" transform="rotate(300)"/>
+    <circle cx="0" cy="0" r="10" fill="#FFD700"/>
+  </g>
+  <!-- Large house outline (right side) -->
+  <g transform="translate(1770,170)" opacity="0.14">
+    <polygon points="-100,0 0,-90 100,0" fill="none" stroke="#FFA500" stroke-width="3"/>
+    <rect x="-20" y="-108" width="24" height="44" fill="none" stroke="#FFA500" stroke-width="2"/>
+    <rect x="-78" y="0" width="156" height="115" fill="none" stroke="#FFA500" stroke-width="3"/>
+    <rect x="-22" y="52" width="44" height="63" fill="none" stroke="#FFA500" stroke-width="2"/>
+    <rect x="-64" y="14" width="36" height="30" fill="none" stroke="#FFA500" stroke-width="1.8"/>
+    <rect x="28" y="14" width="36" height="30" fill="none" stroke="#FFA500" stroke-width="1.8"/>
+  </g>
+  <!-- Small flower (far left) -->
+  <g transform="translate(120,190)" opacity="0.12">
+    <ellipse cx="0" cy="-14" rx="6" ry="16" fill="#FFD700" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-14" rx="6" ry="16" fill="#FFD700" transform="rotate(60)"/>
+    <ellipse cx="0" cy="-14" rx="6" ry="16" fill="#FFD700" transform="rotate(120)"/>
+    <ellipse cx="0" cy="-14" rx="6" ry="16" fill="#FFA500" transform="rotate(180)"/>
+    <ellipse cx="0" cy="-14" rx="6" ry="16" fill="#FFA500" transform="rotate(240)"/>
+    <ellipse cx="0" cy="-14" rx="6" ry="16" fill="#FFA500" transform="rotate(300)"/>
+    <circle cx="0" cy="0" r="7" fill="#FFD700"/>
+  </g>
+  <!-- Diamond accents -->
+  <polygon points="700,165 712,149 724,165 712,181" fill="#FFA500" opacity="0.25"/>
+  <polygon points="1200,58 1208,48 1216,58 1208,68" fill="#D2691E" opacity="0.28"/>
+  <polygon points="900,285 908,273 916,285 908,297" fill="#FFA500" opacity="0.2"/>
+  <polygon points="1550,292 1558,280 1566,292 1558,304" fill="#D2691E" opacity="0.18"/>
+  <!-- Accent lines -->
+  <line x1="0" y1="338" x2="2133" y2="338" stroke="#FFA500" stroke-width="1.5" opacity="0.35"/>
+  <line x1="0" y1="2" x2="2133" y2="2" stroke="#FFA500" stroke-width="1" opacity="0.15"/>
+</svg>

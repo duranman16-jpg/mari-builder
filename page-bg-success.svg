@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2133 340" width="2133" height="340">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A0000"/>
+      <stop offset="40%" stop-color="#3D0000"/>
+      <stop offset="75%" stop-color="#6B0018"/>
+      <stop offset="100%" stop-color="#8B0030"/>
+    </linearGradient>
+    <radialGradient id="gl1" cx="72%" cy="48%" r="40%">
+      <stop offset="0%" stop-color="#FF69B4" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#1A0000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gl2" cx="18%" cy="56%" r="30%">
+      <stop offset="0%" stop-color="#C8102E" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#1A0000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="2133" height="340" fill="url(#g)"/>
+  <rect width="2133" height="340" fill="url(#gl1)"/>
+  <rect width="2133" height="340" fill="url(#gl2)"/>
+  <!-- Stars -->
+  <circle cx="150" cy="42" r="2" fill="#FFD700" opacity="0.55"/><circle cx="480" cy="28" r="2" fill="#FFB6C1" opacity="0.4"/><circle cx="900" cy="82" r="2" fill="#FFD700" opacity="0.6"/><circle cx="1200" cy="72" r="2" fill="#FFB6C1" opacity="0.4"/><circle cx="1650" cy="32" r="2" fill="#FFD700" opacity="0.5"/><circle cx="1900" cy="58" r="2" fill="#FFB6C1" opacity="0.45"/><circle cx="2050" cy="78" r="2" fill="#FFD700" opacity="0.5"/>
+  <circle cx="400" cy="188" r="2" fill="#FFB6C1" opacity="0.3"/><circle cx="700" cy="208" r="2" fill="#FFD700" opacity="0.35"/><circle cx="1000" cy="228" r="2" fill="#FFB6C1" opacity="0.3"/><circle cx="1300" cy="248" r="2" fill="#FFD700" opacity="0.35"/>
+  <circle cx="320" cy="78" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="750" cy="52" r="1.5" fill="#FFB6C1" opacity="0.45"/><circle cx="1050" cy="38" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="1500" cy="88" r="1.5" fill="#FFB6C1" opacity="0.35"/><circle cx="250" cy="268" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="550" cy="258" r="1.5" fill="#FFB6C1" opacity="0.4"/><circle cx="850" cy="288" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="1750" cy="282" r="1.5" fill="#FFB6C1" opacity="0.3"/>
+  <circle cx="200" cy="122" r="1" fill="#FFD700" opacity="0.35"/><circle cx="600" cy="162" r="1" fill="#FFB6C1" opacity="0.3"/><circle cx="1100" cy="162" r="1" fill="#FFD700" opacity="0.3"/><circle cx="1600" cy="212" r="1" fill="#FFB6C1" opacity="0.3"/><circle cx="2100" cy="152" r="1" fill="#FFD700" opacity="0.35"/>
+  <!-- Heart decorations -->
+  <g transform="translate(260,172)" opacity="0.14">
+    <path d="M 0,-22 C 4,-38 28,-38 28,-22 C 28,-6 14,10 0,28 C -14,10 -28,-6 -28,-22 C -28,-38 -4,-38 0,-22 Z" fill="#FF69B4" transform="scale(2.2)"/>
+  </g>
+  <g transform="translate(560,200)" opacity="0.1">
+    <path d="M 0,-22 C 4,-38 28,-38 28,-22 C 28,-6 14,10 0,28 C -14,10 -28,-6 -28,-22 C -28,-38 -4,-38 0,-22 Z" fill="#FF1493" transform="scale(1.4)"/>
+  </g>
+  <g transform="translate(1050,155)" opacity="0.12">
+    <path d="M 0,-22 C 4,-38 28,-38 28,-22 C 28,-6 14,10 0,28 C -14,10 -28,-6 -28,-22 C -28,-38 -4,-38 0,-22 Z" fill="#FF69B4" transform="scale(1.8)"/>
+  </g>
+  <g transform="translate(1450,200)" opacity="0.1">
+    <path d="M 0,-22 C 4,-38 28,-38 28,-22 C 28,-6 14,10 0,28 C -14,10 -28,-6 -28,-22 C -28,-38 -4,-38 0,-22 Z" fill="#FF1493" transform="scale(1.2)"/>
+  </g>
+  <!-- Large heart right side -->
+  <g transform="translate(1780,170)" opacity="0.15">
+    <path d="M 0,-22 C 4,-38 28,-38 28,-22 C 28,-6 14,10 0,28 C -14,10 -28,-6 -28,-22 C -28,-38 -4,-38 0,-22 Z" fill="#FF69B4" transform="scale(3.5)"/>
+  </g>
+  <!-- Small sparkle stars -->
+  <path d="M 880,50 L 884,60 L 894,64 L 884,68 L 880,78 L 876,68 L 866,64 L 876,60 Z" fill="#FFD700" opacity="0.3"/>
+  <path d="M 1600,100 L 1603,108 L 1611,111 L 1603,114 L 1600,122 L 1597,114 L 1589,111 L 1597,108 Z" fill="#FFD700" opacity="0.25"/>
+  <!-- Diamond accents -->
+  <polygon points="300,172 312,156 324,172 312,188" fill="#FF69B4" opacity="0.22"/>
+  <polygon points="1400,62 1408,52 1416,62 1408,72" fill="#FF1493" opacity="0.28"/>
+  <polygon points="700,285 708,273 716,285 708,297" fill="#FF69B4" opacity="0.2"/>
+  <!-- Accent lines -->
+  <line x1="0" y1="338" x2="2133" y2="338" stroke="#FF69B4" stroke-width="1.5" opacity="0.35"/>
+  <line x1="0" y1="2" x2="2133" y2="2" stroke="#FF69B4" stroke-width="1" opacity="0.15"/>
+</svg>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2133 340" width="2133" height="340">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A0505"/>
+      <stop offset="40%" stop-color="#3D0B0B"/>
+      <stop offset="75%" stop-color="#6B1200"/>
+      <stop offset="100%" stop-color="#8B2500"/>
+    </linearGradient>
+    <radialGradient id="gl1" cx="78%" cy="48%" r="42%">
+      <stop offset="0%" stop-color="#B8860B" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#1A0505" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gl2" cx="15%" cy="55%" r="28%">
+      <stop offset="0%" stop-color="#C8102E" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#1A0505" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="2133" height="340" fill="url(#g)"/>
+  <rect width="2133" height="340" fill="url(#gl1)"/>
+  <rect width="2133" height="340" fill="url(#gl2)"/>
+  <!-- Stars -->
+  <circle cx="150" cy="45" r="2" fill="#FFD700" opacity="0.55"/><circle cx="480" cy="30" r="2" fill="#FFD700" opacity="0.4"/><circle cx="900" cy="85" r="2" fill="#FFD700" opacity="0.6"/><circle cx="1200" cy="75" r="2" fill="#FFD700" opacity="0.4"/><circle cx="1650" cy="35" r="2" fill="#FFD700" opacity="0.5"/><circle cx="1900" cy="60" r="2" fill="#FFD700" opacity="0.4"/><circle cx="2050" cy="80" r="2" fill="#FFD700" opacity="0.5"/><circle cx="400" cy="185" r="2" fill="#FFD700" opacity="0.3"/><circle cx="700" cy="205" r="2" fill="#FFD700" opacity="0.4"/><circle cx="1000" cy="225" r="2" fill="#FFD700" opacity="0.3"/><circle cx="1300" cy="245" r="2" fill="#FFD700" opacity="0.4"/><circle cx="100" cy="285" r="2" fill="#FFD700" opacity="0.3"/>
+  <circle cx="320" cy="80" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="750" cy="55" r="1.5" fill="#FFD700" opacity="0.5"/><circle cx="1050" cy="40" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="1500" cy="90" r="1.5" fill="#FFD700" opacity="0.35"/><circle cx="250" cy="265" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="550" cy="255" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="850" cy="285" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="1150" cy="295" r="1.5" fill="#FFD700" opacity="0.4"/><circle cx="1750" cy="285" r="1.5" fill="#FFD700" opacity="0.3"/><circle cx="2000" cy="225" r="1.5" fill="#FFD700" opacity="0.4"/>
+  <circle cx="200" cy="125" r="1" fill="#FFD700" opacity="0.35"/><circle cx="600" cy="165" r="1" fill="#FFD700" opacity="0.3"/><circle cx="800" cy="40" r="1" fill="#FFD700" opacity="0.4"/><circle cx="1100" cy="165" r="1" fill="#FFD700" opacity="0.3"/><circle cx="1600" cy="215" r="1" fill="#FFD700" opacity="0.3"/><circle cx="2100" cy="155" r="1" fill="#FFD700" opacity="0.35"/><circle cx="50" cy="145" r="1" fill="#FFD700" opacity="0.3"/><circle cx="450" cy="315" r="1" fill="#FFD700" opacity="0.25"/><circle cx="950" cy="305" r="1" fill="#FFD700" opacity="0.25"/><circle cx="1700" cy="315" r="1" fill="#FFD700" opacity="0.25"/>
+  <!-- Wedding Rings -->
+  <circle cx="1695" cy="175" r="115" fill="none" stroke="#B8860B" stroke-width="24" opacity="0.2"/>
+  <circle cx="1695" cy="175" r="126" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.12"/>
+  <circle cx="1695" cy="175" r="105" fill="#B8860B" opacity="0.04"/>
+  <circle cx="1875" cy="175" r="115" fill="none" stroke="#B8860B" stroke-width="24" opacity="0.2"/>
+  <circle cx="1875" cy="175" r="126" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.12"/>
+  <circle cx="1875" cy="175" r="105" fill="#B8860B" opacity="0.04"/>
+  <!-- Diamond accents -->
+  <polygon points="300,170 312,154 324,170 312,186" fill="#B8860B" opacity="0.22"/>
+  <polygon points="1400,62 1408,52 1416,62 1408,72" fill="#B8860B" opacity="0.28"/>
+  <polygon points="600,285 608,273 616,285 608,297" fill="#B8860B" opacity="0.2"/>
+  <polygon points="1550,295 1558,283 1566,295 1558,307" fill="#B8860B" opacity="0.18"/>
+  <!-- Thin horizontal accents -->
+  <line x1="0" y1="338" x2="2133" y2="338" stroke="#B8860B" stroke-width="1.5" opacity="0.35"/>
+  <line x1="0" y1="2" x2="2133" y2="2" stroke="#B8860B" stroke-width="1" opacity="0.15"/>
+</svg>
