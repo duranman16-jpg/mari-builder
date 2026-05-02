@@ -1884,13 +1884,14 @@ function safeUser(u) {
 let currentPage = '';
 
 function navigate(page) {
+  window.scrollTo({top: 0, behavior: 'smooth'});
   history.pushState({page}, '', '#' + page);
   showPage(page);
   document.getElementById('navLinks').classList.remove('open');
 }
 
 function showPage(page) {
-  if (currentPage === page) return;
+  if (currentPage === page) { window.scrollTo({top: 0, behavior: 'smooth'}); return; }
   currentPage = page;
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
