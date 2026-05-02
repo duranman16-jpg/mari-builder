@@ -1949,9 +1949,23 @@ html.mobile-view .float-btn span{display:none !important}
     <h3>쪽지 쓰기</h3>
     <div class="form-group" style="margin-top:16px">
       <label class="form-label">받는 회원</label>
-      <select class="auth-input" id="msgTo">
-        <option value="">-- 받는 회원 선택 --</option>
-      </select>
+      <div style="position:relative">
+        <input type="text" class="auth-input" id="msgToSearch"
+               placeholder="아이디 또는 이름으로 검색..."
+               autocomplete="off"
+               oninput="searchMsgRecipient(this.value)"
+               onfocus="searchMsgRecipient(this.value)"
+               onblur="setTimeout(()=>{ document.getElementById('msgToResults').style.display='none'; },200)"
+               style="margin-bottom:0">
+        <div id="msgToResults" style="display:none;position:absolute;top:calc(100% + 2px);left:0;right:0;background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.12);max-height:220px;overflow-y:auto;z-index:500"></div>
+      </div>
+      <div id="msgToSelected" style="display:none;margin-top:8px;padding:9px 14px;background:#fff8f0;border:1.5px solid rgba(200,16,46,0.2);border-radius:8px;align-items:center;gap:10px">
+        <span style="font-size:15px">💌</span>
+        <span id="msgToSelectedText" style="flex:1;font-size:14px;font-weight:700;color:var(--dark)"></span>
+        <button type="button" onclick="clearMsgRecipient()" style="background:none;border:none;cursor:pointer;color:#aaa;font-size:18px;line-height:1;padding:0" title="다시 선택">✕</button>
+      </div>
+      <input type="hidden" id="msgToEmail">
+      <input type="hidden" id="msgToName">
     </div>
     <div class="form-group"><label class="form-label">제목</label><input type="text" class="auth-input" id="msgSubject" placeholder="제목을 입력하세요"></div>
     <div class="form-group"><label class="form-label">내용</label><textarea class="auth-input" id="msgBody" placeholder="쪽지 내용을 입력하세요..." style="min-height:120px;resize:vertical"></textarea></div>
@@ -3033,6 +3047,7 @@ async function submitDeleteAccount() {
 function logout() {
   cleanupMsgListener();
   currentUser = null;
+  _msgAllUsers = null;
   localStorage.removeItem('maryUser');
   sessionStorage.removeItem('maryAdminSecret');
   updateAuthUI();
@@ -4642,35 +4657,96 @@ function deleteMsg(msgId, tab) {
 function closeMsgDetail(e) { if (e.target.id === 'msgDetailModal') document.getElementById('msgDetailModal').classList.remove('open'); }
 function closeComposeMsg(e) { if (e.target.id === 'composeMsgModal') document.getElementById('composeMsgModal').classList.remove('open'); }
 
+let _msgAllUsers = null;
+
 async function openComposeMsgModal(toEmail, toName) {
   if (!currentUser) { openLogin(); return; }
   if (!canSendMsg()) {
     alert('현재 쪽지 발송 권한이 없습니다.\n부부회원 이상만 쪽지를 보낼 수 있습니다.');
     return;
   }
-  const snapshot = await db.collection('users').get();
-  const users = snapshot.docs.map(d => d.data());
-  const sel = document.getElementById('msgTo');
-  if (sel) {
-    sel.innerHTML = '<option value="">-- 받는 회원 선택 --</option>' +
-      users.filter(u => u.email !== currentUser.email)
-           .map(u => `<option value="${u.email}" data-name="${u.name}">${u.name} (${u.userId || maskEmail(u.email)})</option>`).join('');
-    if (toEmail) sel.value = toEmail;
+
+  // 회원 목록 캐시 (세션 중 1회만 로드)
+  if (!_msgAllUsers) {
+    const snap = await db.collection('users').get();
+    _msgAllUsers = snap.docs.map(d => d.data()).filter(u => u.email !== currentUser.email);
   }
-  const sub = document.getElementById('msgSubject');
-  const body = document.getElementById('msgBody');
-  if (sub) sub.value = toName ? 'Re: ' : '';
-  if (body) body.value = '';
+
+  // 필드 초기화
+  document.getElementById('msgToSearch').value = '';
+  document.getElementById('msgToEmail').value = '';
+  document.getElementById('msgToName').value = '';
+  document.getElementById('msgToResults').style.display = 'none';
+  document.getElementById('msgToSelected').style.display = 'none';
+  document.getElementById('msgSubject').value = toName ? 'Re: ' : '';
+  document.getElementById('msgBody').value = '';
+
+  // 답장 또는 매칭 페이지에서 바로 선택된 경우
+  if (toEmail) {
+    const u = _msgAllUsers.find(u => u.email === toEmail);
+    const display = u ? (u.userId ? `${u.userId} (${u.name})` : u.name) : (toName || toEmail);
+    selectMsgRecipient(toEmail, display, u?.name || toName || toEmail);
+  }
+
   document.getElementById('composeMsgModal').classList.add('open');
+  if (!toEmail) setTimeout(() => document.getElementById('msgToSearch').focus(), 150);
+}
+
+function searchMsgRecipient(query) {
+  const results = document.getElementById('msgToResults');
+  // 이미 선택된 상태면 드롭다운 안 열기
+  if (document.getElementById('msgToEmail').value) { results.style.display = 'none'; return; }
+  if (!_msgAllUsers) { results.style.display = 'none'; return; }
+
+  const q = query.trim().toLowerCase();
+  const filtered = (q.length === 0
+    ? _msgAllUsers.slice(0, 8)
+    : _msgAllUsers.filter(u =>
+        (u.userId || '').toLowerCase().includes(q) ||
+        (u.name || '').toLowerCase().includes(q)
+      )
+  ).slice(0, 10);
+
+  if (!filtered.length) { results.style.display = 'none'; return; }
+
+  results.innerHTML = filtered.map(u => {
+    const display = u.userId ? `${sanitizeText(u.userId)} <span style="color:var(--gray);font-weight:400">(${sanitizeText(u.name)})</span>` : sanitizeText(u.name);
+    return `<div onmousedown="selectMsgRecipient('${u.email}','${(u.userId||u.name).replace(/'/g,"\\'")}','${(u.name||'').replace(/'/g,"\\'")}') "
+                 style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:.1s;border-bottom:1px solid #f5f5f5"
+                 onmouseover="this.style.background='#fdf5f5'" onmouseout="this.style.background=''">
+      ${avatarHtml(u.photoURL||'', u.userId||u.name||'?', u.memberType||'member', 32)}
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--dark)">${display}</div>
+        <div style="font-size:11px;color:var(--gray);margin-top:1px">${roleLabel(u.memberType)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  results.style.display = 'block';
+}
+
+function selectMsgRecipient(email, displayName, realName) {
+  document.getElementById('msgToEmail').value = email;
+  document.getElementById('msgToName').value = realName || displayName;
+  document.getElementById('msgToSearch').value = '';
+  document.getElementById('msgToResults').style.display = 'none';
+  document.getElementById('msgToSelectedText').textContent = displayName;
+  document.getElementById('msgToSelected').style.display = 'flex';
+}
+
+function clearMsgRecipient() {
+  document.getElementById('msgToEmail').value = '';
+  document.getElementById('msgToName').value = '';
+  document.getElementById('msgToSearch').value = '';
+  document.getElementById('msgToSelected').style.display = 'none';
+  setTimeout(() => document.getElementById('msgToSearch').focus(), 50);
 }
 
 async function sendMessage() {
-  const toSel = document.getElementById('msgTo');
-  const toEmail = toSel?.value;
-  const toName = toSel?.options[toSel.selectedIndex]?.dataset.name || '';
+  const toEmail = document.getElementById('msgToEmail')?.value;
+  const toName = document.getElementById('msgToName')?.value || '';
   const subject = document.getElementById('msgSubject')?.value.trim();
   const body = document.getElementById('msgBody')?.value.trim();
-  if (!toEmail) { alert('받는 회원을 선택해 주세요.'); return; }
+  if (!toEmail) { alert('받는 회원을 검색하여 선택해 주세요.'); return; }
   if (!subject) { alert('제목을 입력해 주세요.'); return; }
   if (!body) { alert('내용을 입력해 주세요.'); return; }
   if (!canSendMsg()) { alert('쪽지 발송 권한이 없습니다.'); return; }
