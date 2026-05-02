@@ -1,0 +1,16 @@
+{
+  "name": "마리 국제결혼",
+  "short_name": "마리",
+  "description": "한국-베트남 국제결혼 전문 커뮤니티",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#C8102E",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "심볼.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "심볼.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "categories": ["social", "lifestyle"],
+  "lang": "ko"
+}

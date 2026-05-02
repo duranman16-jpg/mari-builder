@@ -10,6 +10,8 @@
 <meta name="author" content="마리 국제결혼">
 <meta name="theme-color" content="#C8102E">
 <link rel="canonical" href="https://mari-viet.web.app/">
+<link rel="manifest" href="/manifest.json">
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{})}</script>
 
 <!-- Open Graph (카카오톡·SNS 공유 미리보기) -->
 <meta property="og:type" content="website">
@@ -100,7 +102,92 @@
   --red:#C8102E;--gold:#B8860B;--gold-light:#F5D87A;
   --cream:#FDF8F0;--dark:#1A1A1A;--text:#333;--gray:#666;
   --light:#F9F5EE;--white:#fff;--radius:12px;
+  --bg-card:#fff;--bg-page:#fff;--border:rgba(0,0,0,0.08);
 }
+/* ─── 다크모드 ─── */
+body.dark-mode{
+  --dark:#f0f0f0;--text:#d4d4d4;--gray:#999;
+  --cream:#1a1a2e;--light:#16213e;--white:#0f0f1a;
+  --bg-card:#1e1e2e;--bg-page:#0f0f1a;--border:rgba(255,255,255,0.08);
+  background:#0f0f1a;color:#d4d4d4
+}
+body.dark-mode nav{background:#16213e!important;box-shadow:0 2px 20px rgba(0,0,0,0.4)}
+body.dark-mode .auth-modal,body.dark-mode .modal{background:#1e1e2e!important;color:#d4d4d4}
+body.dark-mode input,body.dark-mode textarea,body.dark-mode select{background:#2a2a3e!important;border-color:rgba(255,255,255,0.12)!important;color:#d4d4d4!important}
+body.dark-mode .post-card{background:#1e1e2e;border-color:rgba(255,255,255,0.06)}
+body.dark-mode .post-card:hover{background:#252535}
+body.dark-mode .comment-item{background:#1e1e2e;border-color:rgba(255,255,255,0.06)}
+body.dark-mode .story-card{background:#1e1e2e}
+body.dark-mode .faq-item{background:#1e1e2e;border-color:rgba(255,255,255,0.08)}
+body.dark-mode .admin-panel{background:#1e1e2e}
+body.dark-mode .admin-topnav-wrap{background:#16213e}
+body.dark-mode .admin-topnav-btn{color:#999}
+body.dark-mode .admin-content{background:#1e1e2e;color:#d4d4d4}
+body.dark-mode footer{background:#16213e!important}
+body.dark-mode .page-hero{background:linear-gradient(135deg,#16213e,#0f0f1a)!important}
+.dark-toggle{background:none;border:1px solid rgba(0,0,0,0.15);border-radius:20px;padding:5px 10px;font-size:14px;cursor:pointer;transition:.2s;line-height:1}
+body.dark-mode .dark-toggle{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.05)}
+
+/* ─── 커플 갤러리 타임라인 ─── */
+.couple-timeline{position:relative;padding:20px 0;max-width:800px;margin:0 auto}
+.couple-timeline::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent,var(--red),var(--gold),transparent);transform:translateX(-50%)}
+.couple-item{display:flex;align-items:flex-start;gap:32px;margin-bottom:48px;position:relative}
+.couple-item:nth-child(even){flex-direction:row-reverse}
+.couple-item:nth-child(even) .couple-card{text-align:right}
+.couple-dot{position:absolute;left:50%;top:20px;width:14px;height:14px;background:var(--red);border-radius:50%;transform:translateX(-50%);box-shadow:0 0 0 4px rgba(200,16,46,0.2);z-index:2}
+.couple-card{flex:1;background:var(--bg-card);border-radius:14px;padding:20px;box-shadow:0 4px 20px rgba(0,0,0,0.08);border:1px solid var(--border);transition:.3s}
+.couple-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,0.12)}
+.couple-card img{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:12px}
+.couple-card-date{font-size:11px;color:var(--red);font-weight:700;margin-bottom:6px}
+.couple-card-title{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:8px}
+.couple-card-text{font-size:13px;color:var(--gray);line-height:1.7}
+.couple-flags{font-size:22px;margin-bottom:8px}
+@media(max-width:640px){
+  .couple-timeline::before{left:20px}
+  .couple-item,.couple-item:nth-child(even){flex-direction:column;padding-left:44px}
+  .couple-dot{left:20px}
+  .couple-item:nth-child(even) .couple-card{text-align:left}
+}
+
+/* ─── 랭킹 페이지 ─── */
+.rank-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:24px}
+.rank-card{background:var(--bg-card);border-radius:14px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,0.07);border:1px solid var(--border)}
+.rank-card h3{font-size:14px;font-weight:700;color:var(--gray);margin:0 0 16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.rank-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.rank-item:last-child{border-bottom:none}
+.rank-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
+.rank-num.gold{background:linear-gradient(135deg,#FFD700,#FFA500);color:#fff}
+.rank-num.silver{background:linear-gradient(135deg,#C0C0C0,#A0A0A0);color:#fff}
+.rank-num.bronze{background:linear-gradient(135deg,#CD7F32,#A0522D);color:#fff}
+.rank-num.normal{background:#f0f0f0;color:#666}
+.rank-info{flex:1;min-width:0}
+.rank-name{font-size:13px;font-weight:700;color:var(--dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-sub{font-size:11px;color:var(--gray)}
+.rank-val{font-size:18px;font-weight:800;color:var(--red);flex-shrink:0}
+.activity-badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;margin:2px}
+
+/* ─── 내 활동 대시보드 ─── */
+.mypage-hero{background:linear-gradient(135deg,var(--dark),#2a2a4a);padding:40px 7%;color:#fff;text-align:center}
+.mypage-avatar-lg{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.3);margin-bottom:12px}
+.mypage-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:16px;margin:24px 0}
+.mypage-stat{background:var(--bg-card);border-radius:12px;padding:20px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.07);border:1px solid var(--border)}
+.mypage-stat-val{font-size:28px;font-weight:800;color:var(--red)}
+.mypage-stat-label{font-size:12px;color:var(--gray);margin-top:4px}
+.mypage-section{background:var(--bg-card);border-radius:14px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,0.07);border:1px solid var(--border);margin-bottom:20px}
+.mypage-section h3{font-size:14px;font-weight:700;margin:0 0 14px;color:var(--dark)}
+
+/* ─── 베트남 가이드 ─── */
+.guide-tabs{display:flex;overflow-x:auto;gap:8px;padding-bottom:4px;margin-bottom:24px;scrollbar-width:none}
+.guide-tabs::-webkit-scrollbar{display:none}
+.guide-tab-btn{padding:8px 18px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;font-family:'Noto Sans KR',sans-serif;color:var(--gray)}
+.guide-tab-btn.active{background:var(--red);color:#fff;border-color:var(--red)}
+.guide-section{display:none}
+.guide-section.active{display:block}
+.guide-card{background:var(--bg-card);border-radius:12px;padding:20px;border:1px solid var(--border);margin-bottom:16px}
+.guide-card h4{font-size:14px;font-weight:700;color:var(--dark);margin:0 0 10px}
+.guide-card p,.guide-card li{font-size:13px;color:var(--gray);line-height:1.8}
+.exchange-widget{background:linear-gradient(135deg,#C8102E,#8B0A1E);border-radius:14px;padding:24px;color:#fff;text-align:center}
+.exchange-rate{font-size:36px;font-weight:800;margin:8px 0}
 html{scroll-behavior:smooth}
 body{font-family:'Noto Sans KR',sans-serif;color:var(--text);background:var(--white);overflow-x:hidden}
 
@@ -996,14 +1083,18 @@ html.mobile-view .float-btn span{display:none !important}
       <a data-page="board-travel" onclick="navigate('board-travel')" class="nav-community">여행&amp;정보</a>
       <a data-page="board-food" onclick="navigate('board-food')" class="nav-community">베트남음식</a>
       <a data-page="board-trade" onclick="navigate('board-trade')" class="nav-community">물물교환</a>
+      <span class="nav-sep">|</span>
+      <a data-page="ranking" onclick="navigate('ranking')">🏆 랭킹</a>
+      <a data-page="guide" onclick="navigate('guide')">🗺️ 베트남가이드</a>
     </div>
     <div class="nav-right">
+      <button class="dark-toggle" onclick="toggleDarkMode()" title="다크모드">🌙</button>
       <div class="nav-auth" id="navAuth">
         <button class="btn-login" onclick="openLogin()">로그인</button>
         <button class="btn-signup" onclick="openSignup()">회원가입</button>
       </div>
       <div class="nav-user" id="navUser" style="display:none">
-        <button class="nav-profile-btn" onclick="openProfile()">
+        <button class="nav-profile-btn" onclick="navigate('mypage')">
           <div class="nav-avatar" id="navAvatar"></div>
           <span id="userGreeting" style="font-size:13px;font-weight:600;color:var(--dark)"></span>
         </button>
@@ -1432,9 +1523,154 @@ html.mobile-view .float-btn span{display:none !important}
       <p>저희가 연결한 행복한 가정들의 이야기를 들어보세요.</p>
     </div>
   </div>
-  <section class="success" style="margin-top:0">
-    <div id="storyGrid" class="story-grid fade-in">
+  <section style="padding:60px 7%;max-width:900px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:48px">
+      <p style="color:var(--red);font-weight:700;font-size:13px;letter-spacing:1px">OUR HAPPY COUPLES</p>
+      <h2 style="font-size:clamp(1.4rem,2.5vw,2rem);margin:8px 0">함께 맺어진 인연들</h2>
+      <p style="color:var(--gray);font-size:14px">마리가 연결한 소중한 가정들의 아름다운 이야기</p>
+    </div>
+    <div id="storyTimeline" class="couple-timeline">
       <div class="post-loading">⏳ 로딩 중...</div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE: 🏆 랭킹                          -->
+<!-- ══════════════════════════════════════ -->
+<div id="page-ranking" class="page">
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a onclick="navigate('home')">홈</a><span>›</span>명예의 전당</div>
+      <h1>🏆 명예의 전당</h1>
+      <p>커뮤니티를 빛내는 활발한 회원들을 소개합니다.</p>
+    </div>
+  </div>
+  <section style="padding:40px 7%;max-width:1000px;margin:0 auto">
+    <div id="rankingContent"><div class="post-loading">⏳ 불러오는 중...</div></div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE: 📊 내 활동 대시보드              -->
+<!-- ══════════════════════════════════════ -->
+<div id="page-mypage" class="page">
+  <div id="mypageContent"></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE: 🗺️ 베트남 생활 가이드           -->
+<!-- ══════════════════════════════════════ -->
+<div id="page-guide" class="page">
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a onclick="navigate('home')">홈</a><span>›</span>베트남 가이드</div>
+      <h1>🗺️ 베트남 생활 가이드</h1>
+      <p>비자, 문화, 결혼 절차, 생활비까지 한눈에</p>
+    </div>
+  </div>
+  <section style="padding:40px 7%;max-width:900px;margin:0 auto">
+    <div class="guide-tabs">
+      <button class="guide-tab-btn active" onclick="switchGuide('exchange',this)">💱 환율</button>
+      <button class="guide-tab-btn" onclick="switchGuide('visa',this)">🛂 비자</button>
+      <button class="guide-tab-btn" onclick="switchGuide('culture',this)">🎎 문화차이</button>
+      <button class="guide-tab-btn" onclick="switchGuide('marriage',this)">💒 결혼절차</button>
+      <button class="guide-tab-btn" onclick="switchGuide('living',this)">🏠 생활비</button>
+    </div>
+
+    <div id="guide-exchange" class="guide-section active">
+      <div class="exchange-widget">
+        <p style="font-size:13px;opacity:0.8;margin:0 0 4px">🇰🇷 1 KRW =</p>
+        <div class="exchange-rate" id="exchangeRate">로딩 중...</div>
+        <p style="font-size:13px;opacity:0.8;margin:4px 0 0">🇻🇳 VND (베트남 동)</p>
+        <p style="font-size:11px;opacity:0.5;margin-top:12px" id="exchangeUpdated"></p>
+      </div>
+      <div class="guide-card" style="margin-top:20px">
+        <h4>💡 환율 계산 팁</h4>
+        <p>베트남 동(VND)은 단위가 커서 계산이 헷갈릴 수 있습니다.<br>
+        <b>1만원 ≈ 18만~19만 동</b>으로 어림잡으면 편리합니다.<br>
+        현지에서는 100만 동(약 5만원) 지폐를 자주 사용합니다.</p>
+      </div>
+    </div>
+
+    <div id="guide-visa" class="guide-section">
+      <div class="guide-card">
+        <h4>🛂 베트남 비자 종류</h4>
+        <ul>
+          <li><b>E-visa (전자비자)</b> — 관광/방문 목적, 90일, 온라인 신청 가능</li>
+          <li><b>결혼비자 (D-7)</b> — 한국인과 결혼 후 한국 거주 목적</li>
+          <li><b>장기체류비자 (DH)</b> — 6개월~1년, 현지 체류용</li>
+          <li><b>F-6 (결혼이민)</b> — 베트남 배우자의 한국 입국 비자</li>
+        </ul>
+      </div>
+      <div class="guide-card">
+        <h4>📋 F-6 결혼이민비자 준비서류</h4>
+        <ul>
+          <li>혼인관계증명서 (한국 + 베트남)</li>
+          <li>여권 사본 및 사진</li>
+          <li>소득 증빙 서류 (초청자)</li>
+          <li>한국어능력 증빙 (TOPIK 또는 인터뷰)</li>
+          <li>주민등록등본, 가족관계증명서</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="guide-culture" class="guide-section">
+      <div class="guide-card"><h4>🎎 언어 & 소통</h4><p>베트남어는 성조 언어로 한국인에게 어렵지만, 젊은 세대는 영어 소통이 가능합니다. 결혼 초반에는 번역 앱(파파고·구글)을 활용하고, 서로의 문화를 배우는 자세가 중요합니다.</p></div>
+      <div class="guide-card"><h4>🎊 명절 & 가족 문화</h4><p><b>뗏(설날)</b>은 가족 최대 명절. 한국의 추석처럼 고향을 방문하고 세배 문화가 있습니다. 베트남은 대가족 문화가 강해 배우자 가족과의 관계가 매우 중요합니다.</p></div>
+      <div class="guide-card"><h4>🍜 음식 문화</h4><p>쌀국수(퍼), 분짜, 반미 등 쌀 기반 요리가 주식입니다. 한국 음식보다 담백하고 덜 맵습니다. 베트남 배우자를 위해 한국에서도 베트남 식재료를 구할 수 있는 곳을 파악해 두세요.</p></div>
+    </div>
+
+    <div id="guide-marriage" class="guide-section">
+      <div style="padding-left:8px">
+        <div style="display:flex;gap:16px;margin-bottom:20px;align-items:flex-start">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">01</div>
+          <div><b style="font-size:14px;color:var(--dark)">만남 &amp; 교제</b><p style="font-size:13px;color:var(--gray);margin:4px 0 0;line-height:1.6">마리 소개 → 현지 방문 → 교제 시작 (보통 2~6개월)</p></div>
+        </div>
+        <div style="display:flex;gap:16px;margin-bottom:20px;align-items:flex-start">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">02</div>
+          <div><b style="font-size:14px;color:var(--dark)">베트남 혼인신고</b><p style="font-size:13px;color:var(--gray);margin:4px 0 0;line-height:1.6">베트남 지방정부에 혼인신고 (현지 공증 필요)</p></div>
+        </div>
+        <div style="display:flex;gap:16px;margin-bottom:20px;align-items:flex-start">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">03</div>
+          <div><b style="font-size:14px;color:var(--dark)">한국 혼인신고</b><p style="font-size:13px;color:var(--gray);margin:4px 0 0;line-height:1.6">주한 베트남 대사관 경유 → 한국 시청/구청 신고</p></div>
+        </div>
+        <div style="display:flex;gap:16px;margin-bottom:20px;align-items:flex-start">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">04</div>
+          <div><b style="font-size:14px;color:var(--dark)">F-6 비자 신청</b><p style="font-size:13px;color:var(--gray);margin:4px 0 0;line-height:1.6">출입국관리소에 결혼이민비자 신청 (소득요건 필요)</p></div>
+        </div>
+        <div style="display:flex;gap:16px;margin-bottom:20px;align-items:flex-start">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">05</div>
+          <div><b style="font-size:14px;color:var(--dark)">입국 &amp; 정착</b><p style="font-size:13px;color:var(--gray);margin:4px 0 0;line-height:1.6">한국 입국 → 외국인등록증 발급 → 사회통합프로그램</p></div>
+        </div>
+        <div style="display:flex;gap:16px;margin-bottom:20px;align-items:flex-start">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">06</div>
+          <div><b style="font-size:14px;color:var(--dark)">영주권 &amp; 귀화</b><p style="font-size:13px;color:var(--gray);margin:4px 0 0;line-height:1.6">2년 후 영주권(F-5) 신청 가능 / 5년 후 귀화 신청 가능</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="guide-living" class="guide-section">
+      <div class="guide-card">
+        <h4>🏙️ 도시별 생활비 비교 (월 기준)</h4>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead><tr style="background:var(--red);color:#fff">
+              <th style="padding:10px;text-align:left">항목</th>
+              <th style="padding:10px;text-align:center">하노이</th>
+              <th style="padding:10px;text-align:center">호찌민</th>
+            </tr></thead>
+            <tbody>
+              <tr style="background:rgba(200,16,46,0.03)"><td style="padding:10px;font-weight:600">월세 (1인)</td><td style="padding:10px;text-align:center;color:var(--gray)">500~900만동</td><td style="padding:10px;text-align:center;color:var(--gray)">700~1200만동</td></tr>
+              <tr><td style="padding:10px;font-weight:600">식비</td><td style="padding:10px;text-align:center;color:var(--gray)">300~500만동</td><td style="padding:10px;text-align:center;color:var(--gray)">350~600만동</td></tr>
+              <tr style="background:rgba(200,16,46,0.03)"><td style="padding:10px;font-weight:600">교통</td><td style="padding:10px;text-align:center;color:var(--gray)">50~100만동</td><td style="padding:10px;text-align:center;color:var(--gray)">80~150만동</td></tr>
+              <tr><td style="padding:10px;font-weight:600">통신</td><td style="padding:10px;text-align:center;color:var(--gray)">20~30만동</td><td style="padding:10px;text-align:center;color:var(--gray)">20~30만동</td></tr>
+              <tr style="background:rgba(200,16,46,0.03);font-weight:700"><td style="padding:10px">합계 (약)</td><td style="padding:10px;text-align:center;color:var(--gray)">약 50~80만원</td><td style="padding:10px;text-align:center;color:var(--gray)">약 60~100만원</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="guide-card"><h4>🏥 의료 &amp; 보험</h4><p>베트남 현지 의료비는 한국보다 저렴하지만 수준 차이가 있습니다. 한국인이 많이 거주하는 지역에는 한국어 가능 병원이 있습니다. 한국 입국 후에는 건강보험 적용을 위해 외국인등록 후 바로 가입하세요.</p></div>
     </div>
   </section>
 </div>
@@ -2229,6 +2465,9 @@ function showPage(page) {
   if (page === 'success') renderSuccessStories();
   if (page === 'faq') renderFaqList();
   if (page === 'matching') renderMatchingPage();
+  if (page === 'ranking') renderRanking();
+  if (page === 'mypage') renderMyPage();
+  if (page === 'guide') renderGuide();
 
   document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
     a.classList.toggle('nav-active', a.dataset.page === page);
@@ -4792,30 +5031,200 @@ const DEFAULT_FAQS = [
 ];
 
 async function renderSuccessStories() {
-  const grid = document.getElementById('storyGrid');
-  if (!grid) return;
+  const el = document.getElementById('storyTimeline');
+  if (!el) return;
   try {
     const snap = await db.collection('success_stories').orderBy('order','asc').get();
-    const stories = snap.empty ? DEFAULT_STORIES : snap.docs.map(d=>d.data());
-    grid.innerHTML = stories.map(s=>`
-      <div class="story-card">
-        <div class="story-top">
-          <div class="story-couple"><div class="story-avatar">🇰🇷</div><div class="story-heart">❤</div><div class="story-avatar">🇻🇳</div></div>
-          <div class="story-flag">${s.flag||'🌸'}</div>
+    const stories = snap.empty ? DEFAULT_STORIES : snap.docs.map(d=>({id:d.id,...d.data()}));
+    el.innerHTML = stories.map((s,i)=>`
+      <div class="couple-item">
+        <div class="couple-dot"></div>
+        <div class="couple-card">
+          ${s.imageUrl ? `<img src="${s.imageUrl}" alt="커플 사진">` : ''}
+          <div class="couple-card-date">${s.date||''} &nbsp; <span style="font-size:16px">${s.flag||'🌸'}</span></div>
+          <div class="couple-flags">🇰🇷 ❤️ 🇻🇳</div>
+          <div class="couple-card-title">${sanitizeText(s.title||'')}</div>
+          <div class="couple-card-text">${sanitizeText(s.text||'')}</div>
         </div>
-        <div class="story-body">
-          <div class="story-date">${s.date||''}</div>
-          <div class="story-title">${s.title||''}</div>
-          <div class="story-text">${s.text||''}</div>
-        </div>
+        <div style="flex:1"></div>
       </div>`).join('');
   } catch(e) {
-    grid.innerHTML = DEFAULT_STORIES.map(s=>`
-      <div class="story-card">
-        <div class="story-top"><div class="story-couple"><div class="story-avatar">🇰🇷</div><div class="story-heart">❤</div><div class="story-avatar">🇻🇳</div></div><div class="story-flag">${s.flag}</div></div>
-        <div class="story-body"><div class="story-date">${s.date}</div><div class="story-title">${s.title}</div><div class="story-text">${s.text}</div></div>
+    el.innerHTML = DEFAULT_STORIES.map(s=>`
+      <div class="couple-item">
+        <div class="couple-dot"></div>
+        <div class="couple-card">
+          <div class="couple-card-date">${s.date||''}</div>
+          <div class="couple-flags">🇰🇷 ❤️ 🇻🇳</div>
+          <div class="couple-card-title">${s.title||''}</div>
+          <div class="couple-card-text">${s.text||''}</div>
+        </div>
+        <div style="flex:1"></div>
       </div>`).join('');
   }
+}
+
+// ─── 다크모드 ───
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('darkMode', isDark ? '1' : '0');
+  document.querySelector('.dark-toggle').textContent = isDark ? '☀️' : '🌙';
+}
+(function initDarkMode() {
+  if (localStorage.getItem('darkMode') === '1') {
+    document.body.classList.add('dark-mode');
+    const btn = document.querySelector('.dark-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+
+// ─── 🏆 랭킹 ───
+async function renderRanking() {
+  const el = document.getElementById('rankingContent');
+  if (!el) return;
+  el.innerHTML = '<div class="post-loading">⏳ 불러오는 중...</div>';
+  try {
+    const snap = await db.collection('users').get();
+    const users = snap.docs.map(d=>d.data()).filter(u=>u.name);
+    const byLikes = [...users].sort((a,b)=>(b.totalLikesReceived||0)-(a.totalLikesReceived||0)).slice(0,10);
+    const byPosts = [...users].sort((a,b)=>(b.postCount||0)-(a.postCount||0)).slice(0,10);
+    const byComments = [...users].sort((a,b)=>(b.commentCount||0)-(a.commentCount||0)).slice(0,10);
+
+    const numCls = i => i===0?'gold':i===1?'silver':i===2?'bronze':'normal';
+    const numIcon = i => i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
+
+    const mkList = (arr, valFn, label) => arr.map((u,i)=>`
+      <div class="rank-item">
+        <div class="rank-num ${numCls(i)}">${numIcon(i)}</div>
+        <div class="rank-info">
+          <div class="rank-name">${sanitizeText(u.name)}</div>
+          <div class="rank-sub">${sanitizeText(u.userId||u.email||'')}</div>
+        </div>
+        <div class="rank-val">${valFn(u)}<span style="font-size:11px;color:var(--gray);font-weight:400;margin-left:2px">${label}</span></div>
+      </div>`).join('');
+
+    el.innerHTML = `
+      <div style="text-align:center;margin-bottom:32px">
+        <p style="font-size:13px;color:var(--gray)">커뮤니티에서 가장 활발하게 활동하는 회원들입니다 🎉</p>
+      </div>
+      <div class="rank-grid">
+        <div class="rank-card">
+          <h3>❤️ 좋아요 많이 받은 회원</h3>
+          ${mkList(byLikes, u=>u.totalLikesReceived||0, '개')}
+        </div>
+        <div class="rank-card">
+          <h3>✍️ 게시글 많이 쓴 회원</h3>
+          ${mkList(byPosts, u=>u.postCount||0, '개')}
+        </div>
+        <div class="rank-card">
+          <h3>💬 댓글 많이 단 회원</h3>
+          ${mkList(byComments, u=>u.commentCount||0, '개')}
+        </div>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = '<p style="color:var(--gray);text-align:center;padding:32px">데이터를 불러올 수 없습니다.</p>';
+  }
+}
+
+// ─── 📊 내 활동 대시보드 ───
+async function renderMyPage() {
+  const el = document.getElementById('mypageContent');
+  if (!el) return;
+  if (!currentUser) {
+    el.innerHTML = `<div style="text-align:center;padding:80px 20px">
+      <div style="font-size:48px;margin-bottom:16px">🔒</div>
+      <h3 style="margin:0 0 12px">로그인이 필요합니다</h3>
+      <p style="color:var(--gray);margin-bottom:24px">내 활동 대시보드는 로그인 후 이용하실 수 있습니다.</p>
+      <button class="btn-login" onclick="openLogin()" style="padding:10px 28px;font-size:14px">로그인</button>
+    </div>`;
+    return;
+  }
+  el.innerHTML = '<div class="post-loading" style="padding:60px">⏳ 불러오는 중...</div>';
+  try {
+    const userDoc = await db.collection('users').doc(currentUser.email).get();
+    const u = userDoc.exists ? userDoc.data() : currentUser;
+    const jd = u.createdAt ? new Date(u.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '-';
+    const ll = u.lastLogin ? new Date(u.lastLogin.seconds*1000).toLocaleString('ko-KR') : '-';
+
+    // 내 최근 게시글 가져오기 (최대 5개)
+    const boards = ['posts_vn_life','posts_kr_life','posts_free','posts_travel','posts_food','posts_trade'];
+    let myPosts = [];
+    for (const col of boards) {
+      try {
+        const ps = await db.collection(col).where('authorId','==', currentUser.email).orderBy('createdAt','desc').limit(3).get();
+        ps.forEach(d => myPosts.push({col, id:d.id, ...d.data()}));
+      } catch(e) {}
+    }
+    myPosts.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+    myPosts = myPosts.slice(0,5);
+
+    const avatarUrl = u.photoURL || u.authorPhoto || '';
+    const avatarEl = avatarUrl
+      ? `<img src="${avatarUrl}" class="mypage-avatar-lg" alt="프로필">`
+      : `<div class="mypage-avatar-lg" style="background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff">${(u.name||'?')[0]}</div>`;
+
+    el.innerHTML = `
+      <div class="mypage-hero">
+        ${avatarEl}
+        <h2 style="margin:0 0 4px;font-size:20px">${sanitizeText(u.name||'')}</h2>
+        <p style="margin:0;opacity:0.7;font-size:13px">${sanitizeText(u.userId||u.email||'')}</p>
+        <div style="margin-top:10px;display:inline-block;padding:3px 12px;border-radius:20px;background:rgba(255,255,255,0.15);font-size:12px;font-weight:700">${roleLabel(u.memberType||'member')}</div>
+      </div>
+      <div style="padding:32px 7%;max-width:900px;margin:0 auto">
+        <div class="mypage-stat-grid">
+          <div class="mypage-stat"><div class="mypage-stat-val">${u.postCount||0}</div><div class="mypage-stat-label">✍️ 작성 게시글</div></div>
+          <div class="mypage-stat"><div class="mypage-stat-val">${u.commentCount||0}</div><div class="mypage-stat-label">💬 작성 댓글</div></div>
+          <div class="mypage-stat"><div class="mypage-stat-val" style="color:var(--red)">${u.totalLikesReceived||0}</div><div class="mypage-stat-label">❤️ 받은 좋아요</div></div>
+          <div class="mypage-stat"><div class="mypage-stat-val" style="color:var(--gold)">${u.profileViews||0}</div><div class="mypage-stat-label">👁 프로필 조회</div></div>
+        </div>
+        <div class="mypage-section">
+          <h3>📋 계정 정보</h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;font-size:13px">
+            <div><span style="color:var(--gray)">이메일</span><br><b>${sanitizeText(u.email||'-')}</b></div>
+            <div><span style="color:var(--gray)">전화번호</span><br><b>${sanitizeText(u.phone||'-')}</b></div>
+            <div><span style="color:var(--gray)">가입일</span><br><b>${jd}</b></div>
+            <div><span style="color:var(--gray)">최종접속</span><br><b>${ll}</b></div>
+          </div>
+          <button onclick="openSelfChangePw()" style="margin-top:16px;padding:8px 18px;border:1px solid var(--border);border-radius:7px;background:transparent;font-size:13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;color:var(--gray)">🔑 비밀번호 변경</button>
+        </div>
+        <div class="mypage-section">
+          <h3>📝 최근 게시글</h3>
+          ${myPosts.length === 0
+            ? '<p style="color:var(--gray);font-size:13px">아직 작성한 게시글이 없습니다.</p>'
+            : myPosts.map(p=>`<div style="padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="openPost('${p.col}','${p.id}')">
+                <div style="font-size:13px;font-weight:600;color:var(--dark)">${sanitizeText(p.title||'')}</div>
+                <div style="font-size:11px;color:var(--gray);margin-top:3px">${p.createdAt?new Date(p.createdAt.seconds*1000).toLocaleDateString('ko-KR'):''} · 👁 ${p.views||0} · ❤️ ${p.likeCount||0}</div>
+              </div>`).join('')}
+        </div>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = '<p style="text-align:center;padding:40px;color:var(--gray)">오류가 발생했습니다.</p>';
+  }
+}
+
+// ─── 🗺️ 베트남 가이드 ───
+function renderGuide() {
+  // 환율 API 호출
+  fetch('https://api.exchangerate-api.com/v4/latest/KRW')
+    .then(r=>r.json())
+    .then(data=>{
+      const rate = data.rates?.VND;
+      if (rate) {
+        document.getElementById('exchangeRate').textContent = rate.toFixed(2) + ' ₫';
+        document.getElementById('exchangeUpdated').textContent = '업데이트: ' + new Date().toLocaleString('ko-KR');
+      }
+    })
+    .catch(()=>{
+      document.getElementById('exchangeRate').textContent = '≈ 18.5 ₫';
+      document.getElementById('exchangeUpdated').textContent = '(네트워크 오류 — 근사값)';
+    });
+}
+
+function switchGuide(section, btn) {
+  document.querySelectorAll('.guide-section').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.guide-tab-btn').forEach(b=>b.classList.remove('active'));
+  const target = document.getElementById('guide-' + section);
+  if (target) target.classList.add('active');
+  if (btn) btn.classList.add('active');
 }
 
 async function renderFaqList() {
