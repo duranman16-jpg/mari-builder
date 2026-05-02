@@ -1605,8 +1605,8 @@ html.mobile-view .float-btn span{display:none !important}
     <h3>로그인</h3>
     <p class="modal-sub" style="font-size:13px;color:var(--gray);margin-bottom:20px">마리 국제 결혼 회원이시면 로그인해 주세요.</p>
     <div class="form-group">
-      <label class="form-label">이메일</label>
-      <input type="email" class="auth-input" id="loginEmail" placeholder="example@email.com">
+      <label class="form-label">아이디</label>
+      <input type="text" class="auth-input" id="loginUserId" placeholder="아이디 입력" autocomplete="username">
     </div>
     <div class="form-group">
       <label class="form-label">비밀번호</label>
@@ -1626,7 +1626,12 @@ html.mobile-view .float-btn span{display:none !important}
     <p class="modal-sub" style="font-size:13px;color:var(--gray);margin-bottom:20px">마리 국제 결혼 커뮤니티에 오신 것을 환영합니다.</p>
     <div class="form-group"><label class="form-label">이름</label><input type="text" class="auth-input" id="signupName" placeholder="이름 입력"></div>
     <div class="form-group">
-      <label class="form-label">이메일 (아이디로 사용)</label>
+      <label class="form-label">아이디</label>
+      <input type="text" class="auth-input" id="signupUserId" placeholder="한글/영문/숫자, 2~20자" maxlength="20" oninput="onUserIdInput()">
+      <p style="font-size:11px;color:var(--gray);margin-top:6px;line-height:1.7">※ 한글·영문·숫자만 가능, 특수문자 불가 (2~20자)</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label">이메일 <span style="font-size:11px;color:var(--gray);font-weight:400">(인증용 — 로그인에 사용되지 않습니다)</span></label>
       <input type="email" class="auth-input" id="signupEmail" placeholder="example@email.com" oninput="onEmailInput()">
     </div>
     <div class="form-group" id="emailVerifyGroup">
@@ -1688,7 +1693,8 @@ html.mobile-view .float-btn span{display:none !important}
     <!-- 내 정보 -->
     <div id="profileTabInfo">
       <div class="form-group"><label class="form-label">성함</label><input type="text" class="auth-input" id="pfName" placeholder="성함"></div>
-      <div class="form-group"><label class="form-label">이메일 (아이디)</label><input type="email" class="auth-input" id="pfEmail" readonly style="background:#f5f5f5;color:var(--gray)"></div>
+      <div class="form-group"><label class="form-label">아이디 <span style="font-size:11px;color:var(--gray);font-weight:400">(변경 불가)</span></label><input type="text" class="auth-input" id="pfUserId" readonly style="background:#f5f5f5;color:var(--gray)"></div>
+      <div class="form-group"><label class="form-label">이메일</label><input type="email" class="auth-input" id="pfEmail" readonly style="background:#f5f5f5;color:var(--gray)"></div>
       <div class="form-group"><label class="form-label">휴대폰</label><input type="tel" class="auth-input" id="pfPhone" placeholder="010-0000-0000"></div>
       <div class="form-group"><label class="form-label">현재 등급</label><div id="pfGradeDisplay" style="padding:10px 14px;background:#f5f5f5;border-radius:8px;font-size:14px"></div></div>
       <button class="auth-submit" onclick="saveProfileInfo()">정보 저장</button>
@@ -2099,7 +2105,7 @@ async function submitWrite() {
     const data = {
       title, content,
       author: currentUser.name,
-      authorId: currentUser.email,
+      authorId: currentUser.userId || currentUser.email,
       authorType: currentUser.memberType || 'member',
       authorPhoto: currentUser.photoURL || '',
       badge: '', views: 0, likes: 0,
@@ -2583,7 +2589,7 @@ async function renderAdminMembers() {
     const badge = `<span style="display:inline-block;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700;${roleStyle[u.memberType]||roleStyle.member}">${roleLabel(u.memberType)}</span>`;
     return `<tr>
       <td style="padding:10px 8px;font-size:13px;border-bottom:1px solid rgba(0,0,0,0.07)">${u.name}${isSelf?' <span style="font-size:10px;color:var(--gold)">(본인)</span>':''}</td>
-      <td style="padding:10px 8px;font-size:12px;color:var(--gray);border-bottom:1px solid rgba(0,0,0,0.07)">${u.email}</td>
+      <td style="padding:10px 8px;font-size:12px;color:var(--gray);border-bottom:1px solid rgba(0,0,0,0.07)">${u.userId || '(미설정)'}</td>
       <td style="padding:10px 8px;border-bottom:1px solid rgba(0,0,0,0.07)">${badge}</td>
       <td style="padding:10px 8px;border-bottom:1px solid rgba(0,0,0,0.07)">${btns||'<span style="font-size:11px;color:rgba(0,0,0,0.25)">-</span>'}</td>
     </tr>`;
@@ -2591,7 +2597,7 @@ async function renderAdminMembers() {
   el.innerHTML = `<table style="width:100%;border-collapse:collapse">
     <thead><tr>
       <th style="text-align:left;padding:10px 8px;background:var(--dark);color:rgba(255,255,255,0.7);font-size:12px">이름</th>
-      <th style="text-align:left;padding:10px 8px;background:var(--dark);color:rgba(255,255,255,0.7);font-size:12px">이메일</th>
+      <th style="text-align:left;padding:10px 8px;background:var(--dark);color:rgba(255,255,255,0.7);font-size:12px">아이디</th>
       <th style="text-align:left;padding:10px 8px;background:var(--dark);color:rgba(255,255,255,0.7);font-size:12px">등급</th>
       <th style="text-align:left;padding:10px 8px;background:var(--dark);color:rgba(255,255,255,0.7);font-size:12px">등급 변경</th>
     </tr></thead>
@@ -2686,6 +2692,7 @@ function updateNavAvatar() {
 function openProfile() {
   if (!currentUser) { openLogin(); return; }
   document.getElementById('pfName').value = currentUser.name || '';
+  document.getElementById('pfUserId').value = currentUser.userId || '';
   document.getElementById('pfEmail').value = currentUser.email || '';
   document.getElementById('pfPhone').value = currentUser.phone || '';
   document.getElementById('profileModalName').textContent = currentUser.name + '님';
@@ -2806,18 +2813,28 @@ function closeLogin() { document.getElementById('loginModal').classList.remove('
 function closeLoginBg(e) { if (e.target.id==='loginModal') closeLogin(); }
 
 async function submitLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
+  const inputId = document.getElementById('loginUserId').value.trim();
   const pw = document.getElementById('loginPw').value;
-  if (!email||!pw) { alert('이메일과 비밀번호를 입력해 주세요.'); return; }
+  if (!inputId||!pw) { alert('아이디와 비밀번호를 입력해 주세요.'); return; }
   try {
-    const doc = await db.collection('users').doc(email).get();
-    if (!doc.exists) { alert('이메일 또는 비밀번호가 일치하지 않습니다.'); return; }
-    const user = doc.data();
+    // 아이디(userId)로 회원 조회 → 없으면 이메일로 레거시 조회
+    let userDoc = null;
+    const byUserId = await db.collection('users').where('userId', '==', inputId).limit(1).get();
+    if (!byUserId.empty) {
+      userDoc = byUserId.docs[0];
+    } else {
+      // 레거시: 이메일 직접 조회 (userId 없는 기존 회원 대비)
+      const byEmail = await db.collection('users').doc(inputId).get();
+      if (byEmail.exists) userDoc = byEmail;
+    }
+    if (!userDoc) { alert('아이디 또는 비밀번호가 일치하지 않습니다.'); return; }
+    const user = userDoc.data();
     // 해시 비교 (기존 평문 자동 마이그레이션)
     const hashedInput = await hashPassword(pw);
     const isHashed = /^[0-9a-f]{64}$/.test(user.pw);
     const match = isHashed ? (user.pw === hashedInput) : (user.pw === pw);
-    if (!match) { alert('이메일 또는 비밀번호가 일치하지 않습니다.'); return; }
+    if (!match) { alert('아이디 또는 비밀번호가 일치하지 않습니다.'); return; }
+    const email = user.email;
     // 평문 저장된 경우 자동으로 해시로 업그레이드
     if (!isHashed) await db.collection('users').doc(email).update({ pw: hashedInput });
     if (user.tempPassword) {
@@ -2955,6 +2972,12 @@ function onEmailInput() {
   if (_emailVerified) resetEmailVerify();
 }
 
+function onUserIdInput() {
+  const el = document.getElementById('signupUserId');
+  // 허용: 한글, 영문, 숫자만 — 나머지 실시간 제거
+  el.value = el.value.replace(/[^가-힣a-zA-Z0-9]/g, '');
+}
+
 function setDisplay(id, val) {
   const el = document.getElementById(id);
   if (el) el.style.display = val;
@@ -3016,23 +3039,29 @@ async function confirmSignupOtp() {
 
 async function submitSignup() {
   const name = document.getElementById('signupName').value.trim();
+  const userId = document.getElementById('signupUserId').value.trim();
   const email = document.getElementById('signupEmail').value.trim();
   const pw = document.getElementById('signupPw').value;
   const pw2 = document.getElementById('signupPw2').value;
   const phone = document.getElementById('signupPhone').value.trim();
   const birth = document.getElementById('signupBirth').value;
   const gender = document.querySelector('input[name="gender"]:checked');
-  if (!name||!email||!pw||!phone||!birth||!gender) { alert('모든 항목을 입력해 주세요.'); return; }
+  if (!name||!userId||!email||!pw||!phone||!birth||!gender) { alert('모든 항목을 입력해 주세요.'); return; }
+  const userIdRegex = /^[가-힣a-zA-Z0-9]{2,20}$/;
+  if (!userIdRegex.test(userId)) { alert('아이디는 한글·영문·숫자만 사용 가능하며 2~20자여야 합니다. 특수문자는 불가합니다.'); return; }
   if (!_emailVerified) { alert('이메일 인증을 완료해주세요.'); document.getElementById('sendOtpBtn').scrollIntoView({behavior:'smooth',block:'center'}); return; }
   if (pw!==pw2) { alert('비밀번호가 일치하지 않습니다.'); return; }
   const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
   if (!pwRegex.test(pw)) { alert('비밀번호는 8자 이상, 대문자·소문자·숫자·특수문자(@$!%*#?&)를 각 1개 이상 포함해야 합니다.'); return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('이메일 형식이 올바르지 않습니다.'); return; }
   try {
+    // 아이디 중복 확인
+    const dupId = await db.collection('users').where('userId', '==', userId).limit(1).get();
+    if (!dupId.empty) { alert('이미 사용 중인 아이디입니다. 다른 아이디를 선택해 주세요.'); return; }
     const existing = await db.collection('users').doc(email).get();
     if (existing.exists) { alert('이미 가입된 이메일입니다.'); return; }
     const hashedPw = await hashPassword(pw);
-    const newUser = {name,email,pw:hashedPw,phone,birth,gender:gender.value,memberType:'member',nationality:'kr'};
+    const newUser = {userId,name,email,pw:hashedPw,phone,birth,gender:gender.value,memberType:'member',nationality:'kr'};
     await db.collection('users').doc(email).set(newUser);
     currentUser = safeUser(newUser);
     localStorage.setItem('maryUser', JSON.stringify(currentUser));
@@ -3176,7 +3205,7 @@ function loadComments(colName, docId) {
       }
       listEl.innerHTML = items.map(c => {
         const date = c.createdAt ? new Date(c.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
-        const isOwn = currentUser && currentUser.email === c.authorId;
+        const isOwn = currentUser && (currentUser.userId === c.authorId || currentUser.email === c.authorId);
         const imgHtml = c.imageUrl ? `<img src="${c.imageUrl}" alt="첨부 이미지" style="max-width:100%;max-height:300px;border-radius:8px;margin-top:8px;display:block;border:1px solid rgba(0,0,0,0.08)">` : '';
         return `<div class="comment-item">
           <div class="comment-header">
@@ -3251,7 +3280,7 @@ async function submitComment(colName, docId) {
     }
     const commentData = {
       author: currentUser.name,
-      authorId: currentUser.email,
+      authorId: currentUser.userId || currentUser.email,
       authorType: currentUser.memberType || 'member',
       authorPhoto: currentUser.photoURL || '',
       content,
@@ -3627,7 +3656,11 @@ function renderAdminAddVN() {
           <input type="text" class="auth-input" id="vnName" placeholder="이름을 입력하세요">
         </div>
         <div class="form-group">
-          <label class="form-label">이메일 (로그인 아이디)</label>
+          <label class="form-label">아이디 <span style="font-size:11px;color:var(--gray);font-weight:400">(한글/영문/숫자, 2~20자)</span></label>
+          <input type="text" class="auth-input" id="vnUserId" placeholder="아이디 입력" maxlength="20">
+        </div>
+        <div class="form-group">
+          <label class="form-label">이메일 <span style="font-size:11px;color:var(--gray);font-weight:400">(내부 식별용)</span></label>
           <input type="email" class="auth-input" id="vnEmail" placeholder="example@email.com">
         </div>
 
@@ -3726,15 +3759,19 @@ function genTempPw() {
 async function submitAddVN() {
   if (!selectedNationality) { alert('먼저 국적을 선택해 주세요.'); return; }
   const name = document.getElementById('vnName')?.value.trim();
+  const userId = (document.getElementById('vnUserId')?.value || '').trim().replace(/[^가-힣a-zA-Z0-9]/g, '');
   const email = document.getElementById('vnEmail')?.value.trim();
   const role = document.getElementById('vnRole')?.value || 'member';
   const genderEl = document.querySelector('input[name="vnGender"]:checked');
   const gender = genderEl ? genderEl.value : 'female';
   const result = document.getElementById('vnResult');
 
-  if (!name || !email) { alert('이름과 이메일을 입력해 주세요.'); return; }
+  if (!name || !userId || !email) { alert('이름, 아이디, 이메일을 모두 입력해 주세요.'); return; }
+  if (!/^[가-힣a-zA-Z0-9]{2,20}$/.test(userId)) { alert('아이디는 한글·영문·숫자만, 2~20자여야 합니다.'); return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('이메일 형식이 올바르지 않습니다.'); return; }
 
+  const dupId = await db.collection('users').where('userId', '==', userId).limit(1).get();
+  if (!dupId.empty) { alert('이미 사용 중인 아이디입니다.'); return; }
   const existing = await db.collection('users').doc(email).get();
   if (existing.exists) { alert('이미 등록된 이메일입니다.'); return; }
 
@@ -3744,10 +3781,10 @@ async function submitAddVN() {
     pw = document.getElementById('vnTempPw')?.value.trim();
     if (!pw) { alert('임시 비밀번호를 생성해 주세요.'); return; }
     const hashedVnPw = await hashPassword(pw);
-    newUser = {name, email, pw:hashedVnPw, phone:'', birth:'', gender, memberType:role, nationality:'vn', tempPassword:true};
+    newUser = {userId, name, email, pw:hashedVnPw, phone:'', birth:'', gender, memberType:role, nationality:'vn', tempPassword:true};
     resultHtml = `<div style="background:#f0faf5;border:1px solid #1A6B3C;border-radius:10px;padding:16px;line-height:2">
       ✅ 베트남 회원 계정 생성 완료!<br>
-      <b>아이디 (이메일):</b> ${email}<br>
+      <b>아이디:</b> ${userId}<br>
       <b>임시 비밀번호:</b> <code style="background:#e8f5e9;padding:3px 10px;border-radius:6px;font-family:monospace;font-size:15px;letter-spacing:0.08em;font-weight:700">${pw}</code><br>
       <small style="color:var(--gray)">⚠️ 이 정보를 베트남 회원에게 직접 전달해 주세요. 최초 로그인 시 비밀번호가 변경됩니다.</small>
     </div>`;
@@ -3756,11 +3793,11 @@ async function submitAddVN() {
     const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (!pw || !pwRegex.test(pw)) { alert('비밀번호는 8자 이상, 대문자·소문자·숫자·특수문자(@$!%*#?&)를 각 1개 이상 포함해야 합니다.'); return; }
     const hashedKrPw = await hashPassword(pw);
-    newUser = {name, email, pw:hashedKrPw, phone:'', birth:'', gender, memberType:role, nationality:'kr', tempPassword:false};
+    newUser = {userId, name, email, pw:hashedKrPw, phone:'', birth:'', gender, memberType:role, nationality:'kr', tempPassword:false};
     resultHtml = `<div style="background:#fff5f5;border:1px solid #C8102E;border-radius:10px;padding:16px;line-height:2">
       ✅ 한국 회원 계정 생성 완료!<br>
-      <b>아이디 (이메일):</b> ${email}<br>
-      <small style="color:var(--gray)">설정된 비밀번호로 로그인할 수 있습니다.</small>
+      <b>아이디:</b> ${userId}<br>
+      <small style="color:var(--gray)">설정된 아이디와 비밀번호로 로그인할 수 있습니다.</small>
     </div>`;
   }
 
@@ -3768,6 +3805,7 @@ async function submitAddVN() {
 
   if (result) { result.style.display = 'block'; result.innerHTML = resultHtml; }
   document.getElementById('vnName').value = '';
+  document.getElementById('vnUserId').value = '';
   document.getElementById('vnEmail').value = '';
   if (selectedNationality === 'vn') genTempPw();
   else if (document.getElementById('krPw')) document.getElementById('krPw').value = '';
@@ -3937,6 +3975,7 @@ async function renderMatchingPage() {
           <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-size:32px">${flag}</div>
           <div>
             <div style="font-weight:700;font-size:16px">${m.name}</div>
+            ${m.userId ? `<div style="font-size:12px;color:var(--gray);margin-top:2px">@${m.userId}</div>` : ''}
             <div style="color:var(--gray);font-size:13px;margin-top:4px">${birth}세 · ${m.gender==='male'?'남':'여'} · ${grade}</div>
           </div>
           <button onclick="openComposeMsgModal('${m.email}')" style="padding:8px 20px;background:var(--red);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600">💌 쪽지 보내기</button>
@@ -4384,7 +4423,7 @@ async function openComposeMsgModal(toEmail, toName) {
   if (sel) {
     sel.innerHTML = '<option value="">-- 받는 회원 선택 --</option>' +
       users.filter(u => u.email !== currentUser.email)
-           .map(u => `<option value="${u.email}" data-name="${u.name}">${u.name} (${maskEmail(u.email)})</option>`).join('');
+           .map(u => `<option value="${u.email}" data-name="${u.name}">${u.name} (${u.userId || maskEmail(u.email)})</option>`).join('');
     if (toEmail) sel.value = toEmail;
   }
   const sub = document.getElementById('msgSubject');
