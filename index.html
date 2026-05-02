@@ -2104,7 +2104,7 @@ async function submitWrite() {
     const prefix = document.getElementById('writePrefix')?.value || '';
     const data = {
       title, content,
-      author: currentUser.name,
+      author: currentUser.userId || currentUser.name,
       authorId: currentUser.userId || currentUser.email,
       authorType: currentUser.memberType || 'member',
       authorPhoto: currentUser.photoURL || '',
@@ -2641,7 +2641,7 @@ function updateAuthUI() {
   if (currentUser) {
     navAuth.style.display = 'none';
     navUser.style.display = 'flex';
-    greeting.textContent = currentUser.name + '님';
+    greeting.textContent = (currentUser.userId || currentUser.name) + '님';
     updateNavAvatar();
     if (adminBtn) adminBtn.style.display = isManager(currentUser) ? 'inline-block' : 'none';
     if (changePwBtn) changePwBtn.style.display = currentUser.tempPassword ? 'inline-block' : 'none';
@@ -2681,10 +2681,11 @@ function updateNavAvatar() {
   if (!el || !currentUser) return;
   const bg = _avatarBg[currentUser.memberType] || 'var(--red)';
   el.style.background = bg;
+  const _navInitial = (currentUser.userId || currentUser.name || '?')[0].toUpperCase();
   if (currentUser.photoURL) {
-    el.innerHTML = `<img src="${currentUser.photoURL}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='${(currentUser.name||'?')[0].toUpperCase()}'">`;
+    el.innerHTML = `<img src="${currentUser.photoURL}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='${_navInitial}'">`;
   } else {
-    el.textContent = (currentUser.name||'?')[0].toUpperCase();
+    el.textContent = _navInitial;
   }
 }
 
@@ -2842,7 +2843,7 @@ async function submitLogin() {
     }
     closeLogin();
     updateAuthUI();
-    alert(user.name + '님, 환영합니다!');
+    alert((user.userId || user.name) + '님, 환영합니다!');
   } catch(e) {
     alert('로그인 오류: ' + e.message);
   }
@@ -3057,7 +3058,7 @@ async function submitSignup() {
     localStorage.setItem('maryUser', JSON.stringify(currentUser));
     closeSignup();
     updateAuthUI();
-    alert(name + '님, 회원가입을 축하합니다!');
+    alert((currentUser.userId || name) + '님, 회원가입을 축하합니다!');
   } catch(e) {
     alert('가입 오류: ' + e.message);
   }
@@ -3221,7 +3222,7 @@ function renderCommentForm(colName, docId) {
   }
   area.innerHTML = `
     <div class="comment-form-wrap">
-      <div class="comment-form-header">💬 댓글 작성 · <span style="font-size:12px;color:var(--gray);font-weight:400">${currentUser.name}</span></div>
+      <div class="comment-form-header">💬 댓글 작성 · <span style="font-size:12px;color:var(--gray);font-weight:400">${currentUser.userId || currentUser.name}</span></div>
       <textarea class="comment-textarea" id="commentInput" placeholder="댓글을 입력하세요..."></textarea>
       <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap">
         <label class="comment-img-btn" style="cursor:pointer">
@@ -3269,7 +3270,7 @@ async function submitComment(colName, docId) {
       imageUrl = await snap.ref.getDownloadURL();
     }
     const commentData = {
-      author: currentUser.name,
+      author: currentUser.userId || currentUser.name,
       authorId: currentUser.userId || currentUser.email,
       authorType: currentUser.memberType || 'member',
       authorPhoto: currentUser.photoURL || '',
@@ -4284,7 +4285,7 @@ async function sendBroadcastMsg() {
   targets.forEach(u => {
     const ref = db.collection('messages').doc();
     batch.set(ref, {
-      from: currentUser.email, fromName: currentUser.name, fromType: currentUser.memberType || 'admin',
+      from: currentUser.email, fromName: currentUser.userId || currentUser.name, fromType: currentUser.memberType || 'admin',
       to: u.email, toName: u.name,
       subject: '[공지] ' + subject, body, read: false,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -4436,7 +4437,7 @@ async function sendMessage() {
   try {
     await db.collection('messages').add({
       from: currentUser.email,
-      fromName: currentUser.name,
+      fromName: currentUser.userId || currentUser.name,
       fromType: currentUser.memberType || 'member',
       to: toEmail, toName,
       subject, body, read: false,
