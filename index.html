@@ -659,32 +659,26 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .board-tab-content{display:none;padding-top:24px}
 .board-tab-content.active{display:block}
 
-/* ─── 관리자 패널 (슬라이드 사이드패널) ─── */
+/* ─── 관리자 패널 ─── */
 #adminModal{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.55)}
 #adminModal.open{display:flex;align-items:stretch;justify-content:flex-end}
-.admin-panel{display:flex;flex-direction:column;width:clamp(340px,78vw,920px);height:100%;background:#fff;box-shadow:-6px 0 40px rgba(0,0,0,0.2);transform:translateX(100%);transition:transform .32s cubic-bezier(.4,0,.2,1)}
+.admin-panel{display:flex;flex-direction:column;width:clamp(340px,82vw,960px);height:100%;background:#fff;box-shadow:-6px 0 40px rgba(0,0,0,0.22);transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
 #adminModal.open .admin-panel{transform:translateX(0)}
-.admin-panel-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:var(--dark);flex-shrink:0;gap:16px}
-.admin-panel-hd .apanel-title{font-size:17px;font-weight:700;color:#fff;margin:0}
-.admin-panel-hd .apanel-sub{font-size:12px;color:rgba(255,255,255,0.5);margin:2px 0 0}
-.admin-panel-hd .apanel-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:24px;cursor:pointer;padding:0;line-height:1;transition:.2s;flex-shrink:0}
+.admin-panel-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--dark);flex-shrink:0}
+.admin-panel-hd .apanel-title{font-size:16px;font-weight:700;color:#fff;margin:0}
+.admin-panel-hd .apanel-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:22px;cursor:pointer;padding:0;line-height:1;transition:.2s}
 .admin-panel-hd .apanel-close:hover{color:#fff}
-.admin-panel-body{display:flex;flex:1;overflow:hidden}
-.admin-sidebar{width:175px;background:#f5f5f6;border-right:1px solid rgba(0,0,0,0.09);overflow-y:auto;flex-shrink:0;padding:10px 0}
-.admin-sidebar::-webkit-scrollbar{width:3px}
-.admin-sidebar::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.12);border-radius:2px}
-.admin-sidebar-btn{display:flex;align-items:center;gap:9px;width:100%;padding:11px 16px;border:none;background:transparent;text-align:left;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:#777;cursor:pointer;transition:.15s;border-left:3px solid transparent;box-sizing:border-box}
-.admin-sidebar-btn:hover{background:rgba(200,16,46,0.05);color:var(--dark)}
-.admin-sidebar-btn.active{color:var(--red);background:rgba(200,16,46,0.07);border-left-color:var(--red)}
-.admin-content{flex:1;overflow-y:auto;padding:28px 32px}
-@media(max-width:768px){
+/* 상단 탭 네비 */
+.admin-topnav{display:flex;overflow-x:auto;border-bottom:2px solid rgba(0,0,0,0.08);flex-shrink:0;background:#fafafa;scrollbar-width:none}
+.admin-topnav::-webkit-scrollbar{display:none}
+.admin-topnav-btn{display:flex;align-items:center;gap:5px;padding:12px 15px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:#888;cursor:pointer;border-bottom:3px solid transparent;flex-shrink:0;white-space:nowrap;transition:.15s;margin-bottom:-2px}
+.admin-topnav-btn:hover{color:var(--dark);background:rgba(200,16,46,0.04)}
+.admin-topnav-btn.active{color:var(--red);border-bottom-color:var(--red);background:#fff}
+.admin-content{flex:1;overflow-y:auto;padding:24px 28px}
+@media(max-width:600px){
   .admin-panel{width:100%}
-  .admin-panel-body{flex-direction:column}
-  .admin-sidebar{width:100%;display:flex;overflow-x:auto;overflow-y:hidden;border-right:none;border-bottom:2px solid rgba(0,0,0,0.08);padding:0;flex-shrink:0;scrollbar-width:none;height:auto}
-  .admin-sidebar::-webkit-scrollbar{display:none}
-  .admin-sidebar-btn{flex-direction:column;padding:8px 10px;font-size:11px;gap:2px;border-left:none;border-bottom:3px solid transparent;flex-shrink:0;min-width:56px;align-items:center;justify-content:center;white-space:nowrap}
-  .admin-sidebar-btn.active{border-left-color:transparent;border-bottom-color:var(--red)}
   .admin-content{padding:14px}
+  .admin-topnav-btn{padding:10px 11px;font-size:12px;gap:3px}
 }
 
 /* ─── 쪽지함 ─── */
@@ -1982,35 +1976,34 @@ html.mobile-view .float-btn span{display:none !important}
       <button class="apanel-close" onclick="closeAdmin()">✕</button>
     </div>
 
-    <!-- 사이드바 + 콘텐츠 -->
-    <div class="admin-panel-body">
-      <nav class="admin-sidebar" id="adminSidebar">
-        <button class="admin-sidebar-btn active" onclick="showAdminTab('members',this)">👥 회원관리</button>
-        <button class="admin-sidebar-btn" onclick="showAdminTab('addvn',this)">📋 회원등록</button>
-        <button class="admin-sidebar-btn" onclick="showAdminTab('consult',this)">📞 상담신청</button>
-        <button class="admin-sidebar-btn" onclick="showAdminTab('allmsgs',this)">🔍 전체쪽지</button>
-        <button class="admin-sidebar-btn" onclick="showAdminTab('content',this)">✨ 콘텐츠</button>
-        <button class="admin-sidebar-btn" onclick="showAdminTab('broadcast',this)">📨 전체발송</button>
-        <button class="admin-sidebar-btn" onclick="showAdminTab('settings',this)">⚙️ 설정</button>
-        <button id="adminAiImageTabBtn" class="admin-sidebar-btn" style="display:none" onclick="showAdminTab('aiimage',this)">🎨 AI이미지</button>
-        <button id="adminProfileTabBtn" class="admin-sidebar-btn" style="display:none" onclick="showAdminTab('profile',this)">📷 프로필등록</button>
-        <button class="admin-sidebar-btn" onclick="showAdminTab('reports',this)">🚨 신고관리</button>
-        <button class="admin-sidebar-btn" onclick="showAdminTab('forbidden',this)">🚫 금칙어</button>
-      </nav>
+    <!-- 상단 탭 -->
+    <nav class="admin-topnav" id="adminSidebar">
+      <button class="admin-topnav-btn active" onclick="showAdminTab('members',this)">👥 회원관리</button>
+      <button class="admin-topnav-btn" onclick="showAdminTab('addvn',this)">📋 회원등록</button>
+      <button class="admin-topnav-btn" onclick="showAdminTab('consult',this)">📞 상담신청</button>
+      <button class="admin-topnav-btn" onclick="showAdminTab('allmsgs',this)">🔍 전체쪽지</button>
+      <button class="admin-topnav-btn" onclick="showAdminTab('content',this)">✨ 콘텐츠</button>
+      <button class="admin-topnav-btn" onclick="showAdminTab('broadcast',this)">📨 전체발송</button>
+      <button class="admin-topnav-btn" onclick="showAdminTab('settings',this)">⚙️ 설정</button>
+      <button id="adminAiImageTabBtn" class="admin-topnav-btn" style="display:none" onclick="showAdminTab('aiimage',this)">🎨 AI이미지</button>
+      <button id="adminProfileTabBtn" class="admin-topnav-btn" style="display:none" onclick="showAdminTab('profile',this)">📷 프로필등록</button>
+      <button class="admin-topnav-btn" onclick="showAdminTab('reports',this)">🚨 신고관리</button>
+      <button class="admin-topnav-btn" onclick="showAdminTab('forbidden',this)">🚫 금칙어</button>
+    </nav>
 
-      <div class="admin-content">
-        <div id="adminTabMembers" class="admin-tab-panel"><div id="adminUserList"></div></div>
-        <div id="adminTabAddvn" class="admin-tab-panel" style="display:none"></div>
-        <div id="adminTabConsult" class="admin-tab-panel" style="display:none"></div>
-        <div id="adminTabAllmsgs" class="admin-tab-panel" style="display:none"></div>
-        <div id="adminTabContent" class="admin-tab-panel" style="display:none"></div>
-        <div id="adminTabBroadcast" class="admin-tab-panel" style="display:none"></div>
-        <div id="adminTabSettings" class="admin-tab-panel" style="display:none"></div>
-        <div id="adminTabAiimage" class="admin-tab-panel" style="display:none"></div>
-        <div id="adminTabProfile" class="admin-tab-panel" style="display:none"></div>
-        <div id="adminTabReports" class="admin-tab-panel" style="display:none"></div>
-        <div id="adminTabForbidden" class="admin-tab-panel" style="display:none"></div>
-      </div>
+    <!-- 콘텐츠 -->
+    <div class="admin-content">
+      <div id="adminTabMembers" class="admin-tab-panel"><div id="adminUserList"></div></div>
+      <div id="adminTabAddvn" class="admin-tab-panel" style="display:none"></div>
+      <div id="adminTabConsult" class="admin-tab-panel" style="display:none"></div>
+      <div id="adminTabAllmsgs" class="admin-tab-panel" style="display:none"></div>
+      <div id="adminTabContent" class="admin-tab-panel" style="display:none"></div>
+      <div id="adminTabBroadcast" class="admin-tab-panel" style="display:none"></div>
+      <div id="adminTabSettings" class="admin-tab-panel" style="display:none"></div>
+      <div id="adminTabAiimage" class="admin-tab-panel" style="display:none"></div>
+      <div id="adminTabProfile" class="admin-tab-panel" style="display:none"></div>
+      <div id="adminTabReports" class="admin-tab-panel" style="display:none"></div>
+      <div id="adminTabForbidden" class="admin-tab-panel" style="display:none"></div>
     </div>
   </div>
 </div>
@@ -2915,7 +2908,7 @@ function openAdmin() {
   // 📷 프로필 등록 탭은 관리자+매니저 표시
   const profileBtn = document.getElementById('adminProfileTabBtn');
   if (profileBtn) profileBtn.style.display = isManager(currentUser) ? 'inline-block' : 'none';
-  const activeBtn = document.querySelector('.admin-sidebar-btn.active') || document.querySelector('.admin-sidebar-btn');
+  const activeBtn = document.querySelector('.admin-topnav-btn.active') || document.querySelector('.admin-topnav-btn');
   showAdminTab('members', activeBtn);
   renderAdminMembers();
 }
@@ -2923,7 +2916,7 @@ function closeAdmin() { document.getElementById('adminModal').classList.remove('
 function closeAdminBg(e) { if (e.target.id==='adminModal') closeAdmin(); }
 
 function showAdminTab(tab, btn) {
-  document.querySelectorAll('.admin-sidebar-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.admin-topnav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.admin-tab-panel').forEach(p => p.style.display='none');
   if (btn) btn.classList.add('active');
   const panelId = 'adminTab' + tab.charAt(0).toUpperCase() + tab.slice(1);
