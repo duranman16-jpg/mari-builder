@@ -5,6 +5,7 @@ const axios = require('axios');
 const nodemailer = require('nodemailer');
 
 admin.initializeApp();
+console.log('Functions module loaded v2');
 
 // ─── AI 이미지 생성 함수 (최고관리자 전용) ───
 exports.generateImage = functions
