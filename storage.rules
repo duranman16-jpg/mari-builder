@@ -1,0 +1,46 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // AI 이미지: Cloud Function 서비스 계정에서만 씀 (클라이언트 쓰기 차단)
+    match /ai-images/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // 프로필 대표사진 (관리자 등록용)
+    match /profile-images/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.resource.size < 10 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    // 프로필 일상사진
+    match /profile-life/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.resource.size < 10 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    // 회원 프로필 사진
+    match /profile-photos/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.resource.size < 5 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    // 게시글 첨부 이미지 (Quill 에디터)
+    match /board-images/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.resource.size < 10 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    // 댓글 첨부 이미지
+    match /comment-images/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.resource.size < 10 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+  }
+}

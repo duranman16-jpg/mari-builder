@@ -54,5 +54,12 @@ service cloud.firestore {
     // ─── 성공사례 / FAQ ───
     match /success_stories/{docId} { allow read: if true; allow write: if true; }
     match /faqs/{docId} { allow read: if true; allow write: if true; }
+
+    // ─── 신고 ───
+    match /reports/{reportId} {
+      allow create: if true;           // 누구나 신고 가능
+      allow read, delete: if true;     // 관리자 패널에서 조회/삭제
+      allow update: if false;
+    }
   }
 }

@@ -1783,7 +1783,10 @@ html.mobile-view .float-btn span{display:none !important}
   <div class="post-detail-outer">
     <div class="post-detail-meta-bar">
       <div class="post-detail-meta-info" id="postMetaInfo"></div>
-      <button class="post-back-btn" onclick="backToBoard()">← 목록으로</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="postReportBtn" class="post-back-btn" style="background:transparent;border:1px solid #ddd;color:var(--gray);font-size:12px;display:none" onclick="openReport('post',null)">🚨 신고</button>
+        <button class="post-back-btn" onclick="backToBoard()">← 목록으로</button>
+      </div>
     </div>
     <div class="post-detail-body ql-editor" style="border:none;padding:0;min-height:200px" id="postDetailBody">
       <div class="post-loading">⏳ 불러오는 중...</div>
@@ -1826,6 +1829,7 @@ html.mobile-view .float-btn span{display:none !important}
       <button class="admin-tab-btn" onclick="showAdminTab('settings',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">⚙️ 설정</button>
       <button id="adminAiImageTabBtn" class="admin-tab-btn" onclick="showAdminTab('aiimage',this)" style="display:none;padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">🎨 AI 이미지</button>
       <button id="adminProfileTabBtn" class="admin-tab-btn" onclick="showAdminTab('profile',this)" style="display:none;padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">📷 프로필 등록</button>
+      <button class="admin-tab-btn" onclick="showAdminTab('reports',this)" style="padding:10px 20px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s">🚨 신고</button>
     </div>
     <div id="adminTabMembers" class="admin-tab-panel">
       <div id="adminUserList"></div>
@@ -1838,6 +1842,7 @@ html.mobile-view .float-btn span{display:none !important}
     <div id="adminTabSettings" class="admin-tab-panel" style="display:none"></div>
     <div id="adminTabAiimage" class="admin-tab-panel" style="display:none"></div>
     <div id="adminTabProfile" class="admin-tab-panel" style="display:none"></div>
+    <div id="adminTabReports" class="admin-tab-panel" style="display:none"></div>
   </div>
 </div>
 
@@ -1881,6 +1886,33 @@ html.mobile-view .float-btn span{display:none !important}
 </div>
 
 <!-- ─── 상담신청 모달 ─── -->
+<!-- ─── 신고 모달 ─── -->
+<div class="modal-bg" id="reportModal" onclick="closeReportBg(event)">
+  <div class="auth-modal" style="max-width:380px;padding:28px 24px">
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:8px">🚨 신고하기</h2>
+    <p style="font-size:13px;color:var(--gray);margin-bottom:18px">신고 사유를 선택해 주세요. 검토 후 조치하겠습니다.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+      <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid #eee;border-radius:8px;cursor:pointer;font-size:14px;transition:.15s" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='#eee'">
+        <input type="radio" name="reportReason" value="스팸/광고" style="accent-color:var(--red)"> 스팸 / 광고
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid #eee;border-radius:8px;cursor:pointer;font-size:14px;transition:.15s" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='#eee'">
+        <input type="radio" name="reportReason" value="욕설/혐오" style="accent-color:var(--red)"> 욕설 / 혐오 표현
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid #eee;border-radius:8px;cursor:pointer;font-size:14px;transition:.15s" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='#eee'">
+        <input type="radio" name="reportReason" value="음란/불건전" style="accent-color:var(--red)"> 음란 / 불건전 내용
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid #eee;border-radius:8px;cursor:pointer;font-size:14px;transition:.15s" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='#eee'">
+        <input type="radio" name="reportReason" value="기타" style="accent-color:var(--red)"> 기타
+      </label>
+    </div>
+    <p id="reportMsg" style="display:none;color:var(--red);font-size:13px;margin-bottom:10px"></p>
+    <div style="display:flex;gap:8px">
+      <button onclick="closeReport()" style="flex:1;padding:11px;border:1px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:14px">취소</button>
+      <button onclick="submitReport()" style="flex:1;padding:11px;border:none;border-radius:8px;background:var(--red);color:#fff;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:600">신고 접수</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="modal" onclick="closeModalBg(event)">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -2532,24 +2564,90 @@ function roleLabel(type) {
 }
 function isAdmin(u) { return u && u.memberType==='admin'; }
 function isManager(u) { return u && (u.memberType==='admin'||u.memberType==='manager'); }
-function canAccessMarried(u) { return u && (u.memberType==='married'||u.memberType==='admin'||u.memberType==='manager'); }
-
-// ─── 관리자 계정 초기화 ───
-async function initAdmin() {
-  // 관리자 계정은 Firebase 콘솔 또는 관리자가 직접 생성합니다.
-  // 초기화 코드는 보안상 소스에 포함하지 않습니다.
+function sanitizeText(str) {
+  return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ─── localStorage → Firestore 회원 마이그레이션 ───
-async function migrateUsers() {
-  const legacy = JSON.parse(localStorage.getItem('maryUsers'));
-  if (!legacy || !legacy.length) return;
-  for (const u of legacy) {
-    const ref = db.collection('users').doc(u.email);
-    const snap = await ref.get();
-    if (!snap.exists) await ref.set(u);
+function canAccessMarried(u) { return u && (u.memberType==='married'||u.memberType==='admin'||u.memberType==='manager'); }
+
+
+// ─── 신고 기능 ───
+let _reportCtx = { type: null, colName: null, docId: null, commentId: null };
+
+function openReport(type, commentId) {
+  if (!currentUser) { alert('로그인 후 신고할 수 있습니다.'); return; }
+  _reportCtx = { type, colName: currentPostCol, docId: currentPostId, commentId: commentId || null };
+  document.querySelectorAll('input[name="reportReason"]').forEach(r => r.checked = false);
+  const msg = document.getElementById('reportMsg');
+  if (msg) msg.style.display = 'none';
+  document.getElementById('reportModal').classList.add('open');
+}
+function closeReport() { document.getElementById('reportModal').classList.remove('open'); }
+function closeReportBg(e) { if (e.target.id === 'reportModal') closeReport(); }
+
+async function submitReport() {
+  const reason = document.querySelector('input[name="reportReason"]:checked')?.value;
+  const msg = document.getElementById('reportMsg');
+  if (!reason) { msg.textContent = '사유를 선택해 주세요.'; msg.style.display = 'block'; return; }
+  try {
+    await db.collection('reports').add({
+      type: _reportCtx.type,
+      colName: _reportCtx.colName,
+      docId: _reportCtx.docId,
+      commentId: _reportCtx.commentId || null,
+      reason,
+      reporterId: currentUser.email,
+      reporterUserId: currentUser.userId || currentUser.name || currentUser.email,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    closeReport();
+    alert('신고가 접수되었습니다. 검토 후 처리하겠습니다.');
+  } catch(e) {
+    msg.textContent = '오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+    msg.style.display = 'block';
   }
-  localStorage.removeItem('maryUsers');
+}
+
+async function renderAdminReports() {
+  const el = document.getElementById('adminTabReports');
+  el.innerHTML = '<p style="text-align:center;padding:24px;color:var(--gray)">불러오는 중...</p>';
+  try {
+    const snap = await db.collection('reports').orderBy('createdAt','desc').limit(100).get();
+    if (snap.empty) { el.innerHTML = '<p style="text-align:center;padding:24px;color:var(--gray)">접수된 신고가 없습니다.</p>'; return; }
+    const typeLabel = { post: '게시글', comment: '댓글' };
+    const rows = snap.docs.map(d => {
+      const r = d.data();
+      const date = r.createdAt ? new Date(r.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '-';
+      return `<tr style="border-bottom:1px solid #f0f0f0">
+        <td style="padding:9px 8px;font-size:13px">${typeLabel[r.type]||r.type}</td>
+        <td style="padding:9px 8px"><span style="padding:2px 8px;border-radius:4px;background:#fff0f0;color:#e53935;font-size:12px;font-weight:700">${sanitizeText(r.reason)}</span></td>
+        <td style="padding:9px 8px;font-size:12px;color:var(--gray)">${sanitizeText(r.reporterUserId||r.reporterId)}</td>
+        <td style="padding:9px 8px;font-size:12px;color:var(--gray)">${date}</td>
+        <td style="padding:9px 8px;white-space:nowrap">
+          ${r.colName&&r.docId ? `<button onclick="closeAdmin();openPost('${r.colName}','${r.docId}')" style="padding:3px 9px;border:1px solid #ddd;border-radius:5px;background:#fff;cursor:pointer;font-size:11px;font-family:'Noto Sans KR',sans-serif">보기</button>` : ''}
+          <button onclick="deleteReport('${d.id}')" style="padding:3px 9px;border:1px solid #ddd;border-radius:5px;background:#fff;cursor:pointer;font-size:11px;font-family:'Noto Sans KR',sans-serif;color:#e53935;margin-left:4px">삭제</button>
+        </td>
+      </tr>`;
+    }).join('');
+    el.innerHTML = `<table style="width:100%;border-collapse:collapse">
+      <thead><tr style="border-bottom:2px solid #eee;font-size:12px;color:var(--gray)">
+        <th style="padding:8px;text-align:left;font-weight:600">유형</th>
+        <th style="padding:8px;text-align:left;font-weight:600">사유</th>
+        <th style="padding:8px;text-align:left;font-weight:600">신고자</th>
+        <th style="padding:8px;text-align:left;font-weight:600">일시</th>
+        <th style="padding:8px;text-align:left;font-weight:600">관리</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  } catch(e) {
+    el.innerHTML = `<p style="color:red;text-align:center;padding:20px">오류: ${e.message}</p>`;
+  }
+}
+
+async function deleteReport(id) {
+  if (!confirm('이 신고 내역을 삭제하시겠습니까?')) return;
+  await db.collection('reports').doc(id).delete();
+  renderAdminReports();
 }
 
 // ─── 관리자 패널 ───
@@ -2584,6 +2682,7 @@ function showAdminTab(tab, btn) {
   else if (tab==='settings') renderAdminSettings();
   else if (tab==='aiimage') renderAdminAiImage();
   else if (tab==='profile') renderProfileTab();
+  else if (tab==='reports') renderAdminReports();
 }
 
 async function renderAdminMembers() {
@@ -3157,10 +3256,13 @@ async function loadPostDetail(colName, docId) {
 
     document.getElementById('postHeroTitle').textContent = p.prefix ? `[${p.prefix}] ${p.title}` : p.title;
     document.getElementById('postMetaInfo').innerHTML =
-      `<span style="display:inline-flex;align-items:center;gap:6px">${avatarHtml(p.authorPhoto||'',p.author||'?',p.authorType||'member',28)} ${gradeBadge(p.authorType||'member')} <b>${p.author}</b></span> &nbsp;·&nbsp; ${date} &nbsp;·&nbsp; 조회 ${(p.views||0)+1}`;
+      `<span style="display:inline-flex;align-items:center;gap:6px">${avatarHtml(p.authorPhoto||'',p.author||'?',p.authorType||'member',28)} ${gradeBadge(p.authorType||'member')} <b>${sanitizeText(p.author)}</b></span> &nbsp;·&nbsp; ${date} &nbsp;·&nbsp; 조회 ${(p.views||0)+1}`;
     document.getElementById('postDetailBody').innerHTML = p.content || '<p style="color:var(--gray)">내용이 없습니다.</p>';
 
     db.collection(colName).doc(docId).update({views: firebase.firestore.FieldValue.increment(1)}).catch(()=>{});
+
+    const reportBtn = document.getElementById('postReportBtn');
+    if (reportBtn) reportBtn.style.display = currentUser ? 'inline-block' : 'none';
 
     loadAdjacentPosts(colName, docId, p.createdAt);
     loadComments(colName, docId);
@@ -3227,9 +3329,10 @@ function loadComments(colName, docId) {
           <div class="comment-header">
             ${avatarHtml(c.authorPhoto||'',c.author||'?',c.authorType||'member',26)}
             ${gradeBadge(c.authorType||'member')}
-            <span class="comment-author">${c.author}</span>
+            <span class="comment-author">${sanitizeText(c.author)}</span>
             <span class="comment-date">${date}</span>
             ${isOwn ? `<button class="comment-delete" onclick="deleteComment('${colName}','${docId}','${c.id}')">삭제</button>` : ''}
+            ${!isOwn && currentUser ? `<button class="comment-delete" style="color:#aaa;border-color:#eee" onclick="openReport('comment','${c.id}')">신고</button>` : ''}
           </div>
           <div class="comment-content">${c.content.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
           ${imgHtml}
@@ -3386,11 +3489,11 @@ function _renderBoardTable(colName) {
     : pagePosts.map((p,i) => {
         const num = data.length - (pg * BOARD_PAGE_SIZE) - i;
         const date = p.createdAt ? new Date(p.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
-        const prefixTag = p.prefix ? `<span style="display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:700;background:rgba(200,16,46,0.08);color:var(--red);border:1px solid rgba(200,16,46,0.15);margin-right:5px">${p.prefix}</span>` : '';
+        const prefixTag = p.prefix ? `<span style="display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:700;background:rgba(200,16,46,0.08);color:var(--red);border:1px solid rgba(200,16,46,0.15);margin-right:5px">${sanitizeText(p.prefix)}</span>` : '';
         return `<tr>
           <td class="post-meta" style="text-align:center">${num}</td>
-          <td><span class="post-title" onclick="openPost('${colName}','${p.id}')">${badgeMap[p.badge]||''}${prefixTag}${p.title}</span></td>
-          <td class="post-meta" style="white-space:nowrap">${avatarHtml(p.authorPhoto||'',p.author||'?',p.authorType||'member',22)} ${gradeBadge(p.authorType||'member')} ${p.author}</td>
+          <td><span class="post-title" onclick="openPost('${colName}','${p.id}')">${badgeMap[p.badge]||''}${prefixTag}${sanitizeText(p.title)}</span></td>
+          <td class="post-meta" style="white-space:nowrap">${avatarHtml(p.authorPhoto||'',p.author||'?',p.authorType||'member',22)} ${gradeBadge(p.authorType||'member')} ${sanitizeText(p.author)}</td>
           <td class="post-meta">${date}</td>
           <td class="post-meta" style="text-align:center">${p.views||0}</td>
         </tr>`;
@@ -3459,8 +3562,8 @@ function attachPhotoBoard(el, colName) {
             return `<div class="photo-card" onclick="openPost('${colName}','${p.id}')">
               <div class="photo-thumb" style="background:${p.bg||bgs[i%bgs.length]}">${p.emoji||'🌏'}</div>
               <div class="photo-info">
-                <div class="photo-title">${p.title}</div>
-                <div class="photo-meta">${p.author} · ${date} · ♡ ${p.likes||0}</div>
+                <div class="photo-title">${sanitizeText(p.title)}</div>
+                <div class="photo-meta">${sanitizeText(p.author)} · ${date} · ♡ ${p.likes||0}</div>
               </div>
             </div>`;
           }).join('');
@@ -4655,8 +4758,6 @@ function toggleMobileView() {
 
 // ─── 초기화 ───
 (async function() {
-  await migrateUsers();
-  await initAdmin();
   const initHash = location.hash.slice(1);
   if (initHash.startsWith('write/')) {
     initWriteTab(initHash.split('/')[1]);
