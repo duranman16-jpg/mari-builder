@@ -1630,7 +1630,7 @@ html.mobile-view .float-btn span{display:none !important}
     <h3>로그인</h3>
     <p class="modal-sub" style="font-size:13px;color:var(--gray);margin-bottom:20px">마리 국제 결혼 회원이시면 로그인해 주세요.</p>
     <div class="form-group">
-      <label class="form-label">이메일</label>
+      <label class="form-label">이메일 (아이디)</label>
       <input type="email" class="auth-input" id="loginEmail" placeholder="example@email.com">
     </div>
     <div class="form-group">
@@ -1638,6 +1638,7 @@ html.mobile-view .float-btn span{display:none !important}
       <input type="password" class="auth-input" id="loginPw" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')submitLogin()">
     </div>
     <button class="auth-submit" onclick="submitLogin()">로그인</button>
+    <p style="text-align:center;margin-top:10px;font-size:13px"><a onclick="openResetPw()" style="color:var(--gray);cursor:pointer;text-decoration:underline">비밀번호를 잊으셨나요?</a></p>
     <p class="auth-switch">아직 회원이 아니신가요? <a onclick="openSignup()">회원가입</a></p>
   </div>
 </div>
@@ -1683,6 +1684,51 @@ html.mobile-view .float-btn span{display:none !important}
     <p style="font-size:12px;color:var(--gray);background:rgba(0,0,0,0.03);padding:14px;border-radius:8px;line-height:1.8;border:1px solid rgba(0,0,0,0.07)">※ 가입 시 <b>일반회원</b>으로 등록됩니다.<br>결혼회원 등급은 관리자 또는 매니저가 승인 후 부여합니다.</p>
     <button class="auth-submit" onclick="submitSignup()">회원가입 완료</button>
     <p class="auth-switch">이미 회원이신가요? <a onclick="openLogin()">로그인</a></p>
+  </div>
+</div>
+
+<!-- ─── 비밀번호 찾기 모달 ─── -->
+<div class="modal-bg" id="resetPwModal" onclick="closeResetPwBg(event)">
+  <div class="auth-modal">
+    <button class="modal-close" onclick="closeResetPw()">✕</button>
+    <h3>비밀번호 찾기</h3>
+    <p class="modal-sub" style="font-size:13px;color:var(--gray);margin-bottom:20px">가입한 이메일로 인증 후 비밀번호를 재설정합니다.</p>
+
+    <!-- Step 1: 이메일 입력 -->
+    <div id="resetStep1">
+      <div class="form-group">
+        <label class="form-label">이메일 (아이디)</label>
+        <input type="email" class="auth-input" id="resetEmail" placeholder="가입한 이메일 입력">
+      </div>
+      <button class="auth-submit" onclick="sendResetOtp()">인증코드 발송</button>
+    </div>
+
+    <!-- Step 2: OTP 입력 -->
+    <div id="resetStep2" style="display:none">
+      <div class="form-group">
+        <label class="form-label">인증코드 <span id="resetOtpTimer" style="color:var(--red);font-size:12px;font-weight:400"></span></label>
+        <div style="display:flex;gap:8px">
+          <input type="text" class="auth-input" id="resetOtp" placeholder="6자리 코드" maxlength="6" style="flex:1;letter-spacing:6px;font-size:20px;text-align:center;font-weight:700">
+          <button type="button" onclick="confirmResetOtp()" style="padding:0 18px;background:var(--red);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">확인</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: 새 비밀번호 -->
+    <div id="resetStep3" style="display:none">
+      <div class="form-group">
+        <label class="form-label">새 비밀번호</label>
+        <input type="password" class="auth-input" id="resetPw1" placeholder="새 비밀번호 입력">
+        <p style="font-size:11px;color:var(--gray);margin-top:6px;line-height:1.7">※ 8자 이상 / 대문자 · 소문자 · 숫자 · 특수문자(@$!%*#?&) 각 1개 이상 포함</p>
+      </div>
+      <div class="form-group">
+        <label class="form-label">새 비밀번호 확인</label>
+        <input type="password" class="auth-input" id="resetPw2" placeholder="비밀번호 재입력">
+      </div>
+      <button class="auth-submit" onclick="submitResetPw()">비밀번호 변경</button>
+    </div>
+
+    <p class="auth-switch"><a onclick="closeResetPw();openLogin()">로그인으로 돌아가기</a></p>
   </div>
 </div>
 
@@ -2589,6 +2635,92 @@ async function submitLogin() {
 function openSignup() { closeLogin(); document.getElementById('signupModal').classList.add('open'); resetEmailVerify(); }
 function closeSignup() { document.getElementById('signupModal').classList.remove('open'); resetEmailVerify(); }
 function closeSignupBg(e) { if (e.target.id==='signupModal') closeSignup(); }
+
+// ─── 비밀번호 찾기 ───
+let _resetOtpVerified = false;
+let _resetOtpTimerInterval = null;
+
+function openResetPw() {
+  closeLogin();
+  _resetOtpVerified = false;
+  clearInterval(_resetOtpTimerInterval);
+  document.getElementById('resetStep1').style.display = '';
+  document.getElementById('resetStep2').style.display = 'none';
+  document.getElementById('resetStep3').style.display = 'none';
+  document.getElementById('resetEmail').value = '';
+  document.getElementById('resetOtp').value = '';
+  document.getElementById('resetOtpTimer').textContent = '';
+  setDisplay('resetPwModal', 'flex');
+}
+function closeResetPw() { clearInterval(_resetOtpTimerInterval); setDisplay('resetPwModal', 'none'); }
+function closeResetPwBg(e) { if (e.target.id === 'resetPwModal') closeResetPw(); }
+
+async function sendResetOtp() {
+  const email = document.getElementById('resetEmail').value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('올바른 이메일 주소를 입력해주세요.'); return; }
+  const userDoc = await db.collection('users').doc(email).get();
+  if (!userDoc.exists) { alert('등록된 이메일이 아닙니다.'); return; }
+  const btn = document.querySelector('#resetStep1 .auth-submit');
+  btn.disabled = true; btn.textContent = '발송 중...';
+  try {
+    const fn = firebase.functions().httpsCallable('sendVerificationEmail');
+    await fn({ email });
+    document.getElementById('resetStep1').style.display = 'none';
+    document.getElementById('resetStep2').style.display = '';
+    let sec = 600;
+    const timerEl = document.getElementById('resetOtpTimer');
+    clearInterval(_resetOtpTimerInterval);
+    _resetOtpTimerInterval = setInterval(() => {
+      sec--;
+      const m = String(Math.floor(sec/60)).padStart(2,'0');
+      const s = String(sec%60).padStart(2,'0');
+      timerEl.textContent = `${m}:${s}`;
+      if (sec <= 0) { clearInterval(_resetOtpTimerInterval); timerEl.textContent = '만료됨'; }
+    }, 1000);
+  } catch(e) {
+    alert('발송 실패: ' + e.message);
+    btn.disabled = false; btn.textContent = '인증코드 발송';
+  }
+}
+
+async function confirmResetOtp() {
+  const email = document.getElementById('resetEmail').value.trim();
+  const otp = document.getElementById('resetOtp').value.trim();
+  if (!otp || otp.length !== 6) { alert('6자리 인증코드를 입력해주세요.'); return; }
+  try {
+    const fn = firebase.functions().httpsCallable('verifyEmailOtp');
+    const res = await fn({ email, otp });
+    if (res.data.success) {
+      clearInterval(_resetOtpTimerInterval);
+      _resetOtpVerified = true;
+      document.getElementById('resetStep2').style.display = 'none';
+      document.getElementById('resetStep3').style.display = '';
+    } else {
+      alert(res.data.message || '인증 실패');
+    }
+  } catch(e) {
+    alert('확인 오류: ' + e.message);
+  }
+}
+
+async function submitResetPw() {
+  if (!_resetOtpVerified) { alert('이메일 인증을 먼저 완료해주세요.'); return; }
+  const email = document.getElementById('resetEmail').value.trim();
+  const p1 = document.getElementById('resetPw1').value;
+  const p2 = document.getElementById('resetPw2').value;
+  const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  if (!p1 || !pwRegex.test(p1)) { alert('비밀번호는 8자 이상, 대문자·소문자·숫자·특수문자(@$!%*#?&)를 각 1개 이상 포함해야 합니다.'); return; }
+  if (p1 !== p2) { alert('비밀번호가 일치하지 않습니다.'); return; }
+  try {
+    const hashed = await hashPassword(p1);
+    await db.collection('users').doc(email).update({ pw: hashed });
+    alert('비밀번호가 변경되었습니다. 새 비밀번호로 로그인해주세요.');
+    closeResetPw();
+    openLogin();
+  } catch(e) {
+    alert('변경 오류: ' + e.message);
+  }
+}
 
 // ─── 이메일 인증 ───
 let _emailVerified = false;
