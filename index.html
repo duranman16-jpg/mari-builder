@@ -1664,7 +1664,11 @@ html.mobile-view .float-btn span{display:none !important}
       </div>
     </div>
     <div id="emailVerifiedBadge" style="display:none;background:#e8f5e9;border:1px solid #81c784;border-radius:8px;padding:10px 14px;font-size:13px;color:#2e7d32;margin-bottom:4px">✅ 이메일 인증 완료</div>
-    <div class="form-group"><label class="form-label">비밀번호 (6자 이상)</label><input type="password" class="auth-input" id="signupPw" placeholder="비밀번호 입력"></div>
+    <div class="form-group">
+      <label class="form-label">비밀번호</label>
+      <input type="password" class="auth-input" id="signupPw" placeholder="비밀번호 입력">
+      <p style="font-size:11px;color:var(--gray);margin-top:6px;line-height:1.7">※ 8자 이상 / 대문자 · 소문자 · 숫자 · 특수문자(@$!%*#?&) 각 1개 이상 포함</p>
+    </div>
     <div class="form-group"><label class="form-label">비밀번호 확인</label><input type="password" class="auth-input" id="signupPw2" placeholder="비밀번호 재입력"></div>
     <div class="form-group"><label class="form-label">연락처</label><input type="tel" class="auth-input" id="signupPhone" placeholder="010-0000-0000"></div>
     <div class="form-group"><label class="form-label">생년월일</label><input type="date" class="auth-input" id="signupBirth"></div>
@@ -2680,7 +2684,8 @@ async function submitSignup() {
   if (!name||!email||!pw||!phone||!birth||!gender) { alert('모든 항목을 입력해 주세요.'); return; }
   if (!_emailVerified) { alert('이메일 인증을 완료해주세요.'); document.getElementById('sendOtpBtn').scrollIntoView({behavior:'smooth',block:'center'}); return; }
   if (pw!==pw2) { alert('비밀번호가 일치하지 않습니다.'); return; }
-  if (pw.length<6) { alert('비밀번호는 6자 이상이어야 합니다.'); return; }
+  const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  if (!pwRegex.test(pw)) { alert('비밀번호는 8자 이상, 대문자·소문자·숫자·특수문자(@$!%*#?&)를 각 1개 이상 포함해야 합니다.'); return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('이메일 형식이 올바르지 않습니다.'); return; }
   try {
     const existing = await db.collection('users').doc(email).get();
@@ -3181,7 +3186,8 @@ function showLifeUpgrade() {
 async function submitChangePw() {
   const p1 = document.getElementById('newPw1')?.value;
   const p2 = document.getElementById('newPw2')?.value;
-  if (!p1 || p1.length < 6) { alert('비밀번호는 6자 이상이어야 합니다.'); return; }
+  const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  if (!p1 || !pwRegex.test(p1)) { alert('비밀번호는 8자 이상, 대문자·소문자·숫자·특수문자(@$!%*#?&)를 각 1개 이상 포함해야 합니다.'); return; }
   if (p1 !== p2) { alert('비밀번호가 일치하지 않습니다.'); return; }
   try {
     const hashedP1 = await hashPassword(p1);
@@ -3360,7 +3366,8 @@ async function submitAddVN() {
     </div>`;
   } else {
     pw = document.getElementById('krPw')?.value;
-    if (!pw || pw.length < 6) { alert('비밀번호를 6자 이상 입력해 주세요.'); return; }
+    const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    if (!pw || !pwRegex.test(pw)) { alert('비밀번호는 8자 이상, 대문자·소문자·숫자·특수문자(@$!%*#?&)를 각 1개 이상 포함해야 합니다.'); return; }
     const hashedKrPw = await hashPassword(pw);
     newUser = {name, email, pw:hashedKrPw, phone:'', birth:'', gender, memberType:role, nationality:'kr', tempPassword:false};
     resultHtml = `<div style="background:#fff5f5;border:1px solid #C8102E;border-radius:10px;padding:16px;line-height:2">
