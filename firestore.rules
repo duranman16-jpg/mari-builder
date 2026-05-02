@@ -2,10 +2,9 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // 회원 정보 - 삭제 불가, 읽기/생성/수정만 허용
+    // 회원 정보 - 읽기/생성/수정/삭제 허용 (탈퇴 기능)
     match /users/{userId} {
-      allow read, create, update: if true;
-      allow delete: if false;
+      allow read, create, update, delete: if true;
     }
 
     // 이메일 OTP - 직접 읽기 차단 (Functions에서만 읽음)
