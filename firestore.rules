@@ -18,8 +18,7 @@ service cloud.firestore {
 
     // ─── 이메일 OTP ───
     match /email_otps/{emailDoc} {
-      allow write: if true;
-      allow read: if false; // Cloud Function에서만 읽음
+      allow read, write: if false; // Cloud Function Admin SDK에서만 접근 (규칙 우회)
     }
 
     // ─── AI 이미지 ───
