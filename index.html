@@ -436,6 +436,52 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
   .preview-steps{flex-wrap:nowrap}
 }
 
+/* ─── 결혼 절차 상세 페이지 ─── */
+.ps-card{border-radius:20px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.1);margin-bottom:0;background:#fff}
+.ps-header{padding:36px 40px 32px;color:#fff;position:relative;overflow:hidden}
+.ps-header::after{content:'';position:absolute;right:-20px;bottom:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.07)}
+.ps-num-badge{display:inline-block;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.35);border-radius:99px;padding:4px 14px;font-size:12px;font-weight:800;letter-spacing:0.08em;margin-bottom:14px}
+.ps-icon-lg{font-size:44px;margin-bottom:10px;line-height:1}
+.ps-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;margin-bottom:4px}
+.ps-subtitle{font-size:13px;opacity:0.8;font-weight:400}
+.ps-body{padding:36px 40px}
+.ps-text{font-size:15px;color:#444;line-height:1.9;margin-bottom:14px}
+.ps-methods{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.ps-method{display:flex;align-items:center;gap:12px;background:#faf8f5;border-radius:10px;padding:12px 16px;font-size:14px;color:#333;border:1px solid rgba(184,134,11,0.1)}
+.ps-method-icon{font-size:20px;flex-shrink:0}
+.ps-doc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.ps-doc-item{background:#faf8f5;border:1px solid rgba(184,134,11,0.12);border-radius:8px;padding:10px 14px;font-size:13px;color:#333;display:flex;align-items:center;gap:8px}
+.ps-info-box{background:linear-gradient(135deg,rgba(184,134,11,0.06),rgba(200,16,46,0.04));border:1px solid rgba(184,134,11,0.2);border-left:4px solid #B8860B;border-radius:12px;padding:20px 22px;margin-top:20px}
+.ps-info-title{font-size:14px;font-weight:700;color:#8B6309;margin-bottom:10px}
+.ps-info-box p{font-size:13px;color:#555;line-height:1.8;margin:0}
+.ps-notice-box{display:flex;align-items:flex-start;gap:10px;background:rgba(200,16,46,0.04);border:1px dashed rgba(200,16,46,0.2);border-radius:10px;padding:14px 18px;font-size:13px;color:#555;line-height:1.7;margin-top:16px}
+.ps-notice-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.ps-highlight-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}
+.ps-highlight-item{text-align:center;background:#f0f7ff;border-radius:12px;padding:18px 10px;border:1px solid rgba(0,119,182,0.12)}
+.ps-highlight-num{font-size:22px;font-weight:800;color:#0077B6;margin-bottom:4px}
+.ps-highlight-label{font-size:12px;color:#666}
+.ps-option-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.ps-option-card{background:#faf8f5;border:1px solid rgba(184,134,11,0.15);border-radius:12px;padding:20px;text-align:center}
+.ps-option-icon{font-size:28px;margin-bottom:8px}
+.ps-option-title{font-size:14px;font-weight:700;color:#333;margin-bottom:6px}
+.ps-option-desc{font-size:12px;color:#666;line-height:1.6}
+.ps-connector{display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:0}
+.ps-connector-line{width:2px;height:28px;background:linear-gradient(to bottom,rgba(184,134,11,0.3),rgba(184,134,11,0.6))}
+.ps-connector-arrow{color:#B8860B;font-size:14px;margin-top:-2px;opacity:0.7}
+.ps-cta{background:linear-gradient(135deg,#1A0A0A,#3D0B0B);border-radius:20px;padding:48px 40px;text-align:center;margin-top:32px;color:#fff}
+.ps-cta h3{font-family:'Playfair Display',serif;font-size:24px;margin-bottom:10px}
+.ps-cta p{font-size:14px;color:rgba(255,255,255,0.65);margin-bottom:24px;line-height:1.7}
+@media(max-width:640px){
+  .ps-header{padding:28px 22px 24px}
+  .ps-body{padding:24px 22px}
+  .ps-title{font-size:20px}
+  .ps-icon-lg{font-size:34px}
+  .ps-highlight-row{grid-template-columns:repeat(3,1fr);gap:8px}
+  .ps-highlight-num{font-size:18px}
+  .ps-option-cards{grid-template-columns:1fr}
+  .ps-doc-list{grid-template-columns:1fr 1fr}
+}
+
 /* ─── 게시물 상세 페이지 ─── */
 .post-detail-outer{padding:0 7% 80px;max-width:960px;margin:0 auto}
 .post-detail-meta-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:2px solid rgba(200,16,46,0.08);margin-bottom:32px;flex-wrap:wrap;gap:10px}
@@ -935,17 +981,17 @@ html.mobile-view .float-btn span{display:none !important}
     </div>
     <!-- 6단계 요약 바 -->
     <div class="proc-steps-bar fade-in">
-      <div class="proc-step-item"><span class="proc-num" style="background:#C8102E">1</span>무료 상담</div>
+      <div class="proc-step-item"><span class="proc-num" style="background:#C8102E">1</span>상담</div>
       <span class="proc-arrow">›</span>
       <div class="proc-step-item"><span class="proc-num" style="background:#E08000">2</span>회원 등록</div>
       <span class="proc-arrow">›</span>
-      <div class="proc-step-item"><span class="proc-num" style="background:#7B3FBE">3</span>프로필 매칭</div>
+      <div class="proc-step-item"><span class="proc-num" style="background:#7B3FBE">3</span>연인 매칭</div>
       <span class="proc-arrow">›</span>
       <div class="proc-step-item"><span class="proc-num" style="background:#0077B6">4</span>현지 맞선</div>
       <span class="proc-arrow">›</span>
-      <div class="proc-step-item"><span class="proc-num" style="background:#B8860B">5</span>혼인신고</div>
+      <div class="proc-step-item"><span class="proc-num" style="background:#B8860B">5</span>혼인</div>
       <span class="proc-arrow">›</span>
-      <div class="proc-step-item"><span class="proc-num" style="background:#2E7D32">6</span>정착 지원</div>
+      <div class="proc-step-item"><span class="proc-num" style="background:#2E7D32">6</span>각종 서류작업</div>
     </div>
   </div>
 
@@ -1045,54 +1091,191 @@ html.mobile-view .float-btn span{display:none !important}
   <div class="page-hero">
     <div class="page-hero-inner">
       <div class="breadcrumb"><a onclick="navigate('home')">홈</a><span>›</span>결혼 절차</div>
-      <h1>결혼 절차</h1>
-      <p>복잡한 절차도 저희가 처음부터 끝까지 함께합니다.</p>
+      <h1>결혼 절차 안내</h1>
+      <p>평생의 반려자를 만나는 길, 처음부터 끝까지 정직하고 투명하게 함께합니다.</p>
     </div>
   </div>
-  <section class="process" style="margin-top:0">
-    <div class="steps fade-in">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-icon">📞</div>
-        <h3>무료 상담</h3>
-        <p>방문·전화·온라인 상담으로 조건과 희망사항을 말씀해 주세요.</p>
-        <span class="step-arrow">›</span>
+
+  <!-- 상단 6단계 요약 바 -->
+  <div style="background:#fff;border-bottom:1px solid rgba(184,134,11,0.15);padding:20px 7%;position:sticky;top:64px;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+    <div class="proc-steps-bar" style="background:transparent;border:none;box-shadow:none;padding:0">
+      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps1').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:#C8102E">1</span>상담</div>
+      <span class="proc-arrow">›</span>
+      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps2').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:#E08000">2</span>회원 등록</div>
+      <span class="proc-arrow">›</span>
+      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps3').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:#7B3FBE">3</span>연인 매칭</div>
+      <span class="proc-arrow">›</span>
+      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps4').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:#0077B6">4</span>현지 맞선</div>
+      <span class="proc-arrow">›</span>
+      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps5').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:#B8860B">5</span>혼인</div>
+      <span class="proc-arrow">›</span>
+      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps6').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:#2E7D32">6</span>각종 서류작업</div>
+    </div>
+  </div>
+
+  <section style="margin-top:0;padding:64px 7% 80px;max-width:900px;margin-left:auto;margin-right:auto">
+
+    <!-- STEP 1 -->
+    <div id="ps1" class="ps-card fade-in">
+      <div class="ps-header" style="background:linear-gradient(135deg,#C8102E,#9B0D24)">
+        <div class="ps-num-badge">STEP 1</div>
+        <div class="ps-icon-lg">📞</div>
+        <h2 class="ps-title">상담</h2>
+        <p class="ps-subtitle">직접 방문을 환영합니다</p>
       </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-icon">📋</div>
-        <h3>회원 등록</h3>
-        <p>신분증·사진·서류 제출 후 표준계약서 작성, 본인인증 진행.</p>
-        <span class="step-arrow">›</span>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-icon">👤</div>
-        <h3>프로필 매칭</h3>
-        <p>조건에 맞는 베트남 여성 프로필을 엄선해 소개해 드립니다.</p>
-        <span class="step-arrow">›</span>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-icon">✈️</div>
-        <h3>현지 맞선</h3>
-        <p>베트남 현지 방문, 통역사 동행, 안전한 만남 진행.</p>
-        <span class="step-arrow">›</span>
-      </div>
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-icon">💍</div>
-        <h3>혼인신고</h3>
-        <p>양국 혼인신고·비자 신청·입국까지 모든 서류를 지원합니다.</p>
-        <span class="step-arrow">›</span>
-      </div>
-      <div class="step">
-        <div class="step-num">6</div>
-        <div class="step-icon">🏠</div>
-        <h3>정착 지원</h3>
-        <p>입국 후 생활 적응, 한국어 교육 안내까지 사후관리 제공.</p>
+      <div class="ps-body">
+        <p class="ps-text">고객님의 현재 상황과 꿈꾸는 이상형에 대해 편안하게 이야기 나눌 수 있는 첫걸음입니다. 전화나 온라인을 통한 상담도 언제나 열려있지만, 가능하시다면 저희 사무실로 <strong>직접 방문해 주시는 것을 적극 권장</strong>해 드립니다.</p>
+        <p class="ps-text">인생의 중요한 결정인 만큼, 따뜻한 차 한 잔을 나누며 직접 얼굴을 마주하고 고객님의 진심과 세세한 희망 사항을 듣고 싶습니다.</p>
+        <div class="ps-methods">
+          <div class="ps-method"><span class="ps-method-icon">🏢</span><span>사무실 방문 상담 <strong>(적극 권장)</strong></span></div>
+          <div class="ps-method"><span class="ps-method-icon">📱</span><span>전화 상담</span></div>
+          <div class="ps-method"><span class="ps-method-icon">💬</span><span>카카오톡·온라인 상담</span></div>
+        </div>
       </div>
     </div>
+
+    <div class="ps-connector"><div class="ps-connector-line"></div><div class="ps-connector-arrow">▼</div></div>
+
+    <!-- STEP 2 -->
+    <div id="ps2" class="ps-card fade-in">
+      <div class="ps-header" style="background:linear-gradient(135deg,#E08000,#B86200)">
+        <div class="ps-num-badge">STEP 2</div>
+        <div class="ps-icon-lg">🔐</div>
+        <h2 class="ps-title">회원 등록 및 신원 인증</h2>
+        <p class="ps-subtitle">가장 튼튼한 안전망</p>
+      </div>
+      <div class="ps-body">
+        <p class="ps-text">아름다운 만남의 최우선 조건은 서로에 대한 <strong>'신뢰'</strong>입니다. 저희는 정식으로 허가받은 합법적인 중개업체로서, 남성과 여성 양측 모두에게 동일하고 철저한 서류 검증 과정을 거치고 있습니다.</p>
+        <p class="ps-text" style="margin-bottom:16px">확인하는 서류는 다음과 같습니다.</p>
+        <div class="ps-doc-list">
+          <div class="ps-doc-item">📄 혼인관계증명서</div>
+          <div class="ps-doc-item">👨‍👩‍👧 가족관계증명서</div>
+          <div class="ps-doc-item">🔍 범죄경력증명서</div>
+          <div class="ps-doc-item">🏢 재직증명서 / 사업자등록증</div>
+          <div class="ps-doc-item">💰 소득증명원</div>
+          <div class="ps-doc-item">🎓 최종학력증명서</div>
+          <div class="ps-doc-item">🏠 주거 및 자산 관련 서류</div>
+        </div>
+        <p class="ps-text" style="margin-top:16px;color:#666">다소 번거롭게 느껴지실 수 있습니다. 하지만 이는 평생을 함께할 가족을 맞이하기 위해, 한 치의 거짓 없는 투명하고 안전한 만남을 보장하기 위한 저희만의 원칙입니다.</p>
+        <div class="ps-info-box">
+          <div class="ps-info-title">📌 신원 검증 서류란?</div>
+          <p>현행법상 안전한 국제결혼을 위해 상호 간 의무적으로 교환하고 확인해야 하는 필수 공적 서류들을 뜻합니다. 양측의 정확한 사실 관계를 바탕으로 오해 없는 진실한 만남을 시작하기 위한 법적 보호 장치입니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ps-connector"><div class="ps-connector-line"></div><div class="ps-connector-arrow">▼</div></div>
+
+    <!-- STEP 3 -->
+    <div id="ps3" class="ps-card fade-in">
+      <div class="ps-header" style="background:linear-gradient(135deg,#7B3FBE,#5B2D9E)">
+        <div class="ps-num-badge">STEP 3</div>
+        <div class="ps-icon-lg">💑</div>
+        <h2 class="ps-title">연인 매칭</h2>
+        <p class="ps-subtitle">맞춤형 프로필 소개</p>
+      </div>
+      <div class="ps-body">
+        <p class="ps-text">철저한 서류 인증을 마친 후, 고객님의 조건과 성향에 가장 잘 맞는 현지 여성분들을 찾아드립니다. 현지에 상주하는 베테랑 매니저들이 직접 발로 뛰며 엄선한 분들의 프로필을 소개합니다.</p>
+        <p class="ps-text">진정으로 마음에 드는 분을 찾으실 때까지 세심하게 조율해 드립니다.</p>
+        <div class="ps-notice-box">
+          <span class="ps-notice-icon">💡</span>
+          <span>본격적인 매칭 진행을 위해 소정의 주선비 입금이 필요합니다.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ps-connector"><div class="ps-connector-line"></div><div class="ps-connector-arrow">▼</div></div>
+
+    <!-- STEP 4 -->
+    <div id="ps4" class="ps-card fade-in">
+      <div class="ps-header" style="background:linear-gradient(135deg,#0077B6,#005A8E)">
+        <div class="ps-num-badge">STEP 4</div>
+        <div class="ps-icon-lg">✈️</div>
+        <h2 class="ps-title">현지 맞선 진행</h2>
+        <p class="ps-subtitle">베트남 현지에서의 첫 만남</p>
+      </div>
+      <div class="ps-body">
+        <p class="ps-text">사진과 프로필로 서로의 호감을 확인했다면, 이제 직접 만나 진실한 대화를 나눌 차례입니다. 상호 동의하에 날짜를 정하고 베트남 현지로 출국하여 가슴 뛰는 첫 만남을 가집니다.</p>
+        <div class="ps-highlight-row">
+          <div class="ps-highlight-item">
+            <div class="ps-highlight-num">3~5명</div>
+            <div class="ps-highlight-label">예비 신부와 만남</div>
+          </div>
+          <div class="ps-highlight-item">
+            <div class="ps-highlight-num">100%</div>
+            <div class="ps-highlight-label">전문 통역사 동행</div>
+          </div>
+          <div class="ps-highlight-item">
+            <div class="ps-highlight-num">전 일정</div>
+            <div class="ps-highlight-label">매니저 동행 지원</div>
+          </div>
+        </div>
+        <p class="ps-text">평생의 짝을 신중하게 결정하실 수 있도록 현지 전문 통역사와 매니저가 모든 일정에 동행하여 든든하게 지원합니다.</p>
+      </div>
+    </div>
+
+    <div class="ps-connector"><div class="ps-connector-line"></div><div class="ps-connector-arrow">▼</div></div>
+
+    <!-- STEP 5 -->
+    <div id="ps5" class="ps-card fade-in">
+      <div class="ps-header" style="background:linear-gradient(135deg,#B8860B,#8B6309)">
+        <div class="ps-num-badge">STEP 5</div>
+        <div class="ps-icon-lg">💍</div>
+        <h2 class="ps-title">성혼 및 결혼식</h2>
+        <p class="ps-subtitle">맞춤형 진행</p>
+      </div>
+      <div class="ps-body">
+        <p class="ps-text">두 분의 마음이 하나로 모여 결혼을 약속하시게 되면, 양가 부모님께 정식으로 인사를 드리고 약혼을 진행합니다.</p>
+        <div class="ps-notice-box" style="margin-bottom:20px">
+          <span class="ps-notice-icon">💡</span>
+          <span>이 단계에서 결혼 보증금이 발생합니다.</span>
+        </div>
+        <p class="ps-text">이후 이어지는 현지 결혼식, 웨딩 촬영, 신혼여행 등의 일정은 <strong>전적으로 고객님의 선택</strong>에 따라 유연하게 진행됩니다.</p>
+        <div class="ps-option-cards">
+          <div class="ps-option-card">
+            <div class="ps-option-icon">👫</div>
+            <div class="ps-option-title">자유 진행</div>
+            <div class="ps-option-desc">예비 신부님과 직접 상의하여 자유롭게 준비</div>
+          </div>
+          <div class="ps-option-card">
+            <div class="ps-option-icon">🏢</div>
+            <div class="ps-option-title">업체 대행</div>
+            <div class="ps-option-desc">저희 업체에 일임하여 원스톱으로 편안하게 진행<br><small style="color:#aaa">(항목별 추가 비용 발생)</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ps-connector"><div class="ps-connector-line"></div><div class="ps-connector-arrow">▼</div></div>
+
+    <!-- STEP 6 -->
+    <div id="ps6" class="ps-card fade-in">
+      <div class="ps-header" style="background:linear-gradient(135deg,#2E7D32,#1B5E20)">
+        <div class="ps-num-badge">STEP 6</div>
+        <div class="ps-icon-lg">📄</div>
+        <h2 class="ps-title">각종 서류작업</h2>
+        <p class="ps-subtitle">선택 사항</p>
+      </div>
+      <div class="ps-body">
+        <p class="ps-text">결혼식 이후에도 양국 혼인신고, 신부님의 한국어 교육 기관 등록, 배우자 비자 신청 등 복잡한 행정 절차가 남아있습니다. 이 과정은 고객님께서 직접 진행하실 수 있도록 절차를 상세히 안내해 드립니다.</p>
+        <div class="ps-notice-box" style="background:rgba(46,125,50,0.06);border-color:rgba(46,125,50,0.2)">
+          <span class="ps-notice-icon">📋</span>
+          <span>생업으로 시간이 부족하시거나 복잡한 서류 작업이 부담스러우시다면 저희의 <strong>전문 대행 서비스</strong>를 이용하실 수 있습니다. <small style="color:#888">(소정의 수수료 발생)</small></span>
+        </div>
+        <div class="ps-info-box" style="margin-top:24px">
+          <div class="ps-info-title">📌 결혼이민(F-6) 비자란?</div>
+          <p>외국인 배우자가 대한민국 국민과 결혼하여 국내에 합법적으로 체류하며 생활하기 위해 반드시 발급받아야 하는 비자입니다. 위장결혼 방지를 위해 출입국관리사무소의 심사 기준이 매우 까다로우며, 소득 요건 및 의사소통 요건 등을 입증해야 하는 방대한 서류 작업이 필요합니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 하단 CTA -->
+    <div class="ps-cta fade-in">
+      <h3>지금 바로 첫걸음을 시작하세요</h3>
+      <p>전문 상담사가 고객님의 상황에 맞게 친절히 안내해 드립니다.</p>
+      <button class="btn-main" onclick="navigate('inquiry')" style="margin-top:4px">상담 신청하기 →</button>
+    </div>
+
   </section>
 </div>
 
