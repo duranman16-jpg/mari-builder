@@ -3467,6 +3467,25 @@ async function loadAdjacentPosts(colName, docId, createdAt) {
 function loadComments(colName, docId) {
   const listEl = document.getElementById('commentList');
   const countEl = document.getElementById('commentsCount');
+
+  function mkReplyForm(targetId, rootId, toAuthor) {
+    if (!currentUser) return '';
+    return `<div id="replyForm-${targetId}" class="reply-form" style="display:none">
+      <textarea class="comment-textarea" id="replyInput-${targetId}" placeholder="${sanitizeText(toAuthor)}님께 답글..."></textarea>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap">
+        <label class="comment-img-btn" style="cursor:pointer;font-size:12px;padding:5px 12px">📷 사진 첨부
+          <input type="file" accept="image/*" id="replyImgInput-${targetId}" style="display:none" onchange="previewReplyImg('${targetId}',this)">
+        </label>
+        <span id="replyImgStatus-${targetId}" style="font-size:12px;color:var(--gray)"></span>
+      </div>
+      <img id="replyImgPreview-${targetId}" alt="첨부 이미지" style="max-width:100%;max-height:200px;border-radius:8px;margin-top:10px;display:none;border:1px solid rgba(0,0,0,0.08)">
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+        <button class="comment-action-btn" onclick="toggleReplyForm('${targetId}')">취소</button>
+        <button class="comment-submit-btn" id="replySubmitBtn-${targetId}" onclick="submitReply('${colName}','${docId}','${targetId}','${rootId}')">답글 등록</button>
+      </div>
+    </div>`;
+  }
+
   commentListener = db.collection(colName).doc(docId).collection('comments')
     .orderBy('createdAt','asc')
     .onSnapshot(snap => {
@@ -3483,11 +3502,14 @@ function loadComments(colName, docId) {
         const date = c.createdAt ? new Date(c.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
         const isOwn = currentUser && (currentUser.userId === c.authorId || currentUser.email === c.authorId);
         const imgHtml = c.imageUrl ? `<img src="${c.imageUrl}" alt="첨부 이미지" style="max-width:100%;max-height:300px;border-radius:8px;margin-top:8px;display:block;border:1px solid rgba(0,0,0,0.08)">` : '';
-        const myReplies = replies.filter(r => r.parentId === c.id);
+        // rootId 기반 + 구버전 parentId 기반 양쪽 수집
+        const myReplies = replies.filter(r => r.rootId === c.id || (!r.rootId && r.parentId === c.id));
         const repliesHtml = myReplies.map(r => {
           const rDate = r.createdAt ? new Date(r.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
           const rIsOwn = currentUser && (currentUser.userId === r.authorId || currentUser.email === r.authorId);
           const rImg = r.imageUrl ? `<img src="${r.imageUrl}" alt="첨부 이미지" style="max-width:100%;max-height:300px;border-radius:8px;margin-top:8px;display:block;border:1px solid rgba(0,0,0,0.08)">` : '';
+          const parentCmt = r.parentId !== c.id ? all.find(x => x.id === r.parentId) : null;
+          const atMention = parentCmt ? `<span style="color:var(--red);font-weight:600">@${sanitizeText(parentCmt.author)}</span> ` : '';
           return `<div class="comment-item comment-reply">
             <div class="comment-header">
               <span style="color:var(--red);font-size:13px;font-weight:700">↩</span>
@@ -3496,12 +3518,14 @@ function loadComments(colName, docId) {
               <span class="comment-author">${sanitizeText(r.author)}</span>
               <span class="comment-date">${rDate}</span>
             </div>
-            <div class="comment-content">${r.content.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
+            <div class="comment-content">${atMention}${r.content.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
             ${rImg}
-            ${rIsOwn || currentUser ? `<div class="comment-actions">
+            <div class="comment-actions">
               ${rIsOwn ? `<button class="comment-action-btn" onclick="deleteComment('${colName}','${docId}','${r.id}')">삭제</button>` : ''}
               ${!rIsOwn && currentUser ? `<button class="comment-action-btn" onclick="openReport('comment','${r.id}')">신고</button>` : ''}
-            </div>` : ''}
+              ${currentUser ? `<button class="comment-action-btn btn-reply" onclick="toggleReplyForm('${r.id}')">↩ 답글</button>` : ''}
+            </div>
+            ${mkReplyForm(r.id, c.id, r.author)}
           </div>`;
         }).join('');
         return `<div class="comment-item">
@@ -3513,19 +3537,13 @@ function loadComments(colName, docId) {
           </div>
           <div class="comment-content">${c.content.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
           ${imgHtml}
-          ${isOwn || currentUser ? `<div class="comment-actions">
+          <div class="comment-actions">
             ${isOwn ? `<button class="comment-action-btn" onclick="deleteComment('${colName}','${docId}','${c.id}')">삭제</button>` : ''}
             ${!isOwn && currentUser ? `<button class="comment-action-btn" onclick="openReport('comment','${c.id}')">신고</button>` : ''}
-            ${currentUser ? `<button class="comment-action-btn btn-reply" onclick="toggleReplyForm('${c.id}','${colName}','${docId}')">↩ 답글</button>` : ''}
-          </div>` : ''}
+            ${currentUser ? `<button class="comment-action-btn btn-reply" onclick="toggleReplyForm('${c.id}')">↩ 답글</button>` : ''}
+          </div>
           ${repliesHtml}
-          ${currentUser ? `<div id="replyForm-${c.id}" class="reply-form" style="display:none">
-            <textarea class="comment-textarea" id="replyInput-${c.id}" placeholder="답글을 입력하세요..."></textarea>
-            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
-              <button class="comment-action-btn" onclick="toggleReplyForm('${c.id}','${colName}','${docId}')">취소</button>
-              <button class="comment-submit-btn" onclick="submitReply('${colName}','${docId}','${c.id}')">답글 등록</button>
-            </div>
-          </div>` : ''}
+          ${mkReplyForm(c.id, c.id, c.author)}
         </div>`;
       }).join('');
     }, ()=>{});
@@ -3617,26 +3635,57 @@ async function deleteComment(colName, docId, commentId) {
   } catch(e) { alert('삭제 중 오류: ' + e.message); }
 }
 
-function toggleReplyForm(commentId, colName, docId) {
-  const form = document.getElementById('replyForm-' + commentId);
+function toggleReplyForm(formId) {
+  const form = document.getElementById('replyForm-' + formId);
   if (!form) return;
   const showing = form.style.display !== 'none';
   form.style.display = showing ? 'none' : '';
   if (!showing) {
-    const inp = document.getElementById('replyInput-' + commentId);
+    const inp = document.getElementById('replyInput-' + formId);
     if (inp) { inp.value = ''; inp.focus(); }
+    const imgInput = document.getElementById('replyImgInput-' + formId);
+    if (imgInput) imgInput.value = '';
+    const imgPrev = document.getElementById('replyImgPreview-' + formId);
+    if (imgPrev) { imgPrev.src = ''; imgPrev.style.display = 'none'; }
+    const imgStat = document.getElementById('replyImgStatus-' + formId);
+    if (imgStat) imgStat.textContent = '';
   }
 }
 
-async function submitReply(colName, docId, parentId) {
+function previewReplyImg(formId, input) {
+  const file = input.files[0];
+  const status = document.getElementById('replyImgStatus-' + formId);
+  const preview = document.getElementById('replyImgPreview-' + formId);
+  if (!file) { if (status) status.textContent = ''; if (preview) preview.style.display = 'none'; return; }
+  if (status) status.textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e => { if (preview) { preview.src = e.target.result; preview.style.display = 'block'; } };
+  reader.readAsDataURL(file);
+}
+
+async function submitReply(colName, docId, parentId, rootId) {
   const inp = document.getElementById('replyInput-' + parentId);
+  const btn = document.getElementById('replySubmitBtn-' + parentId);
   const content = (inp?.value || '').trim();
   if (!content) { alert('답글 내용을 입력해 주세요.'); return; }
   if (!currentUser) { openLogin(); return; }
+  if (btn) { btn.disabled = true; btn.textContent = '등록 중...'; }
   try {
+    const imgInput = document.getElementById('replyImgInput-' + parentId);
+    let imageUrl = '';
+    if (imgInput && imgInput.files[0]) {
+      const file = imgInput.files[0];
+      if (file.size > 10*1024*1024) { alert('이미지는 10MB 이하로 올려주세요.'); return; }
+      const storage = firebase.storage();
+      const ref = storage.ref('comment-images/' + Date.now() + '_' + file.name);
+      await ref.put(file);
+      imageUrl = await ref.getDownloadURL();
+    }
     await db.collection(colName).doc(docId).collection('comments').add({
       content,
       parentId,
+      rootId,
+      imageUrl,
       author: currentUser.userId || currentUser.name,
       authorId: currentUser.userId || currentUser.email,
       authorPhoto: currentUser.profileImage || '',
@@ -3644,9 +3693,19 @@ async function submitReply(colName, docId, parentId) {
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     if (inp) inp.value = '';
+    const imgInput2 = document.getElementById('replyImgInput-' + parentId);
+    if (imgInput2) imgInput2.value = '';
+    const imgPrev = document.getElementById('replyImgPreview-' + parentId);
+    if (imgPrev) { imgPrev.src = ''; imgPrev.style.display = 'none'; }
+    const imgStat = document.getElementById('replyImgStatus-' + parentId);
+    if (imgStat) imgStat.textContent = '';
     const form = document.getElementById('replyForm-' + parentId);
     if (form) form.style.display = 'none';
-  } catch(e) { alert('답글 등록 오류: ' + e.message); }
+  } catch(e) {
+    alert('답글 등록 오류: ' + e.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '답글 등록'; }
+  }
 }
 
 // ─── 등급 뱃지 함수 ───
