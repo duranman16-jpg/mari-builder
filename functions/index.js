@@ -7,6 +7,37 @@ const nodemailer = require('nodemailer');
 admin.initializeApp();
 console.log('Functions module loaded v2');
 
+// ─── Firestore 자동 백업 (매일 오전 3시 KST) ───
+exports.scheduledFirestoreBackup = functions
+  .pubsub.schedule('0 18 * * *') // UTC 18:00 = KST 03:00
+  .timeZone('UTC')
+  .onRun(async () => {
+    try {
+      const projectId = process.env.GCLOUD_PROJECT || process.env.GOOGLE_CLOUD_PROJECT || 'mari-viet';
+      const bucket = `gs://${projectId}.appspot.com`;
+      const date = new Date().toISOString().slice(0, 10);
+      const outputUriPrefix = `${bucket}/firestore-backups/${date}`;
+
+      // 메타데이터 서버에서 액세스 토큰 취득
+      const tokenRes = await axios.get(
+        'http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token',
+        { headers: { 'Metadata-Flavor': 'Google' } }
+      );
+      const accessToken = tokenRes.data.access_token;
+
+      const response = await axios.post(
+        `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default):exportDocuments`,
+        { outputUriPrefix, collectionIds: [] },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+
+      console.log(`[백업] 완료: ${outputUriPrefix}`, response.data.name);
+    } catch (err) {
+      console.error('[백업] 오류:', err.message);
+    }
+    return null;
+  });
+
 // ─── AI 이미지 생성 함수 (최고관리자 전용) ───
 exports.generateImage = functions
   .runWith({
