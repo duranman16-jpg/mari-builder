@@ -684,6 +684,18 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
   .admin-topnav-btn{padding:10px 11px;font-size:12px;gap:3px}
 }
 
+/* ─── 공지 / 좋아요 ─── */
+.notice-pin-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;background:var(--red);color:#fff;margin-right:5px;vertical-align:middle;flex-shrink:0}
+.post-card.is-pinned{background:rgba(200,16,46,0.03);border-left:3px solid var(--red)}
+.like-btn{background:none;border:1px solid #ddd;border-radius:20px;padding:5px 14px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.2s;color:#999;font-family:'Noto Sans KR',sans-serif}
+.like-btn:hover{border-color:var(--red);color:var(--red)}
+.like-btn.liked{border-color:var(--red);color:var(--red);background:rgba(200,16,46,0.06)}
+.comment-like-btn{background:none;border:none;font-size:12px;color:#bbb;cursor:pointer;padding:2px 6px;border-radius:10px;transition:.15s;display:inline-flex;align-items:center;gap:3px;font-family:'Noto Sans KR',sans-serif}
+.comment-like-btn:hover{color:var(--red)}
+.comment-like-btn.liked{color:var(--red);font-weight:700}
+.pin-toggle-btn{background:none;border:1px solid rgba(200,16,46,0.3);color:var(--red);border-radius:7px;padding:6px 13px;font-size:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
+.pin-toggle-btn:hover{background:var(--red);color:#fff}
+
 /* ─── 쪽지함 ─── */
 .msg-item{display:flex;align-items:center;gap:14px;padding:14px 18px;border:1px solid rgba(0,0,0,0.07);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:.2s;background:#fff}
 .msg-item:hover{border-color:var(--gold);box-shadow:0 4px 16px rgba(184,134,11,0.08)}
@@ -1935,7 +1947,8 @@ html.mobile-view .float-btn span{display:none !important}
   <div class="post-detail-outer">
     <div class="post-detail-meta-bar">
       <div class="post-detail-meta-info" id="postMetaInfo"></div>
-      <div style="display:flex;gap:8px;align-items:center">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button id="postPinBtn" class="pin-toggle-btn" style="display:none" onclick="">📌 공지등록</button>
         <button id="postReportBtn" class="post-back-btn" style="background:transparent;border:1px solid #ddd;color:var(--gray);font-size:12px;display:none" onclick="openReport('post',null)">🚨 신고</button>
         <button id="postDeleteBtn" class="post-back-btn" style="display:none;background:transparent;border:1px solid rgba(200,16,46,0.3);color:var(--red);font-size:12px" onclick="">🗑 삭제</button>
         <button class="post-back-btn" onclick="backToBoard()">← 목록으로</button>
@@ -1944,6 +1957,8 @@ html.mobile-view .float-btn span{display:none !important}
     <div class="post-detail-body ql-editor" style="border:none;padding:0;min-height:200px" id="postDetailBody">
       <div class="post-loading">⏳ 불러오는 중...</div>
     </div>
+    <!-- 좋아요 -->
+    <div style="display:flex;justify-content:center;padding:20px 0 10px" id="postLikeArea"></div>
     <div class="post-detail-divider"></div>
     <!-- 이전글/다음글 -->
     <div class="post-nav-bar">
@@ -2922,6 +2937,82 @@ function openAdmin() {
 function closeAdmin() { document.getElementById('adminModal').classList.remove('open'); }
 function closeAdminBg(e) { if (e.target.id==='adminModal') closeAdmin(); }
 
+// ─── 공지 핀 토글 ───
+async function togglePin(colName, docId, isPinned) {
+  if (!isManager(currentUser)) return;
+  const newVal = !isPinned;
+  await db.collection(colName).doc(docId).update({ isPinned: newVal });
+  const btn = document.getElementById('postPinBtn');
+  if (btn) btn.textContent = newVal ? '📌 공지해제' : '📌 공지등록';
+  // 목록에서 뱃지 즉시 반영을 위해 상태 업데이트
+  const state = boardPageState[colName];
+  if (state) {
+    const idx = state.data.findIndex(p => p.id === docId);
+    if (idx !== -1) { state.data[idx].isPinned = newVal; _renderBoardTable(colName); }
+  }
+  // 헤더 배지 갱신
+  const metaInfo = document.getElementById('postMetaInfo');
+  if (metaInfo) {
+    const pin = metaInfo.querySelector('.notice-pin-badge');
+    if (newVal && !pin) { metaInfo.insertAdjacentHTML('afterbegin','<span class="notice-pin-badge">📌 공지</span>'); }
+    else if (!newVal && pin) { pin.remove(); }
+  }
+}
+
+// ─── 게시글 좋아요 ───
+function renderPostLikeBtn(colName, docId, likes, likeCount) {
+  const area = document.getElementById('postLikeArea');
+  if (!area) return;
+  const uid = currentUser ? (currentUser.email || currentUser.userId) : null;
+  const liked = uid && likes[uid];
+  area.innerHTML = `<button class="like-btn${liked?' liked':''}" onclick="togglePostLike('${colName}','${docId}')">
+    ❤️ 좋아요 <b id="postLikeCount">${likeCount}</b>
+  </button>`;
+}
+
+async function togglePostLike(colName, docId) {
+  if (!currentUser) { alert('로그인 후 좋아요를 누를 수 있습니다.'); return; }
+  const uid = currentUser.email || currentUser.userId;
+  const ref = db.collection(colName).doc(docId);
+  const snap = await ref.get();
+  if (!snap.exists) return;
+  const data = snap.data();
+  const likes = data.likes || {};
+  const authorId = data.authorId || data.author;
+  if (likes[uid]) {
+    await ref.update({ [`likes.${uid}`]: firebase.firestore.FieldValue.delete(), likeCount: firebase.firestore.FieldValue.increment(-1) });
+    if (authorId) db.collection('users').doc(authorId).update({ totalLikesReceived: firebase.firestore.FieldValue.increment(-1) }).catch(()=>{});
+    delete likes[uid];
+    renderPostLikeBtn(colName, docId, likes, (data.likeCount||1)-1);
+  } else {
+    await ref.update({ [`likes.${uid}`]: true, likeCount: firebase.firestore.FieldValue.increment(1) });
+    if (authorId) db.collection('users').doc(authorId).update({ totalLikesReceived: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
+    likes[uid] = true;
+    renderPostLikeBtn(colName, docId, likes, (data.likeCount||0)+1);
+  }
+}
+
+// ─── 댓글 좋아요 ───
+async function toggleCommentLike(colName, docId, commentId, authorId) {
+  if (!currentUser) { alert('로그인 후 좋아요를 누를 수 있습니다.'); return; }
+  const uid = currentUser.email || currentUser.userId;
+  const ref = db.collection(colName).doc(docId).collection('comments').doc(commentId);
+  const snap = await ref.get();
+  if (!snap.exists) return;
+  const data = snap.data();
+  const likes = data.likes || {};
+  const btn = document.getElementById('clbtn-' + commentId);
+  if (likes[uid]) {
+    await ref.update({ [`likes.${uid}`]: firebase.firestore.FieldValue.delete(), likeCount: firebase.firestore.FieldValue.increment(-1) });
+    if (authorId) db.collection('users').doc(authorId).update({ totalLikesReceived: firebase.firestore.FieldValue.increment(-1) }).catch(()=>{});
+    if (btn) { btn.classList.remove('liked'); btn.innerHTML = '❤️ ' + ((data.likeCount||1)-1); }
+  } else {
+    await ref.update({ [`likes.${uid}`]: true, likeCount: firebase.firestore.FieldValue.increment(1) });
+    if (authorId) db.collection('users').doc(authorId).update({ totalLikesReceived: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
+    if (btn) { btn.classList.add('liked'); btn.innerHTML = '❤️ ' + ((data.likeCount||0)+1); }
+  }
+}
+
 function scrollAdminNav(dir) {
   const nav = document.getElementById('adminSidebar');
   if (nav) nav.scrollBy({left: dir * 160, behavior: 'smooth'});
@@ -3586,10 +3677,11 @@ async function loadPostDetail(colName, docId) {
     }
     const p = docSnap.data();
     const date = p.createdAt ? new Date(p.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '-';
+    const pinPrefix = p.isPinned ? '<span class="notice-pin-badge">📌 공지</span>' : '';
 
     document.getElementById('postHeroTitle').textContent = p.prefix ? `[${p.prefix}] ${p.title}` : p.title;
     document.getElementById('postMetaInfo').innerHTML =
-      `<span style="display:inline-flex;align-items:center;gap:6px">${avatarHtml(p.authorPhoto||'',p.author||'?',p.authorType||'member',28)} ${gradeBadge(p.authorType||'member')} <b>${sanitizeText(p.author)}</b></span> &nbsp;·&nbsp; ${date} &nbsp;·&nbsp; 조회 ${(p.views||0)+1}`;
+      `${pinPrefix}<span style="display:inline-flex;align-items:center;gap:6px">${avatarHtml(p.authorPhoto||'',p.author||'?',p.authorType||'member',28)} ${gradeBadge(p.authorType||'member')} <b>${sanitizeText(p.author)}</b></span> &nbsp;·&nbsp; ${date} &nbsp;·&nbsp; 조회 ${(p.views||0)+1}`;
     document.getElementById('postDetailBody').innerHTML = DOMPurify.sanitize(p.content || '<p style="color:var(--gray)">내용이 없습니다.</p>');
 
     db.collection(colName).doc(docId).update({views: firebase.firestore.FieldValue.increment(1)}).catch(()=>{});
@@ -3603,6 +3695,21 @@ async function loadPostDetail(colName, docId) {
       deleteBtn.style.display = canDeletePost ? 'inline-block' : 'none';
       deleteBtn.onclick = () => deletePost(colName, docId);
     }
+
+    // 공지 핀 버튼 (관리자/매니저만)
+    const pinBtn = document.getElementById('postPinBtn');
+    if (pinBtn) {
+      if (isManager(currentUser)) {
+        pinBtn.style.display = 'inline-block';
+        pinBtn.textContent = p.isPinned ? '📌 공지해제' : '📌 공지등록';
+        pinBtn.onclick = () => togglePin(colName, docId, !!p.isPinned);
+      } else {
+        pinBtn.style.display = 'none';
+      }
+    }
+
+    // 좋아요 버튼 렌더링
+    renderPostLikeBtn(colName, docId, p.likes || {}, p.likeCount || 0);
 
     loadAdjacentPosts(colName, docId, p.createdAt);
     loadComments(colName, docId);
@@ -3717,6 +3824,7 @@ function loadComments(colName, docId) {
               ${rCanDelete ? `<button class="comment-action-btn" onclick="deleteComment('${colName}','${docId}','${r.id}')">삭제</button>` : ''}
               ${!rCanDelete && currentUser ? `<button class="comment-action-btn" onclick="openReport('comment','${r.id}')">신고</button>` : ''}
               ${currentUser ? `<button class="comment-action-btn btn-reply" onclick="toggleReplyForm('${r.id}')">↩ 답글</button>` : ''}
+              <button id="clbtn-${r.id}" class="comment-like-btn${currentUser&&(r.likes||{})[currentUser.email||currentUser.userId]?' liked':''}" onclick="toggleCommentLike('${colName}','${docId}','${r.id}','${r.authorId||''}')">❤️ ${r.likeCount||0}</button>
             </div>
             ${mkReplyForm(r.id, c.id, r.author)}
           </div>`;
@@ -3734,6 +3842,7 @@ function loadComments(colName, docId) {
             ${canDelete ? `<button class="comment-action-btn" onclick="deleteComment('${colName}','${docId}','${c.id}')">삭제</button>` : ''}
             ${!canDelete && currentUser ? `<button class="comment-action-btn" onclick="openReport('comment','${c.id}')">신고</button>` : ''}
             ${currentUser ? `<button class="comment-action-btn btn-reply" onclick="toggleReplyForm('${c.id}')">↩ 답글</button>` : ''}
+            <button id="clbtn-${c.id}" class="comment-like-btn${currentUser&&(c.likes||{})[currentUser.email||currentUser.userId]?' liked':''}" onclick="toggleCommentLike('${colName}','${docId}','${c.id}','${c.authorId||''}')">❤️ ${c.likeCount||0}</button>
           </div>
           ${repliesHtml}
           ${mkReplyForm(c.id, c.id, c.author)}
@@ -3964,6 +4073,8 @@ function _renderBoardTable(colName) {
   let posts = [...data];
   if (search) { const q = search.toLowerCase(); posts = posts.filter(p => (p.title||'').toLowerCase().includes(q) || (p.author||'').toLowerCase().includes(q)); }
   if (sort === 'views') posts.sort((a,b) => (b.views||0)-(a.views||0));
+  // 공지 항상 최상단 고정
+  posts.sort((a,b) => (b.isPinned?1:0)-(a.isPinned?1:0));
 
   const totalPages = Math.max(1, Math.ceil(posts.length / BOARD_PAGE_SIZE));
   const pg = Math.min(state.page, totalPages - 1);
@@ -3982,10 +4093,12 @@ function _renderBoardTable(colName) {
           ? `<img class="pc-thumb" src="${firstImg}" alt="" loading="lazy">`
           : `<div class="pc-thumb-ph">📝</div>`;
         const cnt = p.commentCount || 0;
-        return `<div class="post-card" onclick="openPost('${colName}','${p.id}')">
+        const lkCnt = p.likeCount || 0;
+        const pinBadge = p.isPinned ? '<span class="notice-pin-badge">📌 공지</span>' : '';
+        return `<div class="post-card${p.isPinned?' is-pinned':''}" onclick="openPost('${colName}','${p.id}')">
           ${thumbHtml}
           <div class="pc-body">
-            <div class="pc-title">${badgeMap[p.badge]||''}${prefixTag}${sanitizeText(p.title)}</div>
+            <div class="pc-title">${pinBadge}${badgeMap[p.badge]||''}${prefixTag}${sanitizeText(p.title)}</div>
             <div class="pc-meta">
               ${avatarHtml(p.authorPhoto||'',p.author||'?',p.authorType||'member',20)}
               ${gradeBadge(p.authorType||'member')}
@@ -3996,7 +4109,10 @@ function _renderBoardTable(colName) {
               <span>👁 ${p.views||0}</span>
             </div>
           </div>
-          <div class="pc-right"><b>${cnt}</b><span>댓글</span></div>
+          <div class="pc-right">
+            <b>${cnt}</b><span>댓글</span>
+            <b style="margin-top:4px;color:var(--red)">${lkCnt}</b><span>❤️</span>
+          </div>
         </div>`;
       }).join('');
 
