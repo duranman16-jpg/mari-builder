@@ -1816,6 +1816,20 @@ firebase.initializeApp({
 const db = firebase.firestore();
 db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
 
+// ─── 비밀번호 SHA-256 해시 ───
+async function hashPassword(pw) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// localStorage 저장 시 민감 필드 제거
+function safeUser(u) {
+  const s = {...u};
+  delete s.pw;
+  delete s.adminToken;
+  return s;
+}
+
 // ─── 페이지 라우팅 ───
 let currentPage = '';
 
@@ -2381,8 +2395,10 @@ function canAccessMarried(u) { return u && (u.memberType==='married'||u.memberTy
 async function initAdmin() {
   const doc = await db.collection('users').doc('admin').get();
   if (!doc.exists) {
+    const hashedPw = await hashPassword('[REDACTED]');
     await db.collection('users').doc('admin').set({
-      name:'최고관리자',email:'admin',pw:'[REDACTED]',phone:'',birth:'',gender:'male',memberType:'admin'
+      name:'최고관리자',email:'admin',pw:hashedPw,phone:'',birth:'',gender:'male',memberType:'admin',
+      adminToken:'[REDACTED]'
     });
   }
 }
@@ -2538,19 +2554,25 @@ async function submitLogin() {
     const doc = await db.collection('users').doc(email).get();
     if (!doc.exists) { alert('이메일 또는 비밀번호가 일치하지 않습니다.'); return; }
     const user = doc.data();
-    if (user.pw !== pw) { alert('이메일 또는 비밀번호가 일치하지 않습니다.'); return; }
+    // 해시 비교 (기존 평문 자동 마이그레이션)
+    const hashedInput = await hashPassword(pw);
+    const isHashed = /^[0-9a-f]{64}$/.test(user.pw);
+    const match = isHashed ? (user.pw === hashedInput) : (user.pw === pw);
+    if (!match) { alert('이메일 또는 비밀번호가 일치하지 않습니다.'); return; }
+    // 평문 저장된 경우 자동으로 해시로 업그레이드
+    if (!isHashed) await db.collection('users').doc(email).update({ pw: hashedInput });
     if (user.tempPassword) {
       closeLogin();
-      currentUser = user;
-      localStorage.setItem('maryUser', JSON.stringify(user));
+      currentUser = safeUser(user);
+      localStorage.setItem('maryUser', JSON.stringify(currentUser));
       updateAuthUI();
       document.getElementById('changePwModal').classList.add('open');
       return;
     }
-    currentUser = user;
-    localStorage.setItem('maryUser', JSON.stringify(user));
-    if (user.memberType === 'admin') {
-      localStorage.setItem('maryAdminSecret', user.pw + '_' + user.email);
+    currentUser = safeUser(user);
+    localStorage.setItem('maryUser', JSON.stringify(currentUser));
+    if (user.memberType === 'admin' && user.adminToken) {
+      localStorage.setItem('maryAdminSecret', user.adminToken);
     }
     closeLogin();
     updateAuthUI();
@@ -2663,10 +2685,11 @@ async function submitSignup() {
   try {
     const existing = await db.collection('users').doc(email).get();
     if (existing.exists) { alert('이미 가입된 이메일입니다.'); return; }
-    const newUser = {name,email,pw,phone,birth,gender:gender.value,memberType:'member',nationality:'kr'};
+    const hashedPw = await hashPassword(pw);
+    const newUser = {name,email,pw:hashedPw,phone,birth,gender:gender.value,memberType:'member',nationality:'kr'};
     await db.collection('users').doc(email).set(newUser);
-    currentUser = newUser;
-    localStorage.setItem('maryUser', JSON.stringify(newUser));
+    currentUser = safeUser(newUser);
+    localStorage.setItem('maryUser', JSON.stringify(currentUser));
     closeSignup();
     updateAuthUI();
     alert(name + '님, 회원가입을 축하합니다!');
@@ -3161,8 +3184,8 @@ async function submitChangePw() {
   if (!p1 || p1.length < 6) { alert('비밀번호는 6자 이상이어야 합니다.'); return; }
   if (p1 !== p2) { alert('비밀번호가 일치하지 않습니다.'); return; }
   try {
-    await db.collection('users').doc(currentUser.email).update({ pw: p1, tempPassword: false });
-    currentUser.pw = p1;
+    const hashedP1 = await hashPassword(p1);
+    await db.collection('users').doc(currentUser.email).update({ pw: hashedP1, tempPassword: false });
     currentUser.tempPassword = false;
     localStorage.setItem('maryUser', JSON.stringify(currentUser));
     document.getElementById('changePwModal').classList.remove('open');
@@ -3327,7 +3350,8 @@ async function submitAddVN() {
   if (selectedNationality === 'vn') {
     pw = document.getElementById('vnTempPw')?.value.trim();
     if (!pw) { alert('임시 비밀번호를 생성해 주세요.'); return; }
-    newUser = {name, email, pw, phone:'', birth:'', gender, memberType:role, nationality:'vn', tempPassword:true};
+    const hashedVnPw = await hashPassword(pw);
+    newUser = {name, email, pw:hashedVnPw, phone:'', birth:'', gender, memberType:role, nationality:'vn', tempPassword:true};
     resultHtml = `<div style="background:#f0faf5;border:1px solid #1A6B3C;border-radius:10px;padding:16px;line-height:2">
       ✅ 베트남 회원 계정 생성 완료!<br>
       <b>아이디 (이메일):</b> ${email}<br>
@@ -3337,7 +3361,8 @@ async function submitAddVN() {
   } else {
     pw = document.getElementById('krPw')?.value;
     if (!pw || pw.length < 6) { alert('비밀번호를 6자 이상 입력해 주세요.'); return; }
-    newUser = {name, email, pw, phone:'', birth:'', gender, memberType:role, nationality:'kr', tempPassword:false};
+    const hashedKrPw = await hashPassword(pw);
+    newUser = {name, email, pw:hashedKrPw, phone:'', birth:'', gender, memberType:role, nationality:'kr', tempPassword:false};
     resultHtml = `<div style="background:#fff5f5;border:1px solid #C8102E;border-radius:10px;padding:16px;line-height:2">
       ✅ 한국 회원 계정 생성 완료!<br>
       <b>아이디 (이메일):</b> ${email}<br>
