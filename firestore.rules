@@ -60,5 +60,11 @@ service cloud.firestore {
       allow read, delete: if true;     // 관리자 패널에서 조회/삭제
       allow update: if false;
     }
+
+    // ─── 사이트 설정 (금칙어 등) ───
+    match /settings/{docId} {
+      allow read: if true;   // 금칙어 목록은 모든 사용자가 로드
+      allow write: if true;  // 관리자 패널에서 직접 업데이트 (UI는 관리자만 접근 가능)
+    }
   }
 }
