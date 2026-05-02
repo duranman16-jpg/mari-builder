@@ -2378,12 +2378,25 @@ function isManager(u) { return u && (u.memberType==='admin'||u.memberType==='man
 function canAccessMarried(u) { return u && (u.memberType==='married'||u.memberType==='admin'||u.memberType==='manager'); }
 
 // ─── 관리자 계정 초기화 ───
-function initAdmin() {
-  const users = JSON.parse(localStorage.getItem('maryUsers')) || [];
-  if (!users.find(u => u.email === 'admin')) {
-    users.unshift({name:'최고관리자',email:'admin',pw:'[REDACTED]',phone:'',birth:'',gender:'male',memberType:'admin'});
-    localStorage.setItem('maryUsers', JSON.stringify(users));
+async function initAdmin() {
+  const doc = await db.collection('users').doc('admin').get();
+  if (!doc.exists) {
+    await db.collection('users').doc('admin').set({
+      name:'최고관리자',email:'admin',pw:'[REDACTED]',phone:'',birth:'',gender:'male',memberType:'admin'
+    });
   }
+}
+
+// ─── localStorage → Firestore 회원 마이그레이션 ───
+async function migrateUsers() {
+  const legacy = JSON.parse(localStorage.getItem('maryUsers'));
+  if (!legacy || !legacy.length) return;
+  for (const u of legacy) {
+    const ref = db.collection('users').doc(u.email);
+    const snap = await ref.get();
+    if (!snap.exists) await ref.set(u);
+  }
+  localStorage.removeItem('maryUsers');
 }
 
 // ─── 관리자 패널 ───
@@ -2417,10 +2430,13 @@ function showAdminTab(tab, btn) {
   else if (tab==='profile') renderProfileTab();
 }
 
-function renderAdminMembers() {
-  const users = JSON.parse(localStorage.getItem('maryUsers')) || [];
+async function renderAdminMembers() {
   const el = document.getElementById('adminUserList');
-  if (!users.length) { el.innerHTML = '<p style="color:var(--gray);text-align:center;padding:20px">등록된 회원이 없습니다.</p>'; return; }
+  el.innerHTML = '<p style="text-align:center;padding:20px;color:var(--gray)">불러오는 중...</p>';
+  try {
+    const snapshot = await db.collection('users').get();
+    const users = snapshot.docs.map(d => d.data());
+    if (!users.length) { el.innerHTML = '<p style="color:var(--gray);text-align:center;padding:20px">등록된 회원이 없습니다.</p>'; return; }
   const roleStyle = {admin:'background:#1A1A1A;color:#FFD700',manager:'background:#1A4B8B;color:#fff',married:'background:#1A6B3C;color:#fff',member:'background:#e0e0e0;color:#333'};
   const rows = users.map(u => {
     const isSelf = currentUser && currentUser.email === u.email;
@@ -2450,23 +2466,29 @@ function renderAdminMembers() {
     <tbody>${rows}</tbody>
   </table>
   <p style="font-size:11px;color:var(--gray);margin-top:12px;line-height:1.7">※ 최고 관리자: 모든 등급 변경 가능 &nbsp;|&nbsp; 매니저: 일반 ↔ 결혼회원 변경 가능</p>`;
+  } catch(e) {
+    el.innerHTML = '<p style="color:red;text-align:center;padding:20px">오류: ' + e.message + '</p>';
+  }
 }
 
-function changeRole(email, newRole) {
-  const users = JSON.parse(localStorage.getItem('maryUsers')) || [];
-  const idx = users.findIndex(u => u.email === email);
-  if (idx === -1) return;
+async function changeRole(email, newRole) {
   if (!isAdmin(currentUser) && (newRole==='admin'||newRole==='manager')) { alert('권한이 없습니다.'); return; }
-  users[idx].memberType = newRole;
-  localStorage.setItem('maryUsers', JSON.stringify(users));
-  if (currentUser && currentUser.email === email) {
-    currentUser.memberType = newRole;
-    localStorage.setItem('maryUser', JSON.stringify(currentUser));
-    updateAuthUI();
+  try {
+    const doc = await db.collection('users').doc(email).get();
+    if (!doc.exists) { alert('회원을 찾을 수 없습니다.'); return; }
+    const userData = doc.data();
+    await db.collection('users').doc(email).update({ memberType: newRole });
+    if (currentUser && currentUser.email === email) {
+      currentUser.memberType = newRole;
+      localStorage.setItem('maryUser', JSON.stringify(currentUser));
+      updateAuthUI();
+    }
+    renderAdminMembers();
+    renderBoards();
+    alert('['+userData.name+'] 님의 등급이 ['+roleLabel(newRole)+'](으)로 변경되었습니다.');
+  } catch(e) {
+    alert('등급 변경 오류: ' + e.message);
   }
-  renderAdminMembers();
-  renderBoards();
-  alert('['+users[idx].name+'] 님의 등급이 ['+roleLabel(newRole)+'](으)로 변경되었습니다.');
 }
 
 // ─── 인증 ───
@@ -2508,30 +2530,34 @@ function openLogin() { closeSignup(); document.getElementById('loginModal').clas
 function closeLogin() { document.getElementById('loginModal').classList.remove('open'); }
 function closeLoginBg(e) { if (e.target.id==='loginModal') closeLogin(); }
 
-function submitLogin() {
+async function submitLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const pw = document.getElementById('loginPw').value;
   if (!email||!pw) { alert('이메일과 비밀번호를 입력해 주세요.'); return; }
-  const users = JSON.parse(localStorage.getItem('maryUsers')) || [];
-  const user = users.find(u => u.email===email && u.pw===pw);
-  if (!user) { alert('이메일 또는 비밀번호가 일치하지 않습니다.'); return; }
-  if (user.tempPassword) {
-    closeLogin();
+  try {
+    const doc = await db.collection('users').doc(email).get();
+    if (!doc.exists) { alert('이메일 또는 비밀번호가 일치하지 않습니다.'); return; }
+    const user = doc.data();
+    if (user.pw !== pw) { alert('이메일 또는 비밀번호가 일치하지 않습니다.'); return; }
+    if (user.tempPassword) {
+      closeLogin();
+      currentUser = user;
+      localStorage.setItem('maryUser', JSON.stringify(user));
+      updateAuthUI();
+      document.getElementById('changePwModal').classList.add('open');
+      return;
+    }
     currentUser = user;
     localStorage.setItem('maryUser', JSON.stringify(user));
+    if (user.memberType === 'admin') {
+      localStorage.setItem('maryAdminSecret', user.pw + '_' + user.email);
+    }
+    closeLogin();
     updateAuthUI();
-    document.getElementById('changePwModal').classList.add('open');
-    return;
+    alert(user.name + '님, 환영합니다!');
+  } catch(e) {
+    alert('로그인 오류: ' + e.message);
   }
-  currentUser = user;
-  localStorage.setItem('maryUser', JSON.stringify(user));
-  // 최고관리자 로그인 시 secret 저장 (Functions 호출용)
-  if (user.memberType === 'admin') {
-    localStorage.setItem('maryAdminSecret', user.pw + '_' + user.email);
-  }
-  closeLogin();
-  updateAuthUI();
-  alert(user.name + '님, 환영합니다!');
 }
 
 function openSignup() { closeLogin(); document.getElementById('signupModal').classList.add('open'); resetEmailVerify(); }
@@ -2621,7 +2647,7 @@ async function confirmSignupOtp() {
   }
 }
 
-function submitSignup() {
+async function submitSignup() {
   const name = document.getElementById('signupName').value.trim();
   const email = document.getElementById('signupEmail').value.trim();
   const pw = document.getElementById('signupPw').value;
@@ -2634,16 +2660,19 @@ function submitSignup() {
   if (pw!==pw2) { alert('비밀번호가 일치하지 않습니다.'); return; }
   if (pw.length<6) { alert('비밀번호는 6자 이상이어야 합니다.'); return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('이메일 형식이 올바르지 않습니다.'); return; }
-  const users = JSON.parse(localStorage.getItem('maryUsers')) || [];
-  if (users.find(u => u.email===email)) { alert('이미 가입된 이메일입니다.'); return; }
-  const newUser = {name,email,pw,phone,birth,gender:gender.value,memberType:'member',nationality:'kr'};
-  users.push(newUser);
-  localStorage.setItem('maryUsers', JSON.stringify(users));
-  currentUser = newUser;
-  localStorage.setItem('maryUser', JSON.stringify(newUser));
-  closeSignup();
-  updateAuthUI();
-  alert(name + '님, 회원가입을 축하합니다!');
+  try {
+    const existing = await db.collection('users').doc(email).get();
+    if (existing.exists) { alert('이미 가입된 이메일입니다.'); return; }
+    const newUser = {name,email,pw,phone,birth,gender:gender.value,memberType:'member',nationality:'kr'};
+    await db.collection('users').doc(email).set(newUser);
+    currentUser = newUser;
+    localStorage.setItem('maryUser', JSON.stringify(newUser));
+    closeSignup();
+    updateAuthUI();
+    alert(name + '님, 회원가입을 축하합니다!');
+  } catch(e) {
+    alert('가입 오류: ' + e.message);
+  }
 }
 
 // ─── 게시물 상세 페이지 ───
@@ -3126,22 +3155,22 @@ function showLifeUpgrade() {
 }
 
 // ─── 임시 비밀번호 변경 ───
-function submitChangePw() {
+async function submitChangePw() {
   const p1 = document.getElementById('newPw1')?.value;
   const p2 = document.getElementById('newPw2')?.value;
   if (!p1 || p1.length < 6) { alert('비밀번호는 6자 이상이어야 합니다.'); return; }
   if (p1 !== p2) { alert('비밀번호가 일치하지 않습니다.'); return; }
-  const users = JSON.parse(localStorage.getItem('maryUsers')) || [];
-  const idx = users.findIndex(u => u.email === currentUser.email);
-  if (idx === -1) { alert('오류가 발생했습니다.'); return; }
-  users[idx].pw = p1;
-  users[idx].tempPassword = false;
-  localStorage.setItem('maryUsers', JSON.stringify(users));
-  currentUser = users[idx];
-  localStorage.setItem('maryUser', JSON.stringify(currentUser));
-  document.getElementById('changePwModal').classList.remove('open');
-  alert('비밀번호가 변경되었습니다. 이제 새 비밀번호로 로그인하세요.');
-  updateAuthUI();
+  try {
+    await db.collection('users').doc(currentUser.email).update({ pw: p1, tempPassword: false });
+    currentUser.pw = p1;
+    currentUser.tempPassword = false;
+    localStorage.setItem('maryUser', JSON.stringify(currentUser));
+    document.getElementById('changePwModal').classList.remove('open');
+    alert('비밀번호가 변경되었습니다. 이제 새 비밀번호로 로그인하세요.');
+    updateAuthUI();
+  } catch(e) {
+    alert('변경 오류: ' + e.message);
+  }
 }
 
 function openSelfChangePw() {
@@ -3278,7 +3307,7 @@ function genTempPw() {
   if (el) el.value = pw;
 }
 
-function submitAddVN() {
+async function submitAddVN() {
   if (!selectedNationality) { alert('먼저 국적을 선택해 주세요.'); return; }
   const name = document.getElementById('vnName')?.value.trim();
   const email = document.getElementById('vnEmail')?.value.trim();
@@ -3290,8 +3319,8 @@ function submitAddVN() {
   if (!name || !email) { alert('이름과 이메일을 입력해 주세요.'); return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('이메일 형식이 올바르지 않습니다.'); return; }
 
-  const users = JSON.parse(localStorage.getItem('maryUsers')) || [];
-  if (users.find(u => u.email === email)) { alert('이미 등록된 이메일입니다.'); return; }
+  const existing = await db.collection('users').doc(email).get();
+  if (existing.exists) { alert('이미 등록된 이메일입니다.'); return; }
 
   let newUser, pw, resultHtml;
 
@@ -3316,8 +3345,7 @@ function submitAddVN() {
     </div>`;
   }
 
-  users.push(newUser);
-  localStorage.setItem('maryUsers', JSON.stringify(users));
+  await db.collection('users').doc(email).set(newUser);
 
   if (result) { result.style.display = 'block'; result.innerHTML = resultHtml; }
   document.getElementById('vnName').value = '';
@@ -3327,9 +3355,10 @@ function submitAddVN() {
 }
 
 // ─── 관리자 설정 탭 ───
-function renderAdminSettings() {
+async function renderAdminSettings() {
   const el = document.getElementById('adminTabSettings');
   const perm = localStorage.getItem('msgPerm') || 'all';
+  const statsHtml = await renderSystemStats();
   el.innerHTML = `
     <div style="max-width:500px">
       <h4 style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(0,0,0,0.08)">✉️ 쪽지 발송 권한</h4>
@@ -3351,7 +3380,7 @@ function renderAdminSettings() {
       </div>
 
       <h4 style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(0,0,0,0.08)">📋 시스템 현황</h4>
-      ${renderSystemStats()}
+      ${statsHtml}
     </div>`;
 }
 
@@ -3361,8 +3390,9 @@ function saveMsgPerm(val) {
   renderAdminSettings();
 }
 
-function renderSystemStats() {
-  const users = JSON.parse(localStorage.getItem('maryUsers')) || [];
+async function renderSystemStats() {
+  const snapshot = await db.collection('users').get();
+  const users = snapshot.docs.map(d => d.data());
   const kr = users.filter(u => u.nationality==='kr' || !u.nationality).length;
   const vn = users.filter(u => u.nationality==='vn').length;
   const married = users.filter(u => u.memberType==='married').length;
@@ -3387,9 +3417,11 @@ function renderSystemStats() {
 }
 
 // ─── 관리자 전체 발송 탭 ───
-function renderAdminBroadcast() {
+async function renderAdminBroadcast() {
   const el = document.getElementById('adminTabBroadcast');
-  const users = JSON.parse(localStorage.getItem('maryUsers')) || [];
+  el.innerHTML = '<p style="text-align:center;padding:20px;color:var(--gray)">불러오는 중...</p>';
+  const snapshot = await db.collection('users').get();
+  const users = snapshot.docs.map(d => d.data());
   const emails = users.filter(u => u.email && u.email !== 'admin').map(u => u.email).join(', ');
   el.innerHTML = `
     <div style="max-width:560px">
@@ -3425,7 +3457,8 @@ async function sendBroadcastMsg() {
   const body = document.getElementById('broadBody')?.value.trim();
   if (!subject || !body) { alert('제목과 내용을 입력해 주세요.'); return; }
   if (!confirm('전체 회원에게 쪽지를 발송하시겠습니까?')) return;
-  const users = JSON.parse(localStorage.getItem('maryUsers')) || [];
+  const snapshot = await db.collection('users').get();
+  const users = snapshot.docs.map(d => d.data());
   const targets = users.filter(u => u.email && u.email !== 'admin' && u.email !== currentUser.email);
   if (!targets.length) { alert('발송 대상이 없습니다.'); return; }
   const batch = db.batch();
@@ -3549,13 +3582,14 @@ function deleteMsg(msgId, tab) {
 function closeMsgDetail(e) { if (e.target.id === 'msgDetailModal') document.getElementById('msgDetailModal').classList.remove('open'); }
 function closeComposeMsg(e) { if (e.target.id === 'composeMsgModal') document.getElementById('composeMsgModal').classList.remove('open'); }
 
-function openComposeMsgModal(toEmail, toName) {
+async function openComposeMsgModal(toEmail, toName) {
   if (!currentUser) { openLogin(); return; }
   if (!canSendMsg()) {
     alert('현재 쪽지 발송 권한이 없습니다.\n부부회원 이상만 쪽지를 보낼 수 있습니다.');
     return;
   }
-  const users = JSON.parse(localStorage.getItem('maryUsers')) || [];
+  const snapshot = await db.collection('users').get();
+  const users = snapshot.docs.map(d => d.data());
   const sel = document.getElementById('msgTo');
   if (sel) {
     sel.innerHTML = '<option value="">-- 받는 회원 선택 --</option>' +
@@ -3772,18 +3806,20 @@ function toggleMobileView() {
 }
 
 // ─── 초기화 ───
-initAdmin();
-
-const initHash = location.hash.slice(1);
-if (initHash.startsWith('write/')) {
-  initWriteTab(initHash.split('/')[1]);
-} else {
-  updateAuthUI();
-  renderHomeProfiles();
-  initHomeLifePreview();
-  currentPage = '';
-  showPage(initHash || 'home');
-}
+(async function() {
+  await migrateUsers();
+  await initAdmin();
+  const initHash = location.hash.slice(1);
+  if (initHash.startsWith('write/')) {
+    initWriteTab(initHash.split('/')[1]);
+  } else {
+    updateAuthUI();
+    renderHomeProfiles();
+    initHomeLifePreview();
+    currentPage = '';
+    showPage(initHash || 'home');
+  }
+})();
 
 // 로그인/로그아웃 시 결혼생활 미리보기 업데이트
 const _origUpdateAuthUI = updateAuthUI;
