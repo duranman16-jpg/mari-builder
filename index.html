@@ -2512,14 +2512,8 @@ function canAccessMarried(u) { return u && (u.memberType==='married'||u.memberTy
 
 // ─── 관리자 계정 초기화 ───
 async function initAdmin() {
-  const doc = await db.collection('users').doc('admin').get();
-  if (!doc.exists) {
-    const hashedPw = await hashPassword('[REDACTED]');
-    await db.collection('users').doc('admin').set({
-      name:'최고관리자',email:'admin',pw:hashedPw,phone:'',birth:'',gender:'male',memberType:'admin',
-      adminToken:'[REDACTED]'
-    });
-  }
+  // 관리자 계정은 Firebase 콘솔 또는 관리자가 직접 생성합니다.
+  // 초기화 코드는 보안상 소스에 포함하지 않습니다.
 }
 
 // ─── localStorage → Firestore 회원 마이그레이션 ───
@@ -2610,12 +2604,17 @@ async function renderAdminMembers() {
 }
 
 async function changeRole(email, newRole) {
-  if (!isAdmin(currentUser) && (newRole==='admin'||newRole==='manager')) { alert('권한이 없습니다.'); return; }
+  if (!currentUser) { alert('로그인이 필요합니다.'); return; }
+  if (!isAdmin(currentUser) && !isManager(currentUser)) { alert('권한이 없습니다.'); return; }
   try {
     const doc = await db.collection('users').doc(email).get();
     if (!doc.exists) { alert('회원을 찾을 수 없습니다.'); return; }
     const userData = doc.data();
-    await db.collection('users').doc(email).update({ memberType: newRole });
+    // 등급 변경은 Cloud Function에서 서버 측 권한 검증 후 처리
+    const payload = { callerEmail: currentUser.email, targetEmail: email, newRole };
+    if (isAdmin(currentUser)) payload.adminSecret = localStorage.getItem('maryAdminSecret') || '';
+    const fn = firebase.functions().httpsCallable('changeRole');
+    await fn(payload);
     if (currentUser && currentUser.email === email) {
       currentUser.memberType = newRole;
       localStorage.setItem('maryUser', JSON.stringify(currentUser));
@@ -2625,7 +2624,7 @@ async function changeRole(email, newRole) {
     renderBoards();
     alert('['+userData.name+'] 님의 등급이 ['+roleLabel(newRole)+'](으)로 변경되었습니다.');
   } catch(e) {
-    alert('등급 변경 오류: ' + e.message);
+    alert('등급 변경 오류: ' + (e.message || e.details || '서버 오류'));
   }
 }
 

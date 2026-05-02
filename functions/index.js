@@ -187,6 +187,59 @@ exports.verifyEmailOtp = functions.https.onCall(async (data, context) => {
   return { success: true };
 });
 
+// ─── 회원 등급 변경 (서버 검증) ───
+exports.changeRole = functions
+  .runWith({ secrets: ['ADMIN_SECRET'] })
+  .https.onCall(async (data, context) => {
+    const { callerEmail, targetEmail, newRole } = data;
+
+    if (!callerEmail || !targetEmail || !newRole) {
+      throw new functions.https.HttpsError('invalid-argument', '필수 파라미터 누락');
+    }
+
+    const validRoles = ['member', 'manager', 'married'];
+    const adminOnlyRoles = ['manager', 'admin'];
+
+    // 호출자 역할을 Firestore에서 직접 조회 (클라이언트 신뢰 안 함)
+    const callerDoc = await admin.firestore().collection('users').doc(callerEmail).get();
+    if (!callerDoc.exists) {
+      throw new functions.https.HttpsError('unauthenticated', '인증 오류');
+    }
+    const callerRole = callerDoc.data().memberType;
+
+    // 대상 회원 조회
+    const targetDoc = await admin.firestore().collection('users').doc(targetEmail).get();
+    if (!targetDoc.exists) {
+      throw new functions.https.HttpsError('not-found', '대상 회원을 찾을 수 없습니다.');
+    }
+    const targetRole = targetDoc.data().memberType;
+
+    if (callerRole === 'admin') {
+      // 관리자: manager/member/married/admin 모두 변경 가능
+      // 단, ADMIN_SECRET 검증 필요
+      const { adminSecret } = data;
+      if (!adminSecret || adminSecret !== process.env.ADMIN_SECRET) {
+        throw new functions.https.HttpsError('permission-denied', '관리자 인증 실패');
+      }
+      if (!['member','manager','married','admin'].includes(newRole)) {
+        throw new functions.https.HttpsError('invalid-argument', '올바르지 않은 등급');
+      }
+    } else if (callerRole === 'manager') {
+      // 매니저: member ↔ married 만 변경 가능, admin/manager 대상 불가
+      if (!['member','married'].includes(newRole)) {
+        throw new functions.https.HttpsError('permission-denied', '매니저는 일반↔결혼회원 변경만 가능합니다.');
+      }
+      if (['admin','manager'].includes(targetRole)) {
+        throw new functions.https.HttpsError('permission-denied', '관리자/매니저 등급은 변경할 수 없습니다.');
+      }
+    } else {
+      throw new functions.https.HttpsError('permission-denied', '권한이 없습니다.');
+    }
+
+    await admin.firestore().collection('users').doc(targetEmail).update({ memberType: newRole });
+    return { success: true };
+  });
+
 // ─── 상담 신청 알림 이메일 ───
 exports.notifyConsultation = functions
   .runWith({ secrets: ['GMAIL_USER', 'GMAIL_APP_PASS'] })

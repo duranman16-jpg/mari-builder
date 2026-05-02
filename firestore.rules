@@ -2,24 +2,33 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // 회원 정보 - 읽기/생성/수정/삭제 허용 (탈퇴 기능)
+    // ─── 회원 정보 ───
     match /users/{userId} {
-      allow read, create, update, delete: if true;
+      // 읽기: 허용 (회원 목록, 로그인 조회 등에 필요)
+      allow read: if true;
+      // 가입: memberType은 반드시 'member', adminToken 포함 불가
+      allow create: if request.resource.data.memberType == 'member'
+                    && !('adminToken' in request.resource.data);
+      // 수정: memberType / adminToken 직접 변경 차단 (Cloud Function에서만 처리)
+      allow update: if !request.resource.data.diff(resource.data)
+                        .affectedKeys().hasAny(['memberType', 'adminToken']);
+      // 탈퇴: 허용
+      allow delete: if true;
     }
 
-    // 이메일 OTP - 직접 읽기 차단 (Functions에서만 읽음)
+    // ─── 이메일 OTP ───
     match /email_otps/{emailDoc} {
       allow write: if true;
-      allow read: if false;
+      allow read: if false; // Cloud Function에서만 읽음
     }
 
-    // AI 이미지 - 클라이언트 쓰기 차단 (Functions에서만 씀)
+    // ─── AI 이미지 ───
     match /ai_images/{imgId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if false; // Cloud Function에서만 씀
     }
 
-    // 게시판
+    // ─── 게시판 ───
     match /posts_vn_life/{postId} { allow read, write: if true; }
     match /posts_vn_life/{postId}/comments/{commentId} { allow read, write: if true; }
     match /posts_kr_life/{postId} { allow read, write: if true; }
@@ -33,16 +42,17 @@ service cloud.firestore {
     match /posts_trade/{postId} { allow read, write: if true; }
     match /posts_trade/{postId}/comments/{commentId} { allow read, write: if true; }
 
-    // 쪽지
+    // ─── 쪽지 ───
     match /messages/{msgId} { allow read, write: if true; }
 
-    // 상담 신청 - 누구나 쓰기, 읽기는 차단 (관리자는 Functions 또는 콘솔에서)
-    match /consultations/{docId} { allow create: if true; allow read, update, delete: if false; }
+    // ─── 상담 신청 ───
+    match /consultations/{docId} {
+      allow create: if true;
+      allow read, update, delete: if false; // 관리자는 Functions/콘솔에서
+    }
 
-    // 성공사례 - 누구나 읽기, 쓰기는 차단 (관리자 패널에서만)
+    // ─── 성공사례 / FAQ ───
     match /success_stories/{docId} { allow read: if true; allow write: if true; }
-
-    // FAQ - 누구나 읽기
     match /faqs/{docId} { allow read: if true; allow write: if true; }
   }
 }
