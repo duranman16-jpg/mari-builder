@@ -1213,11 +1213,35 @@ html.mobile-view .float-btn span{display:none !important}
 .chat-detail-input:focus{border-color:var(--red)}
 .chat-send-staff{background:var(--red);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;transition:.2s}
 .chat-send-staff:hover{background:#a50d26}
+/* 채팅창 열릴 때 FAB 숨김 */
+.chat-fab.hidden{display:none!important}
+/* 채팅창 상담사 변경 바 */
+.chat-change-bar{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:#f8f8f8;border-bottom:1px solid var(--border);flex-shrink:0}
+.chat-change-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:11px;cursor:pointer;color:var(--gray);font-family:'Noto Sans KR',sans-serif;transition:.15s}
+.chat-change-btn:hover{border-color:var(--red);color:var(--red)}
+/* 매니저 전용 실시간 상담 패널 */
+#mgrPanel{position:fixed;bottom:20px;left:20px;width:290px;background:var(--white);border-radius:14px;box-shadow:0 6px 32px rgba(0,0,0,0.18);z-index:600;display:none;flex-direction:column;border:1px solid var(--border);overflow:hidden;font-family:'Noto Sans KR',sans-serif}
+.mgr-panel-hd{background:var(--dark);color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;flex-shrink:0;user-select:none}
+.mgr-panel-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.mgr-panel-badge{background:var(--red);color:#fff;border-radius:99px;padding:1px 7px;font-size:11px;font-weight:700;min-width:20px;text-align:center}
+.mgr-panel-body{max-height:340px;overflow-y:auto}
+.mgr-card{padding:10px 14px;border-bottom:1px solid var(--border)}
+.mgr-card-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.mgr-card-name{font-size:13px;font-weight:700;color:var(--dark)}
+.mgr-card-time{font-size:11px;color:var(--gray)}
+.mgr-card-msg{font-size:12px;color:var(--gray);margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mgr-reply-row{display:flex;gap:6px}
+.mgr-reply-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:12px;font-family:'Noto Sans KR',sans-serif;outline:none;background:var(--bg)}
+.mgr-reply-input:focus{border-color:var(--red);background:#fff}
+.mgr-reply-btn{background:var(--red);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;font-weight:700;white-space:nowrap;font-family:'Noto Sans KR',sans-serif}
+.mgr-empty{padding:18px;text-align:center;font-size:12px;color:var(--gray)}
+.mgr-unread-dot{display:inline-block;width:7px;height:7px;background:var(--red);border-radius:50%;margin-left:4px;vertical-align:middle}
 @media(max-width:768px){
   .chat-win{right:10px;left:10px;width:auto;bottom:70px}
   .chat-fab{bottom:110px;right:16px;padding:9px 13px;font-size:12px}
   .chat-fab span:not(.chat-fab-badge){display:none}
   .chat-admin-wrap{grid-template-columns:1fr}
+  #mgrPanel{left:10px;right:10px;width:auto;bottom:10px}
 }
 </style>
 </head>
@@ -2154,7 +2178,7 @@ html.mobile-view .float-btn span{display:none !important}
       <div class="chat-online-dot"></div>
       <div>
         <div class="chat-win-title">마리 상담센터</div>
-        <div class="chat-win-sub" id="chatWinSub">상담사 연결 중...</div>
+        <div class="chat-win-sub" id="chatWinSub">매니저 연결 중...</div>
       </div>
     </div>
     <button class="chat-win-close" onclick="toggleChatWin()">✕</button>
@@ -2163,7 +2187,7 @@ html.mobile-view .float-btn span{display:none !important}
   <div class="chat-guest-form" id="chatGuestForm">
     <!-- Step 1: 상담사 선택 -->
     <div id="chatStaffStep">
-      <p style="font-size:13px;font-weight:700;color:var(--dark);margin:0 0 10px">상담사를 선택해 주세요</p>
+      <p style="font-size:13px;font-weight:700;color:var(--dark);margin:0 0 10px">매니저를 선택해 주세요</p>
       <div id="chatStaffList" style="display:flex;flex-direction:column;gap:8px">
         <div style="text-align:center;padding:20px;color:var(--gray);font-size:13px">불러오는 중...</div>
       </div>
@@ -2177,11 +2201,26 @@ html.mobile-view .float-btn span{display:none !important}
   </div>
   <!-- 채팅 메인 영역 -->
   <div class="chat-main-area" id="chatMainArea" style="display:none;flex:1;flex-direction:column">
+    <div class="chat-change-bar">
+      <span id="chatAssignedName" style="font-size:12px;color:var(--gray)">매니저 연결됨</span>
+      <button class="chat-change-btn" onclick="changeChatStaff()">← 매니저 변경</button>
+    </div>
     <div class="chat-body" id="chatMsgArea"></div>
     <div class="chat-input-area">
       <input class="chat-input" id="chatInput" placeholder="메시지 입력..." onkeydown="if(event.key==='Enter')sendUserMessage()">
       <button class="chat-send-btn" onclick="sendUserMessage()">➤</button>
     </div>
+  </div>
+</div>
+
+<!-- ─── 매니저/관리자 전용 실시간 상담 패널 ─── -->
+<div id="mgrPanel">
+  <div class="mgr-panel-hd" onclick="toggleMgrPanel()">
+    <span class="mgr-panel-title">💬 실시간 상담 <span class="mgr-panel-badge" id="mgrBadge">0</span></span>
+    <span id="mgrArrow">▲</span>
+  </div>
+  <div class="mgr-panel-body" id="mgrCards">
+    <div class="mgr-empty">대기 중인 상담이 없습니다</div>
   </div>
 </div>
 
@@ -2229,8 +2268,14 @@ html.mobile-view .float-btn span{display:none !important}
     <div class="form-group"><label class="form-label">이름</label><input type="text" class="auth-input" id="signupName" placeholder="이름 입력"></div>
     <div class="form-group">
       <label class="form-label">아이디 <span style="font-size:11px;color:var(--gray);font-weight:400">(활동명 — 게시판·댓글에 표시됩니다)</span></label>
-      <input type="text" class="auth-input" id="signupUserId" placeholder="한글/영문/숫자, 2~20자" maxlength="20" oninput="onUserIdInput()">
-      <p style="font-size:11px;color:var(--gray);margin-top:6px;line-height:1.7">※ 한글·영문·숫자만 가능, 특수문자 불가 (2~20자)</p>
+      <div style="display:flex;gap:8px">
+        <input type="text" class="auth-input" id="signupUserId" placeholder="예: 하늘1" maxlength="5"
+          oninput="this.value=this.value.replace(/[^가-힣0-9]/g,''); _signupUserIdChecked=false; document.getElementById('signupUserIdMsg').textContent=''; document.getElementById('signupUserIdMsg').style.color='var(--gray)';"
+          style="flex:1">
+        <button type="button" onclick="checkSignupUserId()"
+          style="padding:0 14px;background:#333;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;flex-shrink:0">중복확인</button>
+      </div>
+      <p id="signupUserIdMsg" style="font-size:12px;color:var(--gray);margin-top:5px">※ 한글+숫자 조합 / 최대 5자 / 숫자만은 불가 / 특수문자·영문 불가</p>
     </div>
     <div class="form-group">
       <label class="form-label">이메일 <span style="font-size:11px;color:var(--gray);font-weight:400">(로그인용)</span></label>
@@ -3650,7 +3695,18 @@ function openMemberEdit(email, idx) {
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px">
       ${inp(`me-name-${idx}`,'이름',u.name)}
-      ${inp(`me-userid-${idx}`,'아이디 (로그인용)',u.userId)}
+      <div>
+        <label style="font-size:11px;color:var(--gray);font-weight:600;display:block;margin-bottom:4px">아이디 (활동명)</label>
+        <input id="me-userid-${idx}" type="text" value="${sanitizeText(u.userId||'')}" maxlength="5"
+          placeholder="예: 하늘1 (최대 5자)"
+          oninput="this.value=this.value.replace(/[^가-힣0-9]/g,''); document.getElementById('me-uid-msg-${idx}').textContent=''; window['_uidOk_${idx}']=false;"
+          style="width:100%;padding:7px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px;font-family:'Noto Sans KR',sans-serif;box-sizing:border-box;margin-bottom:4px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span id="me-uid-msg-${idx}" style="font-size:11px;flex:1"></span>
+          <button type="button" onclick="checkAdminUserId('${u._docId||u.email}',${idx})"
+            style="padding:3px 10px;background:#333;color:#fff;border:none;border-radius:5px;font-size:11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap">중복확인</button>
+        </div>
+      </div>
       ${inp(`me-phone-${idx}`,'전화번호',u.phone)}
       <div>
         <label style="font-size:11px;color:var(--gray);font-weight:600;display:block;margin-bottom:4px">등급</label>
@@ -3690,6 +3746,8 @@ async function saveMemberEdit(email, idx) {
   const auth   = document.getElementById(`me-auth-${idx}`)?.value;
 
   if (!name) { alert('이름을 입력해 주세요.'); return; }
+  if (userId && !/^(?=.*[가-힣])[가-힣0-9]{2,5}$/.test(userId)) { alert('아이디는 한글+숫자 조합, 최대 5자이며 숫자만은 불가합니다.'); return; }
+  if (userId && !window[`_uidOk_${idx}`]) { alert('아이디 중복확인을 해주세요.'); return; }
 
   const u = (window._adminUsers||[]).find(x => (x._docId||x.email) === email);
   const updates = { name, userId: userId||'', phone: phone||'', authMethod: auth||'이메일' };
@@ -3795,12 +3853,15 @@ function updateAuthUI() {
     if (adminBtn) adminBtn.style.display = isManager(currentUser) ? 'inline-block' : 'none';
     if (changePwBtn) changePwBtn.style.display = currentUser.tempPassword ? 'inline-block' : 'none';
     initMsgListener();
+    if (isManager(currentUser)) { setTimeout(() => { _startChatNotify(); _startMgrPanel(); }, 200); }
   } else {
     navAuth.style.display = 'flex';
     navUser.style.display = 'none';
     if (adminBtn) adminBtn.style.display = 'none';
     if (changePwBtn) changePwBtn.style.display = 'none';
     cleanupMsgListener();
+    _stopChatNotify();
+    _stopMgrPanel();
   }
   renderBoards();
 }
@@ -4145,6 +4206,68 @@ async function submitResetPw() {
 // ─── 이메일 인증 ───
 let _emailVerified = false;
 let _otpTimer = null;
+let _signupUserIdChecked = false;
+
+async function checkAdminUserId(currentEmail, idx) {
+  const inp = document.getElementById(`me-userid-${idx}`);
+  const msg = document.getElementById(`me-uid-msg-${idx}`);
+  if (!inp || !msg) return;
+  const val = inp.value.trim();
+  if (!/^(?=.*[가-힣])[가-힣0-9]{2,5}$/.test(val)) {
+    msg.textContent = '한글+숫자 조합, 최대 5자, 숫자만은 불가합니다.';
+    msg.style.color = 'var(--red)';
+    return;
+  }
+  msg.textContent = '확인 중...';
+  msg.style.color = 'var(--gray)';
+  try {
+    const snap = await db.collection('users').where('userId', '==', val).limit(1).get();
+    const conflict = snap.docs.find(d => d.id !== currentEmail);
+    if (conflict) {
+      msg.textContent = '✗ 이미 사용 중인 아이디입니다.';
+      msg.style.color = 'var(--red)';
+      window[`_uidOk_${idx}`] = false;
+    } else {
+      msg.textContent = '✓ 사용 가능한 아이디입니다.';
+      msg.style.color = '#16a34a';
+      window[`_uidOk_${idx}`] = true;
+    }
+  } catch(e) {
+    msg.textContent = '확인 중 오류가 발생했습니다.';
+    msg.style.color = 'var(--red)';
+    window[`_uidOk_${idx}`] = false;
+  }
+}
+
+async function checkSignupUserId() {
+  const inp = document.getElementById('signupUserId');
+  const msg = document.getElementById('signupUserIdMsg');
+  const val = inp.value.trim();
+  if (!/^(?=.*[가-힣])[가-힣0-9]{2,5}$/.test(val)) {
+    msg.textContent = '한글+숫자 조합, 최대 5자, 숫자만은 불가합니다.';
+    msg.style.color = 'var(--red)';
+    _signupUserIdChecked = false;
+    return;
+  }
+  msg.textContent = '확인 중...';
+  msg.style.color = 'var(--gray)';
+  try {
+    const snap = await db.collection('users').where('userId', '==', val).limit(1).get();
+    if (!snap.empty) {
+      msg.textContent = '✗ 이미 사용 중인 아이디입니다.';
+      msg.style.color = 'var(--red)';
+      _signupUserIdChecked = false;
+    } else {
+      msg.textContent = '✓ 사용 가능한 아이디입니다.';
+      msg.style.color = '#16a34a';
+      _signupUserIdChecked = true;
+    }
+  } catch(e) {
+    msg.textContent = '확인 중 오류가 발생했습니다.';
+    msg.style.color = 'var(--red)';
+    _signupUserIdChecked = false;
+  }
+}
 
 function resetEmailVerify() {
   _emailVerified = false;
@@ -4241,8 +4364,9 @@ async function submitSignup() {
   const birth = document.getElementById('signupBirth').value;
   const gender = document.querySelector('input[name="gender"]:checked');
   if (!name||!userId||!email||!pw||!phone||!birth||!gender) { alert('모든 항목을 입력해 주세요.'); return; }
-  const userIdRegex = /^[가-힣a-zA-Z0-9]{2,20}$/;
-  if (!userIdRegex.test(userId)) { alert('아이디는 한글·영문·숫자만 사용 가능하며 2~20자여야 합니다. 특수문자는 불가합니다.'); return; }
+  const userIdRegex = /^(?=.*[가-힣])[가-힣0-9]{2,5}$/;
+  if (!userIdRegex.test(userId)) { alert('아이디는 한글+숫자 조합, 최대 5자이며 숫자만은 불가합니다.'); return; }
+  if (!_signupUserIdChecked) { alert('아이디 중복확인을 해주세요.'); document.getElementById('signupUserId').focus(); return; }
   if (!_emailVerified) { alert('이메일 인증을 완료해주세요.'); document.getElementById('sendOtpBtn').scrollIntoView({behavior:'smooth',block:'center'}); return; }
   if (pw!==pw2) { alert('비밀번호가 일치하지 않습니다.'); return; }
   const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
@@ -6437,6 +6561,168 @@ updateAuthUI = function() {
 };
 
 // ═══════════════════════════════
+// CHAT NOTIFY (관리자/매니저 전용)
+// ═══════════════════════════════
+let _chatNotifyUnsub = null;
+let _chatNotifyCount = 0;
+
+function _startChatNotify() {
+  if (_chatNotifyUnsub) return;
+  if (Notification && Notification.permission === 'default') Notification.requestPermission();
+  _chatNotifyUnsub = db.collection('chats')
+    .where('unreadStaff', '>', 0)
+    .onSnapshot(snap => {
+      const newCount = snap.size;
+      // 새 메시지 도착 시 브라우저 알림
+      if (newCount > _chatNotifyCount) {
+        snap.docChanges().forEach(ch => {
+          if (ch.type === 'added' || ch.type === 'modified') {
+            const d = ch.doc.data();
+            if (d.unreadStaff > 0 && d.lastMsg) {
+              _showChatToast(d.userName, d.lastMsg);
+              if (Notification && Notification.permission === 'granted') {
+                new Notification('마리 상담센터 새 메시지', {
+                  body: `${d.userName}: ${d.lastMsg}`,
+                  icon: '/og-image.jpg'
+                });
+              }
+            }
+          }
+        });
+      }
+      _chatNotifyCount = newCount;
+      // 채팅 탭 뱃지 업데이트
+      const btn = document.querySelector('.admin-topnav-btn[onclick*="chat"]');
+      if (btn) {
+        const badge = newCount > 0 ? ` <span style="background:#ef4444;color:#fff;border-radius:99px;padding:0 6px;font-size:11px;font-weight:700">${newCount}</span>` : '';
+        btn.innerHTML = '💬 채팅상담' + badge;
+      }
+    });
+}
+
+function _stopChatNotify() {
+  if (_chatNotifyUnsub) { _chatNotifyUnsub(); _chatNotifyUnsub = null; }
+  _chatNotifyCount = 0;
+}
+
+// ── 매니저 전용 실시간 상담 패널 ──
+let _mgrPanelOpen = true;
+let _mgrChatUnsub = null;
+let _mgrChats = {};
+
+function _startMgrPanel() {
+  if (!isManager(currentUser)) return;
+  const el = document.getElementById('mgrPanel');
+  if (el) el.style.display = 'flex';
+  if (_mgrChatUnsub) return;
+  _mgrChatUnsub = db.collection('chats')
+    .orderBy('updatedAt', 'desc')
+    .limit(30)
+    .onSnapshot(snap => {
+      _mgrChats = {};
+      snap.forEach(doc => { _mgrChats[doc.id] = {id: doc.id, ...doc.data()}; });
+      _renderMgrPanel();
+    });
+}
+
+function _stopMgrPanel() {
+  if (_mgrChatUnsub) { _mgrChatUnsub(); _mgrChatUnsub = null; }
+  _mgrChats = {};
+  const el = document.getElementById('mgrPanel');
+  if (el) el.style.display = 'none';
+}
+
+function toggleMgrPanel() {
+  _mgrPanelOpen = !_mgrPanelOpen;
+  const arrow = document.getElementById('mgrArrow');
+  if (arrow) arrow.textContent = _mgrPanelOpen ? '▲' : '▼';
+  const body = document.getElementById('mgrCards');
+  if (body) body.style.display = _mgrPanelOpen ? '' : 'none';
+}
+
+function _renderMgrPanel() {
+  const cards = document.getElementById('mgrCards');
+  const badge = document.getElementById('mgrBadge');
+  if (!cards) return;
+  const all = Object.values(_mgrChats).filter(c => c.status !== 'closed');
+  // userId별 최신 채팅 1개만 (Firestore는 updatedAt desc로 가져오므로 첫 번째가 최신)
+  const seen = new Set();
+  const list = all.filter(c => {
+    if (seen.has(c.userId)) return false;
+    seen.add(c.userId);
+    return true;
+  });
+  const totalUnread = list.reduce((s, c) => s + (c.unreadStaff || 0), 0);
+  if (badge) badge.textContent = totalUnread > 0 ? totalUnread : list.length;
+  if (!_mgrPanelOpen) return;
+  if (list.length === 0) {
+    cards.innerHTML = '<div class="mgr-empty">대기 중인 상담이 없습니다</div>';
+    return;
+  }
+  // 미읽 있는 것 먼저
+  list.sort((a, b) => (b.unreadStaff||0) - (a.unreadStaff||0));
+  cards.innerHTML = '';
+  list.forEach(c => {
+    const unread = c.unreadStaff > 0;
+    const t = c.updatedAt ? new Date(c.updatedAt.toDate()).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}) : '';
+    const card = document.createElement('div');
+    card.className = 'mgr-card';
+    card.innerHTML = `
+      <div class="mgr-card-hd">
+        <span class="mgr-card-name">${c.userName}${unread?`<span class="mgr-unread-dot"></span>`:''}</span>
+        <span class="mgr-card-time">${t}</span>
+      </div>
+      <div class="mgr-card-msg">${c.lastMsg || '(메시지 없음)'}</div>
+      <div class="mgr-reply-row">
+        <input class="mgr-reply-input" id="mgrR_${c.id}" placeholder="답장..." onkeydown="if(event.key==='Enter')_mgrSend('${c.id}')">
+        <button class="mgr-reply-btn" onclick="_mgrSend('${c.id}')">전송</button>
+      </div>
+      <div style="margin-top:6px;text-align:right">
+        <button onclick="openAdmin();setTimeout(()=>{showAdminTab('chat',document.querySelector('.admin-topnav-btn[onclick*=\\'chat\\']'))},400)"
+          style="font-size:11px;color:var(--gray);background:none;border:none;cursor:pointer;text-decoration:underline;font-family:'Noto Sans KR',sans-serif">전체 대화 보기 →</button>
+      </div>`;
+    cards.appendChild(card);
+  });
+}
+
+async function _mgrSend(chatId) {
+  const inp = document.getElementById('mgrR_' + chatId);
+  if (!inp) return;
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  inp.disabled = true;
+  const role = currentUser?.memberType || 'admin';
+  const senderName = (role === 'manager' ? '매니저 ' : '관리자 ') + (currentUser?.name || currentUser?.email || '');
+  try {
+    await db.collection('chats').doc(chatId).collection('messages').add({
+      text, sender: currentUser?.email || 'admin', senderName, role: 'staff',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    await db.collection('chats').doc(chatId).update({
+      lastMsg: text, updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      status: 'active', unreadStaff: 0
+    });
+  } catch(e) { console.error(e); }
+  inp.disabled = false;
+  inp.focus();
+}
+
+function _showChatToast(userName, msg) {
+  let toast = document.getElementById('chatToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'chatToast';
+    toast.style.cssText = 'position:fixed;top:70px;right:20px;background:#1a1a1a;color:#fff;padding:12px 18px;border-radius:12px;font-size:13px;z-index:9999;max-width:280px;box-shadow:0 4px 20px rgba(0,0,0,0.3);cursor:pointer;font-family:"Noto Sans KR",sans-serif;line-height:1.5';
+    toast.onclick = () => { openAdmin(); setTimeout(()=>showAdminTab('chat', document.querySelector('.admin-topnav-btn[onclick*="chat"]')), 400); toast.remove(); };
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = `💬 <strong>${userName}</strong>님의 새 메시지<br><span style="opacity:.75">${msg.slice(0,40)}${msg.length>40?'…':''}</span>`;
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.remove(), 6000);
+}
+
+// ═══════════════════════════════
 // CHAT SYSTEM
 // ═══════════════════════════════
 let chatWinOpen = false;
@@ -6452,22 +6738,44 @@ let adminSelChatId = null;
 function toggleChatWin() {
   chatWinOpen = !chatWinOpen;
   const win = document.getElementById('chatWin');
+  const fab = document.getElementById('chatFab');
   if (chatWinOpen) {
     win.classList.add('open');
+    if (fab) fab.classList.add('hidden');
     _chatOpen();
   } else {
     win.classList.remove('open');
+    if (fab) fab.classList.remove('hidden');
   }
 }
 
 function _chatOpen() {
   const savedId = localStorage.getItem('mariChatId');
   if (currentUser) {
-    // 로그인 유저: 기존 채팅 있으면 복원, 없으면 상담사 선택
     if (savedId) {
       currentChatId = savedId;
-      _showChatMain();
-      _subChatMessages(currentChatId);
+      db.collection('chats').doc(savedId).get().then(doc => {
+        if (doc.exists) {
+          const d = doc.data();
+          // 종료된 채팅이면 새로 시작
+          if (d.status === 'closed') {
+            localStorage.removeItem('mariChatId');
+            currentChatId = null;
+            _showStaffStep();
+            return;
+          }
+          selectedStaffName = d.assignedName || null;
+          selectedStaffEmail = d.assignedTo || null;
+        } else {
+          // 문서 없으면 새로 시작
+          localStorage.removeItem('mariChatId');
+          currentChatId = null;
+          _showStaffStep();
+          return;
+        }
+        _showChatMain();
+        _subChatMessages(currentChatId);
+      }).catch(() => { _showChatMain(); _subChatMessages(currentChatId); });
     } else {
       _showStaffStep();
     }
@@ -6503,18 +6811,19 @@ async function _loadChatStaffList() {
     listEl.innerHTML = '';
     snap.forEach(doc => {
       const u = doc.data();
-      const roleLabel = u.memberType === 'admin' ? '최고관리자' : '상담매니저';
+      const roleLabel = u.memberType === 'admin' ? '최고관리자' : '매니저';
+      const displayId = u.userId || u.name || doc.id;
       const card = document.createElement('div');
       card.className = 'chat-staff-card';
       card.innerHTML = `
-        <div class="chat-staff-avatar">${u.name ? u.name[0] : '👤'}</div>
+        <div class="chat-staff-avatar">${displayId[0].toUpperCase()}</div>
         <div class="chat-staff-info">
-          <div class="chat-staff-name">${u.name || doc.id}</div>
+          <div class="chat-staff-name">${displayId}</div>
           <div class="chat-staff-role">${roleLabel}</div>
           <div class="chat-staff-status">● 상담 가능</div>
         </div>
         <div style="font-size:20px;color:var(--gray)">›</div>`;
-      card.onclick = () => _selectStaff(doc.id, u.name || doc.id, card);
+      card.onclick = () => _selectStaff(doc.id, displayId, card);
       listEl.appendChild(card);
     });
   } catch(e) {
@@ -6574,8 +6883,8 @@ async function _loadOrCreateUserChat() {
   try {
     const ref = await db.collection('chats').add({
       userId: currentUser.email,
-      userName: currentUserData?.name || currentUser.email,
-      userPhone: currentUserData?.phone || '',
+      userName: currentUser.name || currentUser.email,
+      userPhone: currentUser.phone || '',
       status: selectedStaffEmail ? 'active' : 'waiting',
       assignedTo: selectedStaffEmail || null,
       assignedName: selectedStaffName || null,
@@ -6586,14 +6895,14 @@ async function _loadOrCreateUserChat() {
     currentChatId = ref.id;
     localStorage.setItem('mariChatId', currentChatId);
     await db.collection('chats').doc(currentChatId).collection('messages').add({
-      text: `안녕하세요! ${selectedStaffName ? selectedStaffName + ' 상담사' : '마리 상담센터'}입니다. 무엇을 도와드릴까요?`,
+      text: `안녕하세요! ${selectedStaffName ? selectedStaffName + ' 매니저' : '마리 상담센터'}입니다. 무엇을 도와드릴까요?`,
       sender: 'system', senderName: '마리 상담센터', role: 'system',
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     _showChatMain();
     _subChatMessages(currentChatId);
   } catch(e) {
-    console.error(e);
+    console.error('[chat error]', e.code, e.message, e);
     alert('채팅 연결 중 오류가 발생했습니다. 다시 시도해 주세요.');
   }
 }
@@ -6602,6 +6911,24 @@ function _showChatMain() {
   document.getElementById('chatGuestForm').style.display = 'none';
   const main = document.getElementById('chatMainArea');
   main.style.display = 'flex';
+  const nameEl = document.getElementById('chatAssignedName');
+  if (nameEl && selectedStaffName) nameEl.textContent = selectedStaffName + ' 매니저';
+}
+
+function changeChatStaff() {
+  if (chatMsgUnsub) { chatMsgUnsub(); chatMsgUnsub = null; }
+  // 이전 채팅을 closed 처리 → 매니저 패널에서 중복 방지
+  if (currentChatId) {
+    db.collection('chats').doc(currentChatId).update({
+      status: 'closed',
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(() => {});
+  }
+  currentChatId = null;
+  selectedStaffEmail = null;
+  selectedStaffName = null;
+  localStorage.removeItem('mariChatId');
+  _showStaffStep();
 }
 
 // 메시지 실시간 구독
@@ -6614,7 +6941,7 @@ function _subChatMessages(chatId) {
       if (!area) return;
       area.innerHTML = '';
       if (snap.empty) {
-        area.innerHTML = '<div style="text-align:center;padding:20px;font-size:12px;color:#999">상담사 연결을 기다리고 있습니다...</div>';
+        area.innerHTML = '<div style="text-align:center;padding:20px;font-size:12px;color:#999">매니저 연결을 기다리고 있습니다...</div>';
         return;
       }
       snap.forEach(doc => {
@@ -6638,7 +6965,7 @@ async function sendUserMessage() {
   const text = inp.value.trim();
   if (!text || !currentChatId) return;
   inp.value = '';
-  const name = currentUser ? (currentUserData?.name || currentUser.email) : (localStorage.getItem('mariChatName') || '고객');
+  const name = currentUser ? (currentUser.name || currentUser.email) : (localStorage.getItem('mariChatName') || '고객');
   try {
     await db.collection('chats').doc(currentChatId).collection('messages').add({
       text, sender: currentUser?.email || 'guest', senderName: name, role: 'user',
@@ -6747,8 +7074,8 @@ async function sendStaffMessage(chatId) {
   const text = inp.value.trim();
   if (!text) return;
   inp.value = '';
-  const role = currentUserData?.role||'admin';
-  const senderName = (role==='manager'?'매니저 ':'관리자 ') + (currentUserData?.name||currentUser?.email||'');
+  const role = currentUser?.memberType || 'admin';
+  const senderName = (role==='manager'?'매니저 ':'관리자 ') + (currentUser?.name || currentUser?.email || '');
   try {
     await db.collection('chats').doc(chatId).collection('messages').add({
       text, sender: currentUser?.email||'admin', senderName, role,

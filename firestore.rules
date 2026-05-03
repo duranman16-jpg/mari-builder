@@ -67,5 +67,13 @@ service cloud.firestore {
       allow read: if true;   // 금칙어 목록은 모든 사용자가 로드
       allow write: if true;  // 관리자 패널에서 직접 업데이트 (UI는 관리자만 접근 가능)
     }
+
+    // ─── 실시간 채팅 ───
+    match /chats/{chatId} {
+      allow read, write: if true;   // 비로그인 포함 누구나 채팅 생성/조회 가능
+      match /messages/{msgId} {
+        allow read, write: if true; // 메시지 읽기/쓰기
+      }
+    }
   }
 }

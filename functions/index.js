@@ -246,12 +246,7 @@ exports.changeRole = functions
     const targetRole = targetDoc.data().memberType;
 
     if (callerRole === 'admin') {
-      // 관리자: manager/member/married/admin 모두 변경 가능
-      // 단, ADMIN_SECRET 검증 필요
-      const { adminSecret } = data;
-      if (!adminSecret || adminSecret !== process.env.ADMIN_SECRET) {
-        throw new functions.https.HttpsError('permission-denied', '관리자 인증 실패');
-      }
+      // 관리자: Firestore에서 직접 검증했으므로 추가 secret 불필요
       if (!['member','manager','married','admin'].includes(newRole)) {
         throw new functions.https.HttpsError('invalid-argument', '올바르지 않은 등급');
       }

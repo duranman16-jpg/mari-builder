@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>og-image 생성기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px}
+  canvas{border:1px solid #333;max-width:90vw;height:auto}
+  button{background:#C8102E;color:#fff;border:none;padding:14px 40px;font-size:16px;font-weight:700;border-radius:10px;cursor:pointer}
+  button:hover{background:#a50d26}
+  p{color:#999;font-size:13px;font-family:sans-serif}
+</style>
+</head>
+<body>
+<canvas id="c" width="1200" height="630"></canvas>
+<button onclick="download()">💾 og-image.jpg 다운로드</button>
+<p>이 파일(og-image-gen.html)은 삭제해도 됩니다. og-image.jpg만 프로젝트 폴더에 넣으세요.</p>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = 1200, H = 630;
+
+function draw() {
+  // ── 배경 그라디언트
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0,   '#0D0505');
+  bg.addColorStop(0.4, '#2A0808');
+  bg.addColorStop(0.8, '#4A1200');
+  bg.addColorStop(1,   '#1A0A0A');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // ── 패턴 오버레이 (별 모양 반복)
+  for (let x = 0; x < W; x += 80) {
+    for (let y = 0; y < H; y += 80) {
+      ctx.save();
+      ctx.translate(x + 40, y + 40);
+      ctx.fillStyle = 'rgba(184,134,11,0.045)';
+      ctx.font = '18px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('✦', 0, 0);
+      ctx.restore();
+    }
+  }
+
+  // ── 왼쪽 붉은 사이드 강조
+  const side = ctx.createLinearGradient(0, 0, 220, 0);
+  side.addColorStop(0, 'rgba(200,16,46,0.18)');
+  side.addColorStop(1, 'rgba(200,16,46,0)');
+  ctx.fillStyle = side;
+  ctx.fillRect(0, 0, 220, H);
+
+  // ── 상단 골드 라인
+  ctx.strokeStyle = 'rgba(184,134,11,0.7)';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(80, 68); ctx.lineTo(W - 80, 68); ctx.stroke();
+
+  // ── 하단 골드 라인
+  ctx.beginPath(); ctx.moveTo(80, H - 68); ctx.lineTo(W - 80, H - 68); ctx.stroke();
+
+  // ── 코너 장식
+  const corners = [[80,68],[W-80,68],[80,H-68],[W-80,H-68]];
+  corners.forEach(([x,y]) => {
+    ctx.fillStyle = '#B8860B';
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  // ── 국기 이모지
+  ctx.font = '52px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('🇰🇷 ❤️ 🇻🇳', W / 2, 148);
+
+  // ── 메인 타이틀
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = '900 96px "Noto Sans KR", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.shadowColor = 'rgba(200,16,46,0.5)';
+  ctx.shadowBlur = 24;
+  ctx.fillText('마리 국제결혼', W / 2, 290);
+  ctx.shadowBlur = 0;
+
+  // ── 골드 강조선 (타이틀 아래)
+  const lineGrad = ctx.createLinearGradient(300, 0, 900, 0);
+  lineGrad.addColorStop(0,   'rgba(184,134,11,0)');
+  lineGrad.addColorStop(0.3, 'rgba(184,134,11,0.9)');
+  lineGrad.addColorStop(0.7, 'rgba(184,134,11,0.9)');
+  lineGrad.addColorStop(1,   'rgba(184,134,11,0)');
+  ctx.strokeStyle = lineGrad;
+  ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(300, 350); ctx.lineTo(900, 350); ctx.stroke();
+
+  // ── 서브타이틀
+  ctx.fillStyle = '#F5D87A';
+  ctx.font = '700 38px "Noto Sans KR", sans-serif';
+  ctx.fillText('한국 · 베트남 국제결혼 전문', W / 2, 412);
+
+  // ── 설명 텍스트
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.font = '400 26px "Noto Sans KR", sans-serif';
+  ctx.fillText('검증된 베트남 신부 매칭 · 결혼 절차 안내 · 무료 상담', W / 2, 468);
+
+  // ── URL 배지
+  const badgeX = W / 2;
+  const badgeY = H - 100;
+  ctx.fillStyle = 'rgba(200,16,46,0.75)';
+  roundRect(ctx, badgeX - 140, badgeY - 22, 280, 44, 22);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.font = '700 24px "Noto Sans KR", sans-serif';
+  ctx.fillText('marivnkr.com', badgeX, badgeY + 4);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+function download() {
+  const link = document.createElement('a');
+  link.download = 'og-image.jpg';
+  link.href = canvas.toDataURL('image/jpeg', 0.95);
+  link.click();
+}
+
+// 폰트 로딩 후 그리기
+document.fonts.ready.then(() => {
+  setTimeout(draw, 200);
+});
+</script>
+</body>
+</html>
