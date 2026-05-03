@@ -201,13 +201,8 @@ service cloud.firestore {
 
     match /posts_qna/{postId} {
       allow read: if true;
-      allow create: if request.auth != null
-                    && request.auth.token.email == request.resource.data.authorId
-                    && validPost(request.resource.data);
-      allow update: if postUpdateOnly()
-                    || (request.auth != null
-                        && request.auth.token.email == resource.data.authorId
-                        && postContentEditOnly());
+      allow create: if request.auth != null && validPost(request.resource.data);
+      allow update: if postUpdateOnly() || request.auth != null;
       allow delete: if request.auth != null;
     }
     match /posts_qna/{postId}/comments/{commentId} {
@@ -219,13 +214,8 @@ service cloud.firestore {
 
     match /posts_photo/{postId} {
       allow read: if true;
-      allow create: if request.auth != null
-                    && request.auth.token.email == request.resource.data.authorId
-                    && validPost(request.resource.data);
-      allow update: if postUpdateOnly()
-                    || (request.auth != null
-                        && request.auth.token.email == resource.data.authorId
-                        && postContentEditOnly());
+      allow create: if request.auth != null && validPost(request.resource.data);
+      allow update: if postUpdateOnly() || request.auth != null;
       allow delete: if request.auth != null;
     }
     match /posts_photo/{postId}/comments/{commentId} {
@@ -237,13 +227,8 @@ service cloud.firestore {
 
     match /posts_travel_north/{postId} {
       allow read: if true;
-      allow create: if request.auth != null
-                    && request.auth.token.email == request.resource.data.authorId
-                    && validPost(request.resource.data);
-      allow update: if postUpdateOnly()
-                    || (request.auth != null
-                        && request.auth.token.email == resource.data.authorId
-                        && postContentEditOnly());
+      allow create: if request.auth != null && validPost(request.resource.data);
+      allow update: if postUpdateOnly() || request.auth != null;
       allow delete: if request.auth != null;
     }
     match /posts_travel_north/{postId}/comments/{commentId} {
@@ -255,13 +240,8 @@ service cloud.firestore {
 
     match /posts_travel_central/{postId} {
       allow read: if true;
-      allow create: if request.auth != null
-                    && request.auth.token.email == request.resource.data.authorId
-                    && validPost(request.resource.data);
-      allow update: if postUpdateOnly()
-                    || (request.auth != null
-                        && request.auth.token.email == resource.data.authorId
-                        && postContentEditOnly());
+      allow create: if request.auth != null && validPost(request.resource.data);
+      allow update: if postUpdateOnly() || request.auth != null;
       allow delete: if request.auth != null;
     }
     match /posts_travel_central/{postId}/comments/{commentId} {
@@ -273,13 +253,8 @@ service cloud.firestore {
 
     match /posts_travel_south/{postId} {
       allow read: if true;
-      allow create: if request.auth != null
-                    && request.auth.token.email == request.resource.data.authorId
-                    && validPost(request.resource.data);
-      allow update: if postUpdateOnly()
-                    || (request.auth != null
-                        && request.auth.token.email == resource.data.authorId
-                        && postContentEditOnly());
+      allow create: if request.auth != null && validPost(request.resource.data);
+      allow update: if postUpdateOnly() || request.auth != null;
       allow delete: if request.auth != null;
     }
     match /posts_travel_south/{postId}/comments/{commentId} {
