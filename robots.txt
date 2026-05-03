@@ -1,5 +1,5 @@
 # 마리 국제결혼 robots.txt
-# https://mari-viet.web.app
+# https://marivnkr.com
 
 User-agent: *
 Allow: /
@@ -9,7 +9,7 @@ Disallow: /messages
 Disallow: /matching
 Disallow: /admin
 
-Sitemap: https://mari-viet.web.app/sitemap.xml
+Sitemap: https://marivnkr.com/sitemap.xml
 
 # Googlebot
 User-agent: Googlebot
