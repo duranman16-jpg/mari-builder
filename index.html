@@ -221,6 +221,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 .nav-community{color:var(--gold)!important;font-weight:600!important;font-size:12.5px!important}
 .nav-community:hover{color:#8B6914!important;background:rgba(184,134,11,0.08)!important}
 .nav-community.nav-active{color:#8B6914!important}
+/* ─── 드롭다운 네비 (데스크탑 전용) ─── */
+.nav-dropdown{position:relative;display:flex;align-items:center}
+.nav-dropdown-btn{display:flex;align-items:center;gap:2px;color:var(--gray);font-size:13px;font-weight:500;padding:7px 10px;border-radius:6px;transition:.2s;white-space:nowrap;cursor:pointer;background:none;border:none;font-family:'Noto Sans KR',sans-serif}
+.nav-dropdown-btn.comm-btn{color:var(--gold)!important;font-weight:600!important;font-size:12.5px!important}
+.nav-dropdown-btn::after{content:'▾';font-size:9px;opacity:0.5;margin-left:1px}
+.nav-dropdown:hover .nav-dropdown-btn{color:var(--red);background:rgba(200,16,46,0.06)}
+.nav-dropdown:hover .nav-dropdown-btn.comm-btn{color:#8B6914!important;background:rgba(184,134,11,0.08)!important}
+.nav-dropdown-menu{display:none;position:absolute;top:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#fff;border:1px solid rgba(0,0,0,0.1);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.14);min-width:130px;z-index:200;padding:6px}
+.nav-dropdown:hover .nav-dropdown-menu{display:block}
+.nav-dropdown-menu a{display:block;padding:8px 14px;font-size:13px;color:var(--dark);text-decoration:none;cursor:pointer;border-radius:6px;white-space:nowrap;transition:.15s;font-weight:500}
+.nav-dropdown-menu a:hover{background:rgba(200,16,46,0.06);color:var(--red)}
+.nav-dropdown-menu a.nav-active{color:var(--red);font-weight:700;background:rgba(200,16,46,0.04)}
+.nav-desktop-guide{display:flex;align-items:center}
+.mnav-mobile-only{display:none!important}
 /* ─── 모바일 메뉴 그룹 (데스크탑: display:contents로 투명하게) ─── */
 .mnav-group{display:contents}
 .mnav-label{display:none}
@@ -610,6 +624,9 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
   .nav-links .nav-community:hover,.nav-links .nav-community.nav-active{background:rgba(184,134,11,0.14) !important;color:#5C3D00 !important;border-color:rgba(184,134,11,0.25)}
   .mnav-community .mnav-label{color:var(--gold)}
   .mnav-community .mnav-label::before{background:var(--gold)}
+  .nav-dropdown{display:none!important}
+  .nav-desktop-guide{display:none!important}
+  .mnav-mobile-only{display:grid!important}
   .mobile-nav-cta-wrap{display:block;padding:12px 16px 20px;border-top:1px solid rgba(0,0,0,0.07)}
   .mobile-nav-cta{display:block;width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;transition:.2s}
   .mobile-nav-cta:hover{background:#a50d26}
@@ -1350,14 +1367,53 @@ html.mobile-view .float-btn span{display:none !important}
         <a data-page="ranking" onclick="navigate('ranking')">🏆 랭킹</a>
       </div>
       <span class="nav-sep">|</span>
-      <div class="mnav-group mnav-community">
+      <!-- 데스크탑 드롭다운 (모바일에서 숨김) -->
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn comm-btn">커뮤니티</button>
+        <div class="nav-dropdown-menu">
+          <a data-page="board-free" onclick="navigate('board-free')">💬 자유게시판</a>
+          <a data-page="board-qna" onclick="navigate('board-qna')">❓ 질문게시판</a>
+          <a data-page="board-photo" onclick="navigate('board-photo')">📸 사진게시판</a>
+          <a data-page="board-food" onclick="navigate('board-food')">🍜 베트남음식</a>
+          <a data-page="board-trade" onclick="navigate('board-trade')">🤝 물물교환</a>
+        </div>
+      </div>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn comm-btn">💒 결혼생활</button>
+        <div class="nav-dropdown-menu">
+          <a data-page="board-life-kr" onclick="navigateLife('kr')">🇰🇷 한국 생활</a>
+          <a data-page="board-life-vn" onclick="navigateLife('vn')">🇻🇳 베트남 생활</a>
+        </div>
+      </div>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn comm-btn">✈️ 여행&amp;정보</button>
+        <div class="nav-dropdown-menu">
+          <a data-page="board-travel-north" onclick="navigate('board-travel-north')">🏛️ 북부 지역</a>
+          <a data-page="board-travel-central" onclick="navigate('board-travel-central')">🌊 중부 지역</a>
+          <a data-page="board-travel-south" onclick="navigate('board-travel-south')">🌴 남부 지역</a>
+        </div>
+      </div>
+      <a data-page="guide" onclick="navigate('guide')" class="nav-community nav-desktop-guide">🗺️ 베트남가이드</a>
+      <!-- 모바일 전용 그룹 (데스크탑에서 숨김) -->
+      <div class="mnav-group mnav-community mnav-mobile-only">
+        <div class="mnav-label">결혼생활</div>
+        <a data-page="board-life-kr" onclick="navigateLife('kr')" class="nav-community">🇰🇷 한국 생활</a>
+        <a data-page="board-life-vn" onclick="navigateLife('vn')" class="nav-community">🇻🇳 베트남 생활</a>
+      </div>
+      <div class="mnav-group mnav-community mnav-mobile-only">
         <div class="mnav-label">커뮤니티</div>
-        <a data-page="board-life" onclick="navigate('board-life')" class="nav-community">💒 결혼생활</a>
         <a data-page="board-free" onclick="navigate('board-free')" class="nav-community">💬 자유게시판</a>
-        <a data-page="board-travel" onclick="navigate('board-travel')" class="nav-community">✈️ 여행&amp;정보</a>
+        <a data-page="board-qna" onclick="navigate('board-qna')" class="nav-community">❓ 질문게시판</a>
+        <a data-page="board-photo" onclick="navigate('board-photo')" class="nav-community">📸 사진게시판</a>
         <a data-page="board-food" onclick="navigate('board-food')" class="nav-community">🍜 베트남음식</a>
         <a data-page="board-trade" onclick="navigate('board-trade')" class="nav-community">🤝 물물교환</a>
         <a data-page="guide" onclick="navigate('guide')" class="nav-community">🗺️ 베트남가이드</a>
+      </div>
+      <div class="mnav-group mnav-community mnav-mobile-only">
+        <div class="mnav-label">여행&amp;정보</div>
+        <a data-page="board-travel-north" onclick="navigate('board-travel-north')" class="nav-community">🏛️ 북부 지역</a>
+        <a data-page="board-travel-central" onclick="navigate('board-travel-central')" class="nav-community">🌊 중부 지역</a>
+        <a data-page="board-travel-south" onclick="navigate('board-travel-south')" class="nav-community">🌴 남부 지역</a>
       </div>
       <div class="mobile-nav-cta-wrap">
         <button class="mobile-nav-cta" onclick="navigate('inquiry');toggleMenu()">💬 무료상담 신청</button>
@@ -3133,6 +3189,86 @@ html.mobile-view .float-btn span{display:none !important}
   </div>
   <div class="board-section">
     <div id="board-trade-content"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE: 질문게시판                        -->
+<!-- ══════════════════════════════════════ -->
+<div id="page-board-qna" class="page">
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a onclick="navigate('home')">홈</a><span>›</span>커뮤니티<span>›</span>질문게시판</div>
+      <h1>질문 게시판 ❓</h1>
+      <p>한국·베트남 생활, 비자, 결혼절차 등 궁금한 것을 자유롭게 질문하세요.</p>
+    </div>
+  </div>
+  <div class="board-section">
+    <div id="board-qna-content"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE: 사진게시판                        -->
+<!-- ══════════════════════════════════════ -->
+<div id="page-board-photo" class="page">
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a onclick="navigate('home')">홈</a><span>›</span>커뮤니티<span>›</span>사진게시판</div>
+      <h1>사진 게시판 📸</h1>
+      <p>베트남·한국에서의 일상, 여행, 음식 사진을 자유롭게 공유하세요.</p>
+    </div>
+  </div>
+  <div class="board-section">
+    <div id="board-photo-content"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE: 여행 북부지역                    -->
+<!-- ══════════════════════════════════════ -->
+<div id="page-board-travel-north" class="page">
+  <div class="page-hero" style="background-image:url('page-bg-travel.svg');background-size:cover;background-position:center">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a onclick="navigate('home')">홈</a><span>›</span>여행&amp;정보<span>›</span>북부 지역</div>
+      <h1>북부 지역 여행 🏛️</h1>
+      <p>하노이·하롱베이·사파 등 베트남 북부 여행 정보와 사진을 공유하세요.</p>
+    </div>
+  </div>
+  <div class="board-section">
+    <div id="board-travel-north-content"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE: 여행 중부지역                    -->
+<!-- ══════════════════════════════════════ -->
+<div id="page-board-travel-central" class="page">
+  <div class="page-hero" style="background-image:url('page-bg-travel.svg');background-size:cover;background-position:center">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a onclick="navigate('home')">홈</a><span>›</span>여행&amp;정보<span>›</span>중부 지역</div>
+      <h1>중부 지역 여행 🌊</h1>
+      <p>다낭·호이안·후에 등 베트남 중부 여행 정보와 사진을 공유하세요.</p>
+    </div>
+  </div>
+  <div class="board-section">
+    <div id="board-travel-central-content"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE: 여행 남부지역                    -->
+<!-- ══════════════════════════════════════ -->
+<div id="page-board-travel-south" class="page">
+  <div class="page-hero" style="background-image:url('page-bg-travel.svg');background-size:cover;background-position:center">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a onclick="navigate('home')">홈</a><span>›</span>여행&amp;정보<span>›</span>남부 지역</div>
+      <h1>남부 지역 여행 🌴</h1>
+      <p>호찌민·무이네·푸꾸옥 등 베트남 남부 여행 정보와 사진을 공유하세요.</p>
+    </div>
+  </div>
+  <div class="board-section">
+    <div id="board-travel-south-content"></div>
   </div>
 </div>
 
@@ -5958,18 +6094,20 @@ let commentListener = null;
 
 const boardNames = {
   posts_vn_life:'베트남 생활', posts_kr_life:'한국 생활',
-  posts_free:'자유게시판', posts_travel:'여행사진및 정보',
+  posts_free:'자유게시판', posts_qna:'질문게시판', posts_photo:'사진게시판',
+  posts_travel:'여행정보', posts_travel_north:'북부 지역', posts_travel_central:'중부 지역', posts_travel_south:'남부 지역',
   posts_food:'베트남 음식', posts_trade:'물물교환'
 };
 const boardPages = {
   posts_vn_life:'board-life', posts_kr_life:'board-life',
-  posts_free:'board-free', posts_travel:'board-travel',
+  posts_free:'board-free', posts_qna:'board-qna', posts_photo:'board-photo',
+  posts_travel:'board-travel', posts_travel_north:'board-travel-north', posts_travel_central:'board-travel-central', posts_travel_south:'board-travel-south',
   posts_food:'board-food', posts_trade:'board-trade'
 };
 
 function openPost(colName, docId) {
   const lifeBoards = ['posts_vn_life','posts_kr_life'];
-  const memberBoards = ['posts_free','posts_travel','posts_food','posts_trade'];
+  const memberBoards = ['posts_free','posts_qna','posts_photo','posts_travel','posts_travel_north','posts_travel_central','posts_travel_south','posts_food','posts_trade'];
   if (lifeBoards.includes(colName)) {
     if (!currentUser) { if(confirm('로그인이 필요합니다. 로그인하시겠습니까?')) openLogin(); return; }
     if (!canAccessMarried(currentUser)) { alert('결혼회원 전용 게시판입니다.\n관리자 또는 매니저에게 결혼회원 등급 승인을 요청하세요.'); return; }
@@ -6588,14 +6726,47 @@ function renderBoards() {
   const freeEl = document.getElementById('board-free-content');
   if (freeEl) attachBoardTable(freeEl, 'posts_free');
 
+  const qnaEl = document.getElementById('board-qna-content');
+  if (qnaEl) attachBoardTable(qnaEl, 'posts_qna');
+
+  const photoEl = document.getElementById('board-photo-content');
+  if (photoEl) attachPhotoBoard(photoEl, 'posts_photo');
+
   const travelEl = document.getElementById('board-travel-content');
   if (travelEl) attachPhotoBoard(travelEl, 'posts_travel');
+
+  const northEl = document.getElementById('board-travel-north-content');
+  if (northEl) attachPhotoBoard(northEl, 'posts_travel_north');
+
+  const centralEl = document.getElementById('board-travel-central-content');
+  if (centralEl) attachPhotoBoard(centralEl, 'posts_travel_central');
+
+  const southEl = document.getElementById('board-travel-south-content');
+  if (southEl) attachPhotoBoard(southEl, 'posts_travel_south');
 
   const foodEl = document.getElementById('board-food-content');
   if (foodEl) attachBoardTable(foodEl, 'posts_food');
 
   const tradeEl = document.getElementById('board-trade-content');
   if (tradeEl) attachBoardTable(tradeEl, 'posts_trade');
+}
+
+function navigateLife(tab) {
+  navigate('board-life');
+  setTimeout(() => {
+    const btns = document.querySelectorAll('#page-board-life .board-tab-btn');
+    const contents = document.querySelectorAll('#page-board-life .board-tab-content');
+    btns.forEach(b => b.classList.remove('active'));
+    contents.forEach(c => c.classList.remove('active'));
+    const idx = tab === 'kr' ? 1 : 0;
+    if (btns[idx]) btns[idx].classList.add('active');
+    const targetContent = document.getElementById('board-life-' + tab + '-content');
+    if (targetContent) targetContent.classList.add('active');
+    renderBoards();
+    // nav active 표시
+    document.querySelectorAll('.nav-links a[data-page]').forEach(a => a.classList.remove('nav-active'));
+    document.querySelectorAll('[data-page="board-life-' + tab + '"]').forEach(a => a.classList.add('nav-active'));
+  }, 60);
 }
 
 // ─── 홈 회원 소개 미리보기 ───
@@ -7290,7 +7461,7 @@ async function renderMyPage() {
     const ll = u.lastLogin ? new Date(u.lastLogin.seconds*1000).toLocaleString('ko-KR') : '-';
 
     // 내 최근 게시글 가져오기 (최대 5개)
-    const boards = ['posts_vn_life','posts_kr_life','posts_free','posts_travel','posts_food','posts_trade'];
+    const boards = ['posts_vn_life','posts_kr_life','posts_free','posts_qna','posts_photo','posts_travel_north','posts_travel_central','posts_travel_south','posts_food','posts_trade'];
     let myPosts = [];
     for (const col of boards) {
       try {
