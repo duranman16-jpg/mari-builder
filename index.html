@@ -7763,11 +7763,11 @@ async function sendStaffMessage(chatId) {
 
 async function admAssignManager(chatId) {
   try {
-    const snap = await db.collection('users').where('role','in',['manager','admin']).get();
-    if (snap.empty) { alert('등록된 매니저가 없습니다\n(users 컬렉션에 role: "manager" 필드를 추가하세요)'); return; }
+    const snap = await db.collection('users').where('memberType','in',['manager','admin']).get();
+    if (snap.empty) { alert('등록된 매니저가 없습니다'); return; }
     const list = [];
     snap.forEach(d => list.push({email:d.id,...d.data()}));
-    const opts = list.map((m,i)=>`${i+1}. ${m.name||m.email} (${m.role})`).join('\n');
+    const opts = list.map((m,i)=>`${i+1}. ${m.userId||m.name||m.email} (${m.memberType==='admin'?'최고관리자':'매니저'})`).join('\n');
     const choice = prompt(`배정할 매니저를 번호로 선택:\n${opts}`);
     if (!choice) return;
     const idx = parseInt(choice)-1;
