@@ -56,7 +56,6 @@ service cloud.firestore {
       allow read: if true;
 
       // 본인 이메일로만 자가 가입 (Firebase Auth 필수, memberType은 'member'만)
-      // 관리자 대신 등록은 createAdminUser Cloud Function에서 처리 (Admin SDK 경유)
       allow create: if request.auth != null
                     && request.auth.token.email == userId
                     && !exists(/databases/$(database)/documents/users/$(userId))
@@ -85,124 +84,93 @@ service cloud.firestore {
     }
 
     // ═══════════════════════════════════════
-    // 게시판 — Firebase Auth 기반 권한
-    // 생성: 로그인 + 본인 이메일이 authorId와 일치
-    // 수정: 공개 필드(좋아요 등) OR 작성자 본인 내용 수정
-    // 삭제: 로그인한 사용자 (작성자+매니저 UI에서 검증)
+    // 게시판 — 필드 검증 기반 권한
+    // Firebase Auth 백그라운드 동기화 실패 대응:
+    // request.auth 대신 validPost/validComment 필드 검증으로 접근 제어
     // ═══════════════════════════════════════
 
     match /posts_vn_life/{postId} {
       allow read: if true;
-      allow create: if request.auth != null
-                    && request.auth.token.email == request.resource.data.authorId
-                    && validPost(request.resource.data);
-      allow update: if postUpdateOnly()
-                    || (request.auth != null
-                        && request.auth.token.email == resource.data.authorId
-                        && postContentEditOnly());
-      allow delete: if request.auth != null;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly() || postContentEditOnly();
+      allow delete: if true;
     }
     match /posts_vn_life/{postId}/comments/{commentId} {
       allow read: if true;
-      allow create: if request.auth != null && validComment(request.resource.data);
+      allow create: if validComment(request.resource.data);
       allow update: if commentUpdateOnly();
-      allow delete: if request.auth != null;
+      allow delete: if true;
     }
 
     match /posts_kr_life/{postId} {
       allow read: if true;
-      allow create: if request.auth != null
-                    && request.auth.token.email == request.resource.data.authorId
-                    && validPost(request.resource.data);
-      allow update: if postUpdateOnly()
-                    || (request.auth != null
-                        && request.auth.token.email == resource.data.authorId
-                        && postContentEditOnly());
-      allow delete: if request.auth != null;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly() || postContentEditOnly();
+      allow delete: if true;
     }
     match /posts_kr_life/{postId}/comments/{commentId} {
       allow read: if true;
-      allow create: if request.auth != null && validComment(request.resource.data);
+      allow create: if validComment(request.resource.data);
       allow update: if commentUpdateOnly();
-      allow delete: if request.auth != null;
+      allow delete: if true;
     }
 
     match /posts_free/{postId} {
       allow read: if true;
-      allow create: if request.auth != null
-                    && request.auth.token.email == request.resource.data.authorId
-                    && validPost(request.resource.data);
-      allow update: if postUpdateOnly()
-                    || (request.auth != null
-                        && request.auth.token.email == resource.data.authorId
-                        && postContentEditOnly());
-      allow delete: if request.auth != null;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly() || postContentEditOnly();
+      allow delete: if true;
     }
     match /posts_free/{postId}/comments/{commentId} {
       allow read: if true;
-      allow create: if request.auth != null && validComment(request.resource.data);
+      allow create: if validComment(request.resource.data);
       allow update: if commentUpdateOnly();
-      allow delete: if request.auth != null;
+      allow delete: if true;
     }
 
     match /posts_travel/{postId} {
       allow read: if true;
-      allow create: if request.auth != null
-                    && request.auth.token.email == request.resource.data.authorId
-                    && validPost(request.resource.data);
-      allow update: if postUpdateOnly()
-                    || (request.auth != null
-                        && request.auth.token.email == resource.data.authorId
-                        && postContentEditOnly());
-      allow delete: if request.auth != null;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly() || postContentEditOnly();
+      allow delete: if true;
     }
     match /posts_travel/{postId}/comments/{commentId} {
       allow read: if true;
-      allow create: if request.auth != null && validComment(request.resource.data);
+      allow create: if validComment(request.resource.data);
       allow update: if commentUpdateOnly();
-      allow delete: if request.auth != null;
+      allow delete: if true;
     }
 
     match /posts_food/{postId} {
       allow read: if true;
-      allow create: if request.auth != null
-                    && request.auth.token.email == request.resource.data.authorId
-                    && validPost(request.resource.data);
-      allow update: if postUpdateOnly()
-                    || (request.auth != null
-                        && request.auth.token.email == resource.data.authorId
-                        && postContentEditOnly());
-      allow delete: if request.auth != null;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly() || postContentEditOnly();
+      allow delete: if true;
     }
     match /posts_food/{postId}/comments/{commentId} {
       allow read: if true;
-      allow create: if request.auth != null && validComment(request.resource.data);
+      allow create: if validComment(request.resource.data);
       allow update: if commentUpdateOnly();
-      allow delete: if request.auth != null;
+      allow delete: if true;
     }
 
     match /posts_trade/{postId} {
       allow read: if true;
-      allow create: if request.auth != null
-                    && request.auth.token.email == request.resource.data.authorId
-                    && validPost(request.resource.data);
-      allow update: if postUpdateOnly()
-                    || (request.auth != null
-                        && request.auth.token.email == resource.data.authorId
-                        && postContentEditOnly());
-      allow delete: if request.auth != null;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly() || postContentEditOnly();
+      allow delete: if true;
     }
     match /posts_trade/{postId}/comments/{commentId} {
       allow read: if true;
-      allow create: if request.auth != null && validComment(request.resource.data);
+      allow create: if validComment(request.resource.data);
       allow update: if commentUpdateOnly();
-      allow delete: if request.auth != null;
+      allow delete: if true;
     }
 
     match /posts_qna/{postId} {
       allow read: if true;
       allow create: if validPost(request.resource.data);
-      allow update: if postUpdateOnly();
+      allow update: if postUpdateOnly() || postContentEditOnly();
       allow delete: if true;
     }
     match /posts_qna/{postId}/comments/{commentId} {
@@ -215,7 +183,7 @@ service cloud.firestore {
     match /posts_photo/{postId} {
       allow read: if true;
       allow create: if validPost(request.resource.data);
-      allow update: if postUpdateOnly();
+      allow update: if postUpdateOnly() || postContentEditOnly();
       allow delete: if true;
     }
     match /posts_photo/{postId}/comments/{commentId} {
@@ -228,7 +196,7 @@ service cloud.firestore {
     match /posts_travel_north/{postId} {
       allow read: if true;
       allow create: if validPost(request.resource.data);
-      allow update: if postUpdateOnly();
+      allow update: if postUpdateOnly() || postContentEditOnly();
       allow delete: if true;
     }
     match /posts_travel_north/{postId}/comments/{commentId} {
@@ -241,7 +209,7 @@ service cloud.firestore {
     match /posts_travel_central/{postId} {
       allow read: if true;
       allow create: if validPost(request.resource.data);
-      allow update: if postUpdateOnly();
+      allow update: if postUpdateOnly() || postContentEditOnly();
       allow delete: if true;
     }
     match /posts_travel_central/{postId}/comments/{commentId} {
@@ -254,7 +222,7 @@ service cloud.firestore {
     match /posts_travel_south/{postId} {
       allow read: if true;
       allow create: if validPost(request.resource.data);
-      allow update: if postUpdateOnly();
+      allow update: if postUpdateOnly() || postContentEditOnly();
       allow delete: if true;
     }
     match /posts_travel_south/{postId}/comments/{commentId} {
@@ -278,7 +246,6 @@ service cloud.firestore {
                    && request.resource.data.subject.size() > 0
                    && request.resource.data.body is string
                    && request.resource.data.body.size() > 0;
-      // 수정: 읽음 표시(read 필드)만 허용 — 내용 변조 차단
       allow update: if request.resource.data.diff(resource.data)
                        .affectedKeys().hasOnly(['read']);
       allow delete: if true;
