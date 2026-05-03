@@ -279,8 +279,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 .btn-main:hover{background:#a50d26;transform:translateY(-1px)}
 .btn-outline{background:rgba(255,255,255,0.55);color:#1A0A0A;padding:14px 30px;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px;border:1px solid rgba(30,12,4,0.25);transition:.2s;display:inline-block;cursor:pointer;backdrop-filter:blur(4px)}
 .btn-outline:hover{background:rgba(255,255,255,0.75)}
-.hero-img-wrap{position:relative}
-.hero-img-card{background:rgba(255,255,255,0.30);border:1px solid rgba(255,255,255,0.55);border-radius:20px;padding:28px;backdrop-filter:blur(8px)}
+.hero-img-wrap{position:relative;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.18)}
+.hero-woman-img{width:100%;height:100%;max-height:520px;object-fit:cover;object-position:center top;display:block;border-radius:24px}
+.hero-img-card{position:absolute;bottom:16px;left:16px;right:16px;background:rgba(255,255,255,0.22);border:1px solid rgba(255,255,255,0.55);border-radius:16px;padding:18px 22px;backdrop-filter:blur(14px)}
 .couple-box{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .person-card{background:rgba(255,255,255,0.35);border-radius:14px;padding:18px;text-align:center}
 .avatar{width:70px;height:70px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(139,80,20,0.15)}
@@ -505,7 +506,7 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 /* ─── 반응형 ─── */
 @media(max-width:860px){
   .hero-inner{grid-template-columns:1fr;gap:28px;padding:32px 6%}
-  .hero-img-card{display:none}
+  .hero-img-card{display:block;padding:12px 14px}
   .inquiry-inner{grid-template-columns:1fr}
   .footer-top{grid-template-columns:1fr 1fr}
   .nav-links{display:none;position:fixed;top:56px;left:0;right:0;background:var(--white);flex-direction:column;border-top:3px solid var(--red);box-shadow:0 8px 36px rgba(0,0,0,0.18);padding:0;z-index:99;max-height:calc(100vh - 56px);overflow-y:auto}
@@ -1226,7 +1227,7 @@ html.mobile-view .float-btn span{display:none !important}
         </div>
       </div>
       <div class="hero-img-wrap">
-        <div class="heart-deco">❤</div>
+        <img src="hero-woman.jpng" alt="베트남 아오자이 여성" class="hero-woman-img">
         <div class="hero-img-card">
           <div class="couple-box">
             <div class="person-card">
