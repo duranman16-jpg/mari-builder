@@ -2763,18 +2763,18 @@ async function submitWrite() {
 // ─── 프로필 ───
 const profiles = {
   vn:[
-    {emoji:'🌸',name:'Nguyen Thi A',age:24,loc:'하노이',job:'회사원',tags:['비흡연','대졸','요리 잘함']},
-    {emoji:'🌺',name:'Tran Thi B',age:26,loc:'호치민',job:'간호사',tags:['대졸','활발','가족적']},
-    {emoji:'🌻',name:'Pham Thi C',age:23,loc:'다낭',job:'교사',tags:['조용함','성실','요리']},
-    {emoji:'🌼',name:'Le Thi D',age:25,loc:'하노이',job:'회계사',tags:['대졸','지적','검소']},
-    {emoji:'🌷',name:'Vo Thi E',age:28,loc:'호치민',job:'디자이너',tags:['감각적','활발','독립적']},
-    {emoji:'🌹',name:'Do Thi F',age:24,loc:'하이퐁',job:'대학원생',tags:['지적','성실','차분']},
-    {emoji:'⭐',name:'Nguyen Thi G',age:22,loc:'하노이',job:'은행원',tags:['성실','대졸','밝음']},
-    {emoji:'💐',name:'Hoang Thi H',age:27,loc:'후에',job:'공무원',tags:['안정적','차분','가정적']},
-    {emoji:'🍀',name:'Dang Thi I',age:25,loc:'하노이',job:'영양사',tags:['건강','요리','활발']},
-    {emoji:'🌙',name:'Bui Thi J',age:23,loc:'호치민',job:'약사',tags:['지적','성실','비흡연']},
-    {emoji:'🦋',name:'Ly Thi K',age:29,loc:'다낭',job:'경영학도',tags:['활발','대졸','독립적']},
-    {emoji:'🌟',name:'Mai Thi L',age:24,loc:'빈증',job:'간호사',tags:['배려','차분','성실']},
+    {photo:'gai/1.jpg', cover:{t:'emoji',v:'😊'}, name:'Nguyen Thi A',age:24,loc:'하노이',job:'회사원',tags:['비흡연','대졸','요리 잘함']},
+    {photo:'gai/2.jpg', cover:{t:'blur'},          name:'Tran Thi B',age:26,loc:'호치민',job:'간호사',tags:['대졸','활발','가족적']},
+    {photo:'gai/3.jpg', cover:{t:'sticker',v:'🌸'},name:'Pham Thi C',age:23,loc:'다낭',job:'교사',tags:['조용함','성실','요리']},
+    {photo:'gai/4.jpg', cover:{t:'emoji',v:'✨'},   name:'Le Thi D',age:25,loc:'하노이',job:'회계사',tags:['대졸','지적','검소']},
+    {photo:'gai/5.jpg', cover:{t:'sticker',v:'💕'},name:'Vo Thi E',age:28,loc:'호치민',job:'디자이너',tags:['감각적','활발','독립적']},
+    {photo:'gai/6.jpg', cover:{t:'blur'},          name:'Do Thi F',age:24,loc:'하이퐁',job:'대학원생',tags:['지적','성실','차분']},
+    {photo:'gai/7.jpg', cover:{t:'emoji',v:'😎'},  name:'Nguyen Thi G',age:22,loc:'하노이',job:'은행원',tags:['성실','대졸','밝음']},
+    {photo:'gai/8.jpg', cover:{t:'sticker',v:'🌺'},name:'Hoang Thi H',age:27,loc:'후에',job:'공무원',tags:['안정적','차분','가정적']},
+    {photo:'gai/9.jpg', cover:{t:'emoji',v:'🦋'},  name:'Dang Thi I',age:25,loc:'하노이',job:'영양사',tags:['건강','요리','활발']},
+    {photo:'gai/10.jpg',cover:{t:'sticker',v:'🎀'},name:'Bui Thi J',age:23,loc:'호치민',job:'약사',tags:['지적','성실','비흡연']},
+    {photo:'gai/11.jpg',cover:{t:'blur'},          name:'Ly Thi K',age:29,loc:'다낭',job:'경영학도',tags:['활발','대졸','독립적']},
+    {photo:'gai/12.jpg',cover:{t:'emoji',v:'⭐'},  name:'Mai Thi L',age:24,loc:'빈증',job:'간호사',tags:['배려','차분','성실']},
   ],
   kr:[
     {emoji:'👨',name:'김○○ 님',age:35,loc:'경기도',job:'회사원',tags:['비흡연','성실','가정적']},
@@ -2822,11 +2822,23 @@ function renderProfiles(type) {
     });
 }
 
+function renderCover(c) {
+  if (!c) return '';
+  if (c.t==='blur') return `<div style="position:absolute;top:0;left:0;right:0;height:56%;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(255,255,255,0.06);z-index:3;pointer-events:none"></div>`;
+  if (c.t==='emoji') return `<div style="position:absolute;top:9%;left:50%;transform:translateX(-50%);z-index:3;font-size:58px;line-height:1;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.2));pointer-events:none">${c.v}</div>`;
+  if (c.t==='sticker') return `<div style="position:absolute;top:9%;left:50%;transform:translateX(-50%);z-index:3;background:rgba(255,255,255,0.92);border-radius:50%;width:70px;height:70px;display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 3px 16px rgba(0,0,0,0.2);pointer-events:none">${c.v}</div>`;
+  return '';
+}
 function profileCardHTML(p, type) {
   const flag = (type||p.nationality) === 'vn' ? '🇻🇳' : '🇰🇷';
-  const imgArea = p.photoUrl
-    ? `<img src="${p.photoUrl}" style="width:100%;height:100%;object-fit:cover;display:block" alt="${p.name}">`
-    : `<span style="font-size:64px">${p.emoji||'👤'}</span>`;
+  let imgArea;
+  if (p.photoUrl) {
+    imgArea = `<img src="${p.photoUrl}" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block" alt="${p.name}">`;
+  } else if (p.photo) {
+    imgArea = `<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block" alt="${p.name}">${renderCover(p.cover)}`;
+  } else {
+    imgArea = `<span style="font-size:64px">${p.emoji||'👤'}</span>`;
+  }
   const tags = Array.isArray(p.tags) ? p.tags : (p.tags||'').split(',').map(t=>t.trim()).filter(Boolean);
   const lifeCount = Array.isArray(p.lifePhotos) && p.lifePhotos.length > 0
     ? `<span style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.55);color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px">📷 +${p.lifePhotos.length}</span>` : '';
@@ -4753,15 +4765,19 @@ function renderHomeProfiles() {
   if (!grid) return;
   const isMobile = window.innerWidth <= 768;
   const data = isMobile ? profiles.vn.slice(0,6) : profiles.vn;
-  grid.innerHTML = data.map(p => `
-    <div class="hp-card" onclick="navigate('profiles')">
-      <div class="hp-img"><span>${p.emoji}</span><span class="profile-country" style="position:absolute;top:6px;right:6px;background:rgba(255,255,255,0.9);border-radius:4px;padding:2px 5px;font-size:11px">🇻🇳</span></div>
+  grid.innerHTML = data.map(p => {
+    const inner = p.photo
+      ? `<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block" alt="${p.name}">${renderCover(p.cover)}`
+      : `<span>${p.emoji||'👤'}</span>`;
+    return `<div class="hp-card" onclick="navigate('profiles')">
+      <div class="hp-img" style="position:relative">${inner}<span class="profile-country" style="position:absolute;top:6px;right:6px;background:rgba(255,255,255,0.9);border-radius:4px;padding:2px 5px;font-size:11px">🇻🇳</span></div>
       <div class="hp-body">
         <div class="hp-name">${p.name}</div>
         <div class="hp-meta">${p.age}세 · ${p.loc} · ${p.job}</div>
         <div class="hp-cta">프로필 보기 →</div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   if (!isMobile) { _hpDots(); _hpAutoStart(); }
 }
 function _hpSlideOffset() {
