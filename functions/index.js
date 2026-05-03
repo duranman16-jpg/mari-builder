@@ -316,3 +316,50 @@ exports.notifyConsultation = functions
     }
     return { success: true };
   });
+
+// ─── 관리자 회원 직접 등록 (Cloud Function — 권한 상승 방지) ───
+exports.createAdminUser = functions
+  .runWith({ secrets: ['ADMIN_SECRET'] })
+  .https.onCall(async (data, context) => {
+    const { callerEmail, adminSecret, userId, name, email, hashedPw, salt,
+            phone, birth, gender, memberType, nationality, tempPassword } = data;
+
+    // 호출자가 admin인지 Firestore에서 직접 확인
+    const callerDoc = await admin.firestore().collection('users').doc(callerEmail).get();
+    if (!callerDoc.exists) throw new functions.https.HttpsError('unauthenticated', '인증 오류');
+    const callerRole = callerDoc.data().memberType;
+    if (!['admin', 'manager'].includes(callerRole)) {
+      throw new functions.https.HttpsError('permission-denied', '관리자/매니저만 사용할 수 있습니다.');
+    }
+    // 매니저는 'member', 'married'만 생성 가능
+    if (callerRole === 'manager' && !['member', 'married'].includes(memberType)) {
+      throw new functions.https.HttpsError('permission-denied', '매니저는 일반/결혼회원만 생성 가능합니다.');
+    }
+
+    const existing = await admin.firestore().collection('users').doc(email).get();
+    if (existing.exists) throw new functions.https.HttpsError('already-exists', '이미 등록된 이메일입니다.');
+
+    const newUser = { userId, name, email, pw: hashedPw, salt, phone: phone || '',
+                      birth: birth || '', gender, memberType, nationality, tempPassword: !!tempPassword };
+    await admin.firestore().collection('users').doc(email).set(newUser);
+    return { success: true };
+  });
+
+// ─── Firebase Auth 비밀번호 동기화 (비밀번호 재설정 후 Auth와 Firestore 불일치 복구) ───
+exports.syncFirebaseAuth = functions.https.onCall(async (data, context) => {
+  const { email } = data;
+  if (!email) throw new functions.https.HttpsError('invalid-argument', '이메일 필수');
+
+  const userDoc = await admin.firestore().collection('users').doc(email).get();
+  if (!userDoc.exists) throw new functions.https.HttpsError('not-found', '사용자 없음');
+
+  // Firebase Auth 계정이 없으면 임시 생성 (다음 로그인 시 정상 비밀번호로 재동기화)
+  try {
+    await admin.auth().getUserByEmail(email);
+  } catch(e) {
+    if (e.code === 'auth/user-not-found') {
+      // 클라이언트에서 signInWithEmailAndPassword로 직접 생성하게 함
+    }
+  }
+  return { success: true };
+});

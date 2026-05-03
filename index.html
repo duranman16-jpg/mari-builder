@@ -41,6 +41,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-functions-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
@@ -2594,6 +2595,7 @@ html.mobile-view .float-btn span{display:none !important}
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <button id="postPinBtn" class="pin-toggle-btn" style="display:none" onclick="">📌 공지등록</button>
         <button id="postReportBtn" class="post-back-btn" style="background:transparent;border:1px solid #ddd;color:var(--gray);font-size:12px;display:none" onclick="openReport('post',null)">🚨 신고</button>
+        <button id="postEditBtn" class="post-back-btn" style="display:none;background:transparent;border:1px solid rgba(0,100,200,0.3);color:#0064c8;font-size:12px" onclick="">✏️ 수정</button>
         <button id="postDeleteBtn" class="post-back-btn" style="display:none;background:transparent;border:1px solid rgba(200,16,46,0.3);color:var(--red);font-size:12px" onclick="">🗑 삭제</button>
         <button class="post-back-btn" onclick="backToBoard()">← 목록으로</button>
       </div>
@@ -2968,12 +2970,48 @@ function initWriteTab(boardType) {
     if (prefixRow) prefixRow.style.display = 'none';
   }
 
-  setTimeout(() => {
+  // ── edit 모드 파라미터 확인 ──
+  const urlParams = new URLSearchParams(location.search);
+  _editMode = urlParams.get('edit') === '1';
+  _editColName = urlParams.get('col') || '';
+  _editDocId = urlParams.get('id') || '';
+
+  if (_editMode && _editColName && _editDocId) {
+    document.getElementById('writeSubmitBtn').textContent = '수정 완료';
+    const titleMap = {
+      vn_life:'베트남 생활 수정', kr_life:'한국 생활 수정',
+      free:'자유게시판 수정', travel:'여행사진및 정보 수정',
+      food:'베트남 음식 수정', trade:'물물교환 수정'
+    };
+    document.getElementById('writeTabTitle').textContent = titleMap[boardType] || '게시글 수정';
+    // 임시저장 배너는 수정 모드에서 숨김
+    const draftBanner = document.getElementById('draftBanner');
+    if (draftBanner) draftBanner.style.display = 'none';
+  }
+
+  setTimeout(async () => {
     initQuill();
-    quillEditor.setContents([]);
+    if (_editMode && _editColName && _editDocId) {
+      // 기존 게시글 데이터 불러오기
+      try {
+        const snap = await db.collection(_editColName).doc(_editDocId).get();
+        if (snap.exists) {
+          const p = snap.data();
+          document.getElementById('writeTitle').value = p.title || '';
+          quillEditor.root.innerHTML = p.content || '';
+          const prefixSel = document.getElementById('writePrefix');
+          if (prefixSel && p.prefix) prefixSel.value = p.prefix;
+          if (boardType === 'travel' && p.emoji) {
+            document.getElementById('writeEmoji').value = p.emoji;
+          }
+        }
+      } catch(e) { console.warn('edit load error', e); }
+    } else {
+      quillEditor.setContents([]);
+      setupAutoSave(boardType);
+      checkForDraft(boardType);
+    }
     quillEditor.focus();
-    setupAutoSave(boardType);
-    checkForDraft(boardType);
   }, 100);
 }
 
@@ -3330,9 +3368,14 @@ function discardDraft() {
 }
 
 let _lastPostTime = 0;
+let _editMode = false;
+let _editDocId = '';
+let _editColName = '';
+
 async function submitWrite() {
   const now = Date.now();
-  if (now - _lastPostTime < 30000) {
+  // 수정 모드일 때는 스팸 방지 쿨다운 건너뜀
+  if (!_editMode && now - _lastPostTime < 30000) {
     alert('연속 등록을 방지하기 위해 잠시 후 다시 시도해 주세요. (30초 간격)'); return;
   }
   const title = document.getElementById('writeTitle').value.trim();
@@ -3341,33 +3384,50 @@ async function submitWrite() {
   if (!title) { alert('제목을 입력해 주세요.'); return; }
   if (!textOnly) { alert('내용을 입력해 주세요.'); return; }
   const btn = document.getElementById('writeSubmitBtn');
-  btn.disabled = true; btn.textContent = '등록 중...';
+  btn.disabled = true; btn.textContent = _editMode ? '수정 중...' : '등록 중...';
   try {
-    const colName = 'posts_' + currentWriteBoard;
     const prefix = document.getElementById('writePrefix')?.value || '';
-    const data = {
-      title, content,
-      author: currentUser.userId || currentUser.name,
-      authorId: currentUser.userId || currentUser.email,
-      authorType: currentUser.memberType || 'member',
-      authorPhoto: currentUser.photoURL || '',
-      badge: '', views: 0, likes: 0,
-      prefix: prefix,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    if (currentWriteBoard === 'travel') {
-      data.emoji = document.getElementById('writeEmoji').value.trim() || '🌏';
-      data.bg = 'linear-gradient(135deg,#006994,#0099CC)';
+
+    if (_editMode) {
+      // ── 수정 모드: 기존 게시글 업데이트 ──
+      await db.collection(_editColName).doc(_editDocId).update({
+        title, content, prefix,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      clearDraft();
+      document.getElementById('writeTabBody').style.display = 'none';
+      const successEl = document.getElementById('writeSuccessMsg');
+      successEl.querySelector('h2').textContent = '게시물이 수정되었습니다!';
+      successEl.querySelector('p').textContent = '이 창을 닫으면 게시판에서 수정된 글을 확인하실 수 있습니다.';
+      successEl.style.display = 'block';
+      setTimeout(() => window.close(), 2000);
+    } else {
+      // ── 새 글 등록 모드 ──
+      const colName = 'posts_' + currentWriteBoard;
+      const data = {
+        title, content,
+        author: currentUser.userId || currentUser.name,
+        authorId: currentUser.email,
+        authorType: currentUser.memberType || 'member',
+        authorPhoto: currentUser.photoURL || '',
+        badge: '', views: 0, likes: 0,
+        prefix: prefix,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      if (currentWriteBoard === 'travel') {
+        data.emoji = document.getElementById('writeEmoji').value.trim() || '🌏';
+        data.bg = 'linear-gradient(135deg,#006994,#0099CC)';
+      }
+      await db.collection(colName).add(data);
+      _lastPostTime = Date.now();
+      clearDraft();
+      document.getElementById('writeTabBody').style.display = 'none';
+      document.getElementById('writeSuccessMsg').style.display = 'block';
+      setTimeout(() => window.close(), 2000);
     }
-    await db.collection(colName).add(data);
-    _lastPostTime = Date.now();
-    clearDraft();
-    document.getElementById('writeTabBody').style.display = 'none';
-    document.getElementById('writeSuccessMsg').style.display = 'block';
-    setTimeout(() => window.close(), 2000);
   } catch(e) {
-    alert('등록 중 오류: ' + e.message);
-    btn.disabled = false; btn.textContent = '등록하기';
+    alert((_editMode ? '수정' : '등록') + ' 중 오류: ' + e.message);
+    btn.disabled = false; btn.textContent = _editMode ? '수정 완료' : '등록하기';
   }
 }
 
@@ -4474,6 +4534,7 @@ function logout() {
   localStorage.removeItem('maryAutoLogin');
   sessionStorage.removeItem('maryUser');
   sessionStorage.removeItem('maryAdminSecret');
+  firebase.auth().signOut().catch(() => {});
   updateAuthUI();
   alert('로그아웃 되었습니다.');
 }
@@ -4509,6 +4570,9 @@ async function submitLogin() {
       const newHash = await hashPasswordPBKDF2(pw, newSalt);
       await db.collection('users').doc(email).update({ pw: newHash, salt: newSalt });
     }
+    // Firebase Auth 동기화 (백그라운드, 실패해도 로그인은 계속)
+    _syncFirebaseAuth(email, pw);
+
     if (user.tempPassword) {
       closeLogin();
       currentUser = safeUser(user);
@@ -4541,6 +4605,23 @@ async function submitLogin() {
     alert('로그인 오류: ' + e.message);
   } finally {
     if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = '로그인'; }
+  }
+}
+
+// Firebase Auth 동기화 헬퍼 (PBKDF2 검증 후 비동기 호출)
+async function _syncFirebaseAuth(email, pw) {
+  try {
+    await firebase.auth().signInWithEmailAndPassword(email, pw);
+  } catch(e) {
+    if (e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential' || e.code === 'auth/invalid-email') {
+      // 아직 Firebase Auth 계정 없음 → 생성
+      try { await firebase.auth().createUserWithEmailAndPassword(email, pw); } catch(e2) { /* ignore */ }
+    } else if (e.code === 'auth/wrong-password') {
+      // 비밀번호 재설정 후 Firebase Auth 비동기 → Cloud Function으로 동기화
+      try {
+        await firebase.functions().httpsCallable('syncFirebaseAuth')({ email }).catch(() => {});
+      } catch(e3) { /* ignore */ }
+    }
   }
 }
 
@@ -4849,6 +4930,20 @@ async function submitSignup() {
     if (!dupId.empty) { alert('이미 사용 중인 아이디입니다. 다른 아이디를 선택해 주세요.'); return; }
     const existing = await db.collection('users').doc(email).get();
     if (existing.exists) { alert('이미 가입된 이메일입니다.'); return; }
+
+    // Firebase Auth 계정 먼저 생성 (Firestore 규칙 검증을 위해)
+    let firebaseAuthCreated = false;
+    try {
+      await firebase.auth().createUserWithEmailAndPassword(email, pw);
+      firebaseAuthCreated = true;
+    } catch(authErr) {
+      if (authErr.code === 'auth/email-already-in-use') {
+        // 이미 존재하면 로그인 시도
+        try { await firebase.auth().signInWithEmailAndPassword(email, pw); firebaseAuthCreated = true; } catch(e2) { /* 계속 진행 */ }
+      }
+      // Auth 실패해도 Firestore 계정은 생성 (하위 호환성)
+    }
+
     const salt = generateSalt();
     const hashedPw = await hashPasswordPBKDF2(pw, salt);
     const newUser = {userId,name,email,pw:hashedPw,salt,phone,birth,gender:gender.value,memberType:'member',nationality:'kr'};
@@ -4948,9 +5043,17 @@ async function loadPostDetail(colName, docId) {
     const reportBtn = document.getElementById('postReportBtn');
     if (reportBtn) reportBtn.style.display = currentUser ? 'inline-block' : 'none';
 
+    const isAuthor = currentUser && (currentUser.email === p.authorId || currentUser.userId === p.authorId || p.author === (currentUser.userId || currentUser.name));
+    const canDeletePost = currentUser && (isManager(currentUser) || isAuthor);
+
+    const editBtn = document.getElementById('postEditBtn');
+    if (editBtn) {
+      editBtn.style.display = isAuthor ? 'inline-block' : 'none';
+      editBtn.onclick = () => openEditPost(colName, docId, p);
+    }
+
     const deleteBtn = document.getElementById('postDeleteBtn');
     if (deleteBtn) {
-      const canDeletePost = currentUser && (isManager(currentUser) || currentUser.userId === p.authorId || currentUser.email === p.authorId || p.author === (currentUser.userId || currentUser.name));
       deleteBtn.style.display = canDeletePost ? 'inline-block' : 'none';
       deleteBtn.onclick = () => deletePost(colName, docId);
     }
@@ -4981,6 +5084,19 @@ async function loadPostDetail(colName, docId) {
 function backToBoard() {
   if (commentListener) { commentListener(); commentListener = null; }
   navigate(currentBoardPage || 'home');
+}
+
+function openEditPost(colName, docId, postData) {
+  // boardType 파악
+  const boardTypeMap = {
+    posts_vn_life:'vn_life', posts_kr_life:'kr_life',
+    posts_free:'free', posts_travel:'travel',
+    posts_food:'food', posts_trade:'trade'
+  };
+  const boardType = boardTypeMap[colName] || 'free';
+  const params = new URLSearchParams({ edit: '1', col: colName, id: docId });
+  const url = '/write/' + boardType + '?' + params.toString();
+  window.open(url, '_blank', 'width=960,height=860,scrollbars=yes,resizable=yes');
 }
 
 async function deletePost(colName, docId) {
@@ -5762,6 +5878,9 @@ async function submitChangePw() {
     await db.collection('users').doc(currentUser.email).update({ pw: hashedP1, salt: newSalt, tempPassword: false });
     currentUser.tempPassword = false;
     localStorage.setItem('maryUser', JSON.stringify(currentUser));
+    // Firebase Auth 비밀번호도 동기화
+    const authUser = firebase.auth().currentUser;
+    if (authUser) { authUser.updatePassword(p1).catch(() => {}); }
     document.getElementById('changePwModal').classList.remove('open');
     alert('비밀번호가 변경되었습니다. 이제 새 비밀번호로 로그인하세요.');
     updateAuthUI();
@@ -5955,7 +6074,28 @@ async function submitAddVN() {
     </div>`;
   }
 
-  await db.collection('users').doc(email).set(newUser);
+  // Cloud Function으로 보안 등록 (권한 검증 서버에서 처리)
+  try {
+    const fn = firebase.functions().httpsCallable('createAdminUser');
+    await fn({
+      callerEmail: currentUser.email,
+      adminSecret: sessionStorage.getItem('maryAdminSecret') || '',
+      userId: newUser.userId,
+      name: newUser.name,
+      email: newUser.email,
+      hashedPw: newUser.pw,
+      salt: newUser.salt,
+      phone: newUser.phone,
+      birth: newUser.birth,
+      gender: newUser.gender,
+      memberType: newUser.memberType,
+      nationality: newUser.nationality,
+      tempPassword: newUser.tempPassword
+    });
+  } catch(fnErr) {
+    alert('회원 등록 오류: ' + (fnErr.message || fnErr.details || '서버 오류'));
+    return;
+  }
 
   if (result) { result.style.display = 'block'; result.innerHTML = resultHtml; }
   document.getElementById('vnName').value = '';
