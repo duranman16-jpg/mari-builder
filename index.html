@@ -560,15 +560,16 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .preview-more-btn.gold{color:var(--gold);border-color:var(--gold)}
 .preview-more-btn.gold:hover{background:var(--gold);color:#fff}
 
-/* ─── 절차 6단계 이미지 한줄 스트립 ─── */
-.proc-cards{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.proc-cards::-webkit-scrollbar{display:none}
-.proc-card{flex:1 1 0;min-width:100px;max-width:200px;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;box-shadow:0 3px 14px rgba(0,0,0,0.12);transition:.25s;aspect-ratio:1/1}
+/* ─── 절차 6단계 이미지 ─── */
+.proc-cards{display:flex;gap:10px}
+.proc-card{flex:1 1 0;min-width:0;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;box-shadow:0 3px 14px rgba(0,0,0,0.12);transition:.25s}
 .proc-card:hover{transform:translateY(-5px);box-shadow:0 10px 28px rgba(0,0,0,0.2)}
-.proc-card img{width:100%;height:100%;object-fit:cover;display:block;transition:.25s}
-.proc-card:hover img{filter:brightness(1.08) scale(1.04)}
-.proc-card-num{position:absolute;top:8px;left:8px;width:26px;height:26px;border-radius:50%;color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.35);z-index:2}
-.proc-card-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,0.78) 0%,rgba(0,0,0,0) 100%);color:#fff;font-size:11px;font-weight:700;padding:22px 6px 8px;text-align:center;z-index:2}
+.proc-card img{width:100%;height:auto;display:block;transition:.25s}
+.proc-card:hover img{filter:brightness(1.08)}
+.proc-card-num{display:none}
+.proc-card-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,0.72) 0%,rgba(0,0,0,0) 100%);color:#fff;font-size:12px;font-weight:700;padding:24px 6px 8px;text-align:center;z-index:2}
+@media(max-width:768px){.proc-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}}
+@media(max-width:400px){.proc-cards{gap:6px}.proc-card-label{font-size:10px;padding:18px 4px 6px}}
 .proc-steps-bar{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;padding:14px 20px;background:#fff;border-radius:14px;border:1px solid rgba(184,134,11,0.14);box-shadow:0 2px 12px rgba(0,0,0,0.04)}
 .proc-step-item{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:var(--dark);white-space:nowrap}
 .proc-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
