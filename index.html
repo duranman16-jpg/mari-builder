@@ -4076,8 +4076,10 @@ function initWriteTab(boardType) {
 
   const titles = {
     vn_life:'베트남 생활 글쓰기', kr_life:'한국 생활 글쓰기',
-    life:'결혼생활 글쓰기', free:'자유게시판 글쓰기',
-    travel:'여행사진및 정보 올리기', food:'베트남 음식 글쓰기',
+    life:'결혼생활 글쓰기', free:'자유게시판 글쓰기', qna:'질문게시판 글쓰기',
+    photo:'사진게시판 올리기', food:'베트남 음식 올리기',
+    travel:'여행사진및 정보 올리기', travel_north:'북부 지역 여행 올리기',
+    travel_central:'중부 지역 여행 올리기', travel_south:'남부 지역 여행 올리기',
     trade:'물물교환 글쓰기'
   };
   document.getElementById('writeTabTitle').textContent = titles[boardType] || '글쓰기';
@@ -6683,26 +6685,46 @@ function boardGotoPage(colName, pg) {
 function attachPhotoBoard(el, colName) {
   if (boardListeners[colName]) return;
   const bgs = ['linear-gradient(135deg,#006994,#0099CC)','linear-gradient(135deg,#8B4513,#D2691E)','linear-gradient(135deg,#228B22,#32CD32)','linear-gradient(135deg,#8B0000,#DC143C)','linear-gradient(135deg,#4B0082,#8A2BE2)','linear-gradient(135deg,#FF6347,#FF8C00)'];
-  boardListeners[colName] = db.collection(colName).orderBy('createdAt','desc').limit(12)
+
+  function extractThumb(p, idx) {
+    // 콘텐츠 HTML에서 첫 번째 이미지 추출
+    const m = p.content && p.content.match(/<img[^>]+src=["']([^"']+)["']/i);
+    if (m) return `<img src="${m[1]}" style="width:100%;height:100%;object-fit:cover;display:block">`;
+    // 이미지 없으면 그라디언트 + 이모지
+    return `<div style="width:100%;height:100%;background:${p.bg||bgs[idx%bgs.length]};display:flex;align-items:center;justify-content:center;font-size:52px">${p.emoji||'📷'}</div>`;
+  }
+
+  const writeType = colName.replace('posts_','');
+  const writeBtnLabels = {
+    photo:'📸 사진 올리기', food:'🍜 음식 올리기',
+    travel:'📷 올리기', travel_north:'📷 올리기', travel_central:'📷 올리기', travel_south:'📷 올리기'
+  };
+  const emptyMsgs = {
+    photo:'첫 사진을 올려보세요!', food:'첫 음식 사진을 올려보세요!',
+    travel_north:'북부 여행 사진을 올려보세요!', travel_central:'중부 여행 사진을 올려보세요!', travel_south:'남부 여행 사진을 올려보세요!'
+  };
+
+  boardListeners[colName] = db.collection(colName).orderBy('createdAt','desc').limit(24)
     .onSnapshot(snap => {
       const posts = [];
       snap.forEach(doc => posts.push({id:doc.id,...doc.data()}));
+      const empty = emptyMsgs[writeType] || '첫 게시물을 올려보세요!';
       const cards = posts.length===0
-        ? '<p style="text-align:center;color:var(--gray);padding:40px;grid-column:1/-1">아직 게시물이 없습니다. 첫 번째 여행 사진을 올려보세요!</p>'
+        ? `<p style="text-align:center;color:var(--gray);padding:40px;grid-column:1/-1">아직 게시물이 없습니다. ${empty}</p>`
         : posts.map((p,i) => {
-            const date = p.createdAt ? new Date(p.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
+            const date = p.createdAt ? new Date(p.createdAt.seconds*1000).toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}).replace('. ','').replace('.',':') : '';
             return `<div class="photo-card" onclick="openPost('${colName}','${p.id}')">
-              <div class="photo-thumb" style="background:${p.bg||bgs[i%bgs.length]}">${p.emoji||'🌏'}</div>
+              <div class="photo-thumb">${extractThumb(p,i)}</div>
               <div class="photo-info">
                 <div class="photo-title">${sanitizeText(p.title)}</div>
-                <div class="photo-meta">${sanitizeText(p.author)} · ${date} · ♡ ${p.likes||0}</div>
+                <div class="photo-meta">🕐 ${date} &nbsp;💬 ${p.commentCount||0} &nbsp;✍️ ${sanitizeText(p.author||'')}</div>
               </div>
             </div>`;
           }).join('');
       el.innerHTML = `
         <div class="board-header">
           <span style="font-size:14px;color:var(--gray)">총 <b>${posts.length}</b>개의 게시물</span>
-          <button class="board-write-btn" onclick="openWrite('travel')">📷 올리기</button>
+          <button class="board-write-btn" onclick="openWrite('${writeType}')">${writeBtnLabels[writeType]||'📷 올리기'}</button>
         </div>
         <div class="photo-grid">${cards}</div>`;
     }, err => { el.innerHTML = `<div class="post-loading">❌ 오류: ${err.message}</div>`; });
@@ -6745,7 +6767,7 @@ function renderBoards() {
   if (southEl) attachPhotoBoard(southEl, 'posts_travel_south');
 
   const foodEl = document.getElementById('board-food-content');
-  if (foodEl) attachBoardTable(foodEl, 'posts_food');
+  if (foodEl) attachPhotoBoard(foodEl, 'posts_food');
 
   const tradeEl = document.getElementById('board-trade-content');
   if (tradeEl) attachBoardTable(tradeEl, 'posts_trade');
