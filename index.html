@@ -2062,7 +2062,7 @@ html.mobile-view .float-btn span{display:none !important}
 <div id="page-write" class="page">
   <div class="write-tab-nav">
     <a class="logo" style="cursor:default">
-      <img src="심볼.png" alt="마리" class="logo-mark">
+      <img src="/심볼.png" alt="마리" class="logo-mark">
     </a>
     <span class="write-tab-title" id="writeTabTitle">글쓰기</span>
     <button class="btn-logout" onclick="window.close()">✕ 닫기</button>
@@ -2785,6 +2785,10 @@ function initWriteTab(boardType) {
   document.getElementById('mainNav').style.display = 'none';
   document.getElementById('site-footer').style.display = 'none';
   document.getElementById('floatWrap').style.display = 'none';
+  document.getElementById('chatFab').style.display = 'none';
+  document.getElementById('viewToggleWrap').style.display = 'none';
+  const mgrPanel = document.getElementById('mgrPanel');
+  if (mgrPanel) mgrPanel.style.display = 'none';
 
   const user = JSON.parse(localStorage.getItem('maryUser'))
     || (window.opener?.currentUser)
