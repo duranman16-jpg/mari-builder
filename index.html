@@ -1147,7 +1147,8 @@ html.mobile-view .float-btn span{display:none !important}
 @media(max-width:640px){#viewToggleWrap{display:none}}
 
 /* ─── 채팅 시스템 ─── */
-.chat-fab{position:fixed;bottom:130px;right:24px;width:52px;height:52px;border-radius:50%;background:#1a73e8;color:#fff;border:none;font-size:22px;cursor:pointer;box-shadow:0 4px 20px rgba(26,115,232,0.5);z-index:500;display:flex;align-items:center;justify-content:center;transition:.2s;font-family:sans-serif}
+.chat-fab{position:fixed;bottom:130px;right:24px;height:auto;border-radius:99px;background:#1a73e8;color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.2);z-index:500;display:flex;align-items:center;gap:8px;padding:10px 16px;transition:.2s;font-family:'Noto Sans KR',sans-serif;white-space:nowrap}
+.chat-fab:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.25)}
 .chat-fab:hover{transform:scale(1.1)}
 .chat-fab-badge{position:absolute;top:-3px;right:-3px;background:#ff4444;color:#fff;border-radius:50%;min-width:18px;height:18px;font-size:11px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 3px}
 .chat-win{position:fixed;bottom:80px;right:20px;width:320px;height:480px;background:var(--white);border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.22);z-index:201;display:none;flex-direction:column;overflow:hidden;border:1px solid var(--border)}
@@ -1206,7 +1207,8 @@ html.mobile-view .float-btn span{display:none !important}
 .chat-send-staff:hover{background:#a50d26}
 @media(max-width:768px){
   .chat-win{right:10px;left:10px;width:auto;bottom:70px}
-  .chat-fab{bottom:110px;right:16px}
+  .chat-fab{bottom:110px;right:16px;padding:9px 13px;font-size:12px}
+  .chat-fab span:not(.chat-fab-badge){display:none}
   .chat-admin-wrap{grid-template-columns:1fr}
 }
 </style>
@@ -2135,7 +2137,7 @@ html.mobile-view .float-btn span{display:none !important}
 </div>
 
 <!-- ─── 채팅 FAB ─── -->
-<button class="chat-fab" id="chatFab" onclick="toggleChatWin()">💬<span class="chat-fab-badge" id="chatFabBadge"></span></button>
+<button class="chat-fab" id="chatFab" onclick="toggleChatWin()">💬 <span>실시간 상담</span><span class="chat-fab-badge" id="chatFabBadge"></span></button>
 
 <!-- ─── 채팅 창 ─── -->
 <div class="chat-win" id="chatWin">
