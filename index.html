@@ -1183,6 +1183,14 @@ html.mobile-view .float-btn span{display:none !important}
 .chat-guest-input:focus{border-color:var(--red)}
 .chat-guest-start{background:var(--red);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s;margin-top:4px}
 .chat-guest-start:hover{background:#a50d26}
+.chat-staff-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:.2s;background:var(--white)}
+.chat-staff-card:hover{border-color:var(--red);background:rgba(200,16,46,0.04)}
+.chat-staff-card.sel{border-color:var(--red);background:rgba(200,16,46,0.07)}
+.chat-staff-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--red),#a50d26);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.chat-staff-info{flex:1;min-width:0}
+.chat-staff-name{font-size:14px;font-weight:700;color:var(--dark)}
+.chat-staff-role{font-size:11px;color:var(--gray);margin-top:2px}
+.chat-staff-status{font-size:11px;color:#16a34a;font-weight:600}
 .chat-main-area{display:flex;flex:1;flex-direction:column;min-height:0}
 /* Admin chat */
 .chat-admin-wrap{display:grid;grid-template-columns:240px 1fr;height:100%;overflow:hidden}
@@ -2151,13 +2159,21 @@ html.mobile-view .float-btn span{display:none !important}
     </div>
     <button class="chat-win-close" onclick="toggleChatWin()">✕</button>
   </div>
-  <!-- 비로그인: 이름/전화번호 입력 폼 -->
+  <!-- 상담사 선택 + 이름 입력 -->
   <div class="chat-guest-form" id="chatGuestForm">
-    <h3>상담 시작하기</h3>
-    <p>이름과 연락처를 입력해 주세요</p>
-    <input class="chat-guest-input" id="chatGuestName" placeholder="이름">
-    <input class="chat-guest-input" id="chatGuestPhone" placeholder="연락처 (선택)">
-    <button class="chat-guest-start" onclick="startGuestChat()">상담 시작 →</button>
+    <!-- Step 1: 상담사 선택 -->
+    <div id="chatStaffStep">
+      <p style="font-size:13px;font-weight:700;color:var(--dark);margin:0 0 10px">상담사를 선택해 주세요</p>
+      <div id="chatStaffList" style="display:flex;flex-direction:column;gap:8px">
+        <div style="text-align:center;padding:20px;color:var(--gray);font-size:13px">불러오는 중...</div>
+      </div>
+    </div>
+    <!-- Step 2: 비로그인 이름 입력 (선택 후 표시) -->
+    <div id="chatNameStep" style="display:none;flex-direction:column;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+      <p style="font-size:13px;color:var(--gray);margin:0">이름을 알려주세요</p>
+      <input class="chat-guest-input" id="chatGuestName" placeholder="이름 (예: 홍길동)">
+      <button class="chat-guest-start" onclick="startGuestChat()">상담 시작 →</button>
+    </div>
   </div>
   <!-- 채팅 메인 영역 -->
   <div class="chat-main-area" id="chatMainArea" style="display:none;flex:1;flex-direction:column">
@@ -6425,6 +6441,8 @@ updateAuthUI = function() {
 // ═══════════════════════════════
 let chatWinOpen = false;
 let currentChatId = null;
+let selectedStaffEmail = null;
+let selectedStaffName = null;
 let chatMsgUnsub = null;
 let adminChatListUnsub = null;
 let adminChatMsgUnsub = null;
@@ -6443,35 +6461,95 @@ function toggleChatWin() {
 }
 
 function _chatOpen() {
-  // 기존 chatId 복원 (localStorage)
   const savedId = localStorage.getItem('mariChatId');
   if (currentUser) {
-    _loadOrCreateUserChat();
+    // 로그인 유저: 기존 채팅 있으면 복원, 없으면 상담사 선택
+    if (savedId) {
+      currentChatId = savedId;
+      _showChatMain();
+      _subChatMessages(currentChatId);
+    } else {
+      _showStaffStep();
+    }
   } else if (savedId) {
     currentChatId = savedId;
     _showChatMain();
     _subChatMessages(currentChatId);
   } else {
-    document.getElementById('chatGuestForm').style.display = 'flex';
-    document.getElementById('chatMainArea').style.display = 'none';
+    _showStaffStep();
+  }
+}
+
+function _showStaffStep() {
+  document.getElementById('chatGuestForm').style.display = 'flex';
+  document.getElementById('chatMainArea').style.display = 'none';
+  document.getElementById('chatStaffStep').style.display = 'block';
+  document.getElementById('chatNameStep').style.display = 'none';
+  selectedStaffEmail = null;
+  selectedStaffName = null;
+  _loadChatStaffList();
+}
+
+async function _loadChatStaffList() {
+  const listEl = document.getElementById('chatStaffList');
+  if (!listEl) return;
+  try {
+    const snap = await db.collection('users')
+      .where('memberType', 'in', ['admin', 'manager']).get();
+    if (snap.empty) {
+      listEl.innerHTML = '<div style="text-align:center;padding:16px;font-size:13px;color:var(--gray)">현재 상담 가능한 상담사가 없습니다</div>';
+      return;
+    }
+    listEl.innerHTML = '';
+    snap.forEach(doc => {
+      const u = doc.data();
+      const roleLabel = u.memberType === 'admin' ? '최고관리자' : '상담매니저';
+      const card = document.createElement('div');
+      card.className = 'chat-staff-card';
+      card.innerHTML = `
+        <div class="chat-staff-avatar">${u.name ? u.name[0] : '👤'}</div>
+        <div class="chat-staff-info">
+          <div class="chat-staff-name">${u.name || doc.id}</div>
+          <div class="chat-staff-role">${roleLabel}</div>
+          <div class="chat-staff-status">● 상담 가능</div>
+        </div>
+        <div style="font-size:20px;color:var(--gray)">›</div>`;
+      card.onclick = () => _selectStaff(doc.id, u.name || doc.id, card);
+      listEl.appendChild(card);
+    });
+  } catch(e) {
+    listEl.innerHTML = '<div style="text-align:center;padding:16px;font-size:13px;color:var(--gray)">불러오기 실패</div>';
+  }
+}
+
+function _selectStaff(email, name, cardEl) {
+  selectedStaffEmail = email;
+  selectedStaffName = name;
+  document.querySelectorAll('.chat-staff-card').forEach(c => c.classList.remove('sel'));
+  cardEl.classList.add('sel');
+  if (currentUser) {
+    // 로그인 유저 → 바로 채팅 시작
+    _loadOrCreateUserChat();
+  } else {
+    // 비로그인 → 이름만 입력
+    document.getElementById('chatNameStep').style.display = 'flex';
+    document.getElementById('chatGuestName').focus();
   }
 }
 
 // 비로그인 채팅 시작
 async function startGuestChat() {
   const nameEl = document.getElementById('chatGuestName');
-  const phoneEl = document.getElementById('chatGuestPhone');
   const name = nameEl.value.trim();
-  const phone = phoneEl.value.trim();
   if (!name) { nameEl.focus(); return; }
   try {
     const ref = await db.collection('chats').add({
       userId: 'guest_' + Date.now(),
       userName: name,
-      userPhone: phone,
-      status: 'waiting',
-      assignedTo: null,
-      assignedName: null,
+      userPhone: '',
+      status: selectedStaffEmail ? 'active' : 'waiting',
+      assignedTo: selectedStaffEmail || null,
+      assignedName: selectedStaffName || null,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       lastMsg: '',
@@ -6505,8 +6583,9 @@ async function _loadOrCreateUserChat() {
         userId: currentUser.email,
         userName: currentUserData?.name || currentUser.email,
         userPhone: currentUserData?.phone || '',
-        status: 'waiting',
-        assignedTo: null, assignedName: null,
+        status: selectedStaffEmail ? 'active' : 'waiting',
+        assignedTo: selectedStaffEmail || null,
+        assignedName: selectedStaffName || null,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         lastMsg: '', unreadStaff: 0
