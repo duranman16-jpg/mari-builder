@@ -475,7 +475,22 @@ button.ql-video::before{content:'▶ YT';font-size:11px;font-weight:700;color:#c
 #emojiPanel button{background:none;border:none;font-size:22px;cursor:pointer;padding:3px 5px;border-radius:6px;line-height:1;transition:.1s}
 #emojiPanel button:hover{background:rgba(0,0,0,0.07);transform:scale(1.2)}
 /* 에디터 하단 바 */
-.editor-bottom-bar{display:flex;justify-content:space-between;align-items:center;padding:5px 2px;margin-top:6px;font-size:12px;color:var(--gray)}
+.editor-bottom-bar{display:flex;justify-content:space-between;align-items:center;padding:5px 2px;margin-top:6px;font-size:12px;color:var(--gray);gap:10px}
+/* 임시저장 배너 */
+#draftBanner{display:none;background:rgba(184,134,11,0.07);border:1px solid rgba(184,134,11,0.28);border-radius:10px;padding:13px 16px;margin-bottom:14px;flex-direction:column;gap:10px}
+#draftBanner.show{display:flex}
+.draft-banner-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.draft-banner-text{font-size:13px;color:#7a5c00;font-weight:500;line-height:1.5}
+.draft-banner-btns{display:flex;gap:8px;flex-shrink:0}
+.draft-load-btn{background:var(--gold);color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
+.draft-load-btn:hover{background:#9a6e00}
+.draft-discard-btn{background:transparent;color:#999;border:1px solid #ddd;border-radius:7px;padding:8px 14px;font-size:13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
+.draft-discard-btn:hover{border-color:#aaa;color:#555}
+/* 자동저장 상태 */
+#autoSaveStatus{font-size:11px;color:#aaa;white-space:nowrap;transition:.3s}
+/* 임시저장 버튼 */
+.write-tab-draft{background:transparent;color:var(--gold);border:1.5px solid var(--gold);border-radius:10px;padding:12px 22px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
+.write-tab-draft:hover{background:var(--gold);color:#fff}
 /* 유튜브 삽입 모달 */
 #ytModalWrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center}
 #ytModalWrap.open{display:flex}
@@ -2118,15 +2133,27 @@ html.mobile-view .float-btn span{display:none !important}
         <option value="">-- 말머리 없음 --</option>
       </select>
     </div>
+    <!-- 임시저장 불러오기 배너 -->
+    <div id="draftBanner">
+      <div class="draft-banner-row">
+        <span class="draft-banner-text" id="draftBannerText">📝 이전에 작성 중이던 글이 있습니다.</span>
+        <div class="draft-banner-btns">
+          <button class="draft-load-btn" onclick="loadDraft()">불러오기</button>
+          <button class="draft-discard-btn" onclick="discardDraft()">버리고 새로 쓰기</button>
+        </div>
+      </div>
+    </div>
     <input type="text" class="write-tab-input" id="writeTitle" placeholder="제목을 입력하세요">
     <div id="quill-editor"></div>
     <div id="emojiPanel"></div>
     <div class="editor-bottom-bar">
       <p class="img-uploading" id="imgUploadingMsg" style="margin:0">📤 이미지 업로드 중...</p>
-      <span id="editorCharCount" style="margin-left:auto">0자</span>
+      <span id="autoSaveStatus"></span>
+      <span id="editorCharCount">0자</span>
     </div>
     <div class="write-tab-actions">
       <button class="write-tab-cancel" onclick="window.close()">취소</button>
+      <button class="write-tab-draft" onclick="saveDraft(false)">임시저장</button>
       <button class="write-tab-submit" id="writeSubmitBtn" onclick="submitWrite()">등록하기</button>
     </div>
   </div>
@@ -2893,6 +2920,8 @@ function initWriteTab(boardType) {
     initQuill();
     quillEditor.setContents([]);
     quillEditor.focus();
+    setupAutoSave(boardType);
+    checkForDraft(boardType);
   }, 100);
 }
 
@@ -3052,6 +3081,104 @@ function imageUploadHandler() {
   };
 }
 
+// ─── 자동저장 / 임시저장 ───
+const DRAFT_PREFIX = 'mariDraft_';
+let _autoSaveTimer = null;
+let _autoSaveInterval = null;
+let _currentDraftKey = null;
+
+function getDraftKey(boardType) {
+  return DRAFT_PREFIX + (boardType || currentWriteBoard || 'unknown');
+}
+
+function saveDraft(isAuto) {
+  if (!quillEditor) return;
+  const title = document.getElementById('writeTitle')?.value || '';
+  const textOnly = quillEditor.getText().replace(/\n/g, '').trim();
+  if (!title && !textOnly) return;
+
+  const draft = {
+    title,
+    content: quillEditor.root.innerHTML,
+    prefix: document.getElementById('writePrefix')?.value || '',
+    boardType: currentWriteBoard,
+    savedAt: Date.now()
+  };
+  localStorage.setItem(_currentDraftKey, JSON.stringify(draft));
+
+  const el = document.getElementById('autoSaveStatus');
+  if (!el) return;
+  const t = new Date().toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'});
+  if (isAuto) {
+    el.textContent = '💾 자동저장 ' + t;
+    el.style.color = '#aaa';
+  } else {
+    el.textContent = '✅ 임시저장 완료 ' + t;
+    el.style.color = '#27ae60';
+    setTimeout(() => { if (el) el.style.color = '#aaa'; }, 2500);
+  }
+}
+
+function clearDraft() {
+  if (_currentDraftKey) localStorage.removeItem(_currentDraftKey);
+  if (_autoSaveInterval) clearInterval(_autoSaveInterval);
+  clearTimeout(_autoSaveTimer);
+}
+
+function setupAutoSave(boardType) {
+  _currentDraftKey = getDraftKey(boardType);
+
+  // 타이핑 멈춘 후 3초 자동저장 (debounce)
+  quillEditor.on('text-change', () => {
+    clearTimeout(_autoSaveTimer);
+    _autoSaveTimer = setTimeout(() => saveDraft(true), 3000);
+  });
+  document.getElementById('writeTitle')?.addEventListener('input', () => {
+    clearTimeout(_autoSaveTimer);
+    _autoSaveTimer = setTimeout(() => saveDraft(true), 3000);
+  });
+
+  // 30초마다 강제 자동저장
+  _autoSaveInterval = setInterval(() => saveDraft(true), 30000);
+}
+
+function checkForDraft(boardType) {
+  const key = getDraftKey(boardType);
+  const raw = localStorage.getItem(key);
+  if (!raw) return;
+  try {
+    const draft = JSON.parse(raw);
+    const textOnly = (draft.content || '').replace(/<[^>]+>/g, '').trim();
+    if (!draft.title && !textOnly) { localStorage.removeItem(key); return; }
+    const t = new Date(draft.savedAt).toLocaleString('ko-KR', {month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    document.getElementById('draftBannerText').textContent = '📝 ' + t + '에 임시저장된 글이 있습니다. 제목: "' + (draft.title || '(제목 없음)') + '"';
+    document.getElementById('draftBanner').classList.add('show');
+    document.getElementById('draftBanner')._draft = draft;
+  } catch(e) { localStorage.removeItem(key); }
+}
+
+function loadDraft() {
+  const banner = document.getElementById('draftBanner');
+  const draft = banner._draft;
+  if (!draft) return;
+  if (draft.title) document.getElementById('writeTitle').value = draft.title;
+  if (draft.content) quillEditor.root.innerHTML = draft.content;
+  if (draft.prefix) {
+    const sel = document.getElementById('writePrefix');
+    if (sel) sel.value = draft.prefix;
+  }
+  const len = quillEditor.getText().replace(/\n/g,'').length;
+  const cnt = document.getElementById('editorCharCount');
+  if (cnt) cnt.textContent = len.toLocaleString() + '자';
+  banner.classList.remove('show');
+  quillEditor.focus();
+}
+
+function discardDraft() {
+  localStorage.removeItem(_currentDraftKey);
+  document.getElementById('draftBanner').classList.remove('show');
+}
+
 async function submitWrite() {
   const title = document.getElementById('writeTitle').value.trim();
   const content = quillEditor ? quillEditor.root.innerHTML : '';
@@ -3078,6 +3205,7 @@ async function submitWrite() {
       data.bg = 'linear-gradient(135deg,#006994,#0099CC)';
     }
     await db.collection(colName).add(data);
+    clearDraft();
     document.getElementById('writeTabBody').style.display = 'none';
     document.getElementById('writeSuccessMsg').style.display = 'block';
     setTimeout(() => window.close(), 2000);
