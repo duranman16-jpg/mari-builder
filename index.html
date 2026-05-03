@@ -557,14 +557,22 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .preview-more-btn.gold{color:var(--gold);border-color:var(--gold)}
 .preview-more-btn.gold:hover{background:var(--gold);color:#fff}
 
-/* ─── 절차 이미지 섹션 ─── */
-.proc-img-wrap{position:relative;border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:0 4px 28px rgba(0,0,0,0.1);transition:.3s;background:#fff;margin-bottom:16px}
-.proc-img-wrap:hover{transform:translateY(-4px);box-shadow:0 16px 56px rgba(0,0,0,0.15)}
-.proc-img{width:100%;display:block;height:auto}
-.proc-img-hover{position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;transition:.3s}
-.proc-img-hover span{background:var(--red);color:#fff;padding:11px 26px;border-radius:99px;font-size:15px;font-weight:700;font-family:'Noto Sans KR',sans-serif;opacity:0;transform:scale(0.92);transition:.3s;box-shadow:0 4px 20px rgba(200,16,46,0.3)}
-.proc-img-wrap:hover .proc-img-hover{background:rgba(0,0,0,0.26)}
-.proc-img-wrap:hover .proc-img-hover span{opacity:1;transform:scale(1)}
+/* ─── 절차 6단계 카드 그리드 ─── */
+.proc-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:0}
+.proc-card{border-radius:18px;overflow:hidden;cursor:pointer;transition:.28s;position:relative;min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:0 4px 20px rgba(0,0,0,0.12)}
+.proc-card:hover{transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,0.22)}
+.proc-card-bg{position:absolute;inset:0;z-index:0;transition:.28s}
+.proc-card:hover .proc-card-bg{filter:brightness(1.12)}
+.proc-card-num{position:absolute;top:16px;left:16px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.22);backdrop-filter:blur(4px);border:2px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;z-index:2}
+.proc-card-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-64%);font-size:48px;z-index:2;transition:.28s;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2))}
+.proc-card:hover .proc-card-icon{transform:translate(-50%,-70%) scale(1.1)}
+.proc-card-body{position:relative;z-index:2;padding:14px 16px 16px;background:linear-gradient(to top,rgba(0,0,0,0.72) 0%,rgba(0,0,0,0) 100%)}
+.proc-card-title{font-size:15px;font-weight:800;color:#fff;margin-bottom:3px}
+.proc-card-sub{font-size:11px;color:rgba(255,255,255,0.72);line-height:1.5}
+.proc-card-arrow{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.9);background:rgba(255,255,255,0.18);border-radius:99px;padding:4px 10px;transition:.2s}
+.proc-card:hover .proc-card-arrow{background:rgba(255,255,255,0.32)}
+@media(max-width:860px){.proc-cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.proc-cards{grid-template-columns:repeat(2,1fr);gap:10px}.proc-card{min-height:160px}.proc-card-icon{font-size:36px}}
 .proc-steps-bar{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;padding:14px 20px;background:#fff;border-radius:14px;border:1px solid rgba(184,134,11,0.14);box-shadow:0 2px 12px rgba(0,0,0,0.04)}
 .proc-step-item{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:var(--dark);white-space:nowrap}
 .proc-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
@@ -1246,24 +1254,74 @@ html.mobile-view .float-btn span{display:none !important}
       </div>
       <button class="preview-more-btn" onclick="navigate('process')">자세히 보기 →</button>
     </div>
-    <!-- 절차 이미지 -->
-    <div class="proc-img-wrap fade-in" onclick="navigate('process')">
-      <img src="절차.png" alt="국제결혼 6단계 절차 한눈에 보기" class="proc-img">
-      <div class="proc-img-hover"><span>자세히 보기 →</span></div>
-    </div>
-    <!-- 6단계 요약 바 -->
-    <div class="proc-steps-bar fade-in">
-      <div class="proc-step-item"><span class="proc-num" style="background:#C8102E">1</span>상담</div>
-      <span class="proc-arrow">›</span>
-      <div class="proc-step-item"><span class="proc-num" style="background:#E08000">2</span>회원 등록</div>
-      <span class="proc-arrow">›</span>
-      <div class="proc-step-item"><span class="proc-num" style="background:#7B3FBE">3</span>연인 매칭</div>
-      <span class="proc-arrow">›</span>
-      <div class="proc-step-item"><span class="proc-num" style="background:#0077B6">4</span>현지 맞선</div>
-      <span class="proc-arrow">›</span>
-      <div class="proc-step-item"><span class="proc-num" style="background:#B8860B">5</span>혼인</div>
-      <span class="proc-arrow">›</span>
-      <div class="proc-step-item"><span class="proc-num" style="background:#2E7D32">6</span>각종 서류작업</div>
+    <!-- 6단계 카드 그리드 -->
+    <div class="proc-cards fade-in">
+      <!-- 1. 상담 -->
+      <div class="proc-card" onclick="navigate('process');setTimeout(()=>document.getElementById('ps1').scrollIntoView({behavior:'smooth'}),320)">
+        <div class="proc-card-bg" style="background:linear-gradient(135deg,#8B0A1E,#C8102E,#E8304A)"></div>
+        <div class="proc-card-num">1</div>
+        <div class="proc-card-icon">💬</div>
+        <div class="proc-card-body">
+          <div class="proc-card-title">상담</div>
+          <div class="proc-card-sub">무료 전문 상담 · 방문/전화/온라인</div>
+          <div class="proc-card-arrow">자세히 보기 →</div>
+        </div>
+      </div>
+      <!-- 2. 회원 등록 -->
+      <div class="proc-card" onclick="navigate('process');setTimeout(()=>document.getElementById('ps2').scrollIntoView({behavior:'smooth'}),320)">
+        <div class="proc-card-bg" style="background:linear-gradient(135deg,#8B4500,#E08000,#F5A623)"></div>
+        <div class="proc-card-num">2</div>
+        <div class="proc-card-icon">📝</div>
+        <div class="proc-card-body">
+          <div class="proc-card-title">회원 등록</div>
+          <div class="proc-card-sub">서류 검증 · 신뢰 기반 서약</div>
+          <div class="proc-card-arrow">자세히 보기 →</div>
+        </div>
+      </div>
+      <!-- 3. 연인 매칭 -->
+      <div class="proc-card" onclick="navigate('process');setTimeout(()=>document.getElementById('ps3').scrollIntoView({behavior:'smooth'}),320)">
+        <div class="proc-card-bg" style="background:linear-gradient(135deg,#4A1A8B,#7B3FBE,#9B5FDE)"></div>
+        <div class="proc-card-num">3</div>
+        <div class="proc-card-icon">💑</div>
+        <div class="proc-card-body">
+          <div class="proc-card-title">연인 매칭</div>
+          <div class="proc-card-sub">조건·성향 맞춤 파트너 소개</div>
+          <div class="proc-card-arrow">자세히 보기 →</div>
+        </div>
+      </div>
+      <!-- 4. 현지 맞선 -->
+      <div class="proc-card" onclick="navigate('process');setTimeout(()=>document.getElementById('ps4').scrollIntoView({behavior:'smooth'}),320)">
+        <div class="proc-card-bg" style="background:linear-gradient(135deg,#00456B,#0077B6,#0099DD)"></div>
+        <div class="proc-card-num">4</div>
+        <div class="proc-card-icon">✈️</div>
+        <div class="proc-card-body">
+          <div class="proc-card-title">현지 맞선</div>
+          <div class="proc-card-sub">베트남 직접 방문 · 1:1 만남</div>
+          <div class="proc-card-arrow">자세히 보기 →</div>
+        </div>
+      </div>
+      <!-- 5. 혼인 -->
+      <div class="proc-card" onclick="navigate('process');setTimeout(()=>document.getElementById('ps5').scrollIntoView({behavior:'smooth'}),320)">
+        <div class="proc-card-bg" style="background:linear-gradient(135deg,#6B4E00,#B8860B,#D4A017)"></div>
+        <div class="proc-card-num">5</div>
+        <div class="proc-card-icon">💍</div>
+        <div class="proc-card-body">
+          <div class="proc-card-title">혼인</div>
+          <div class="proc-card-sub">양국 혼인신고 · 사랑의 결실</div>
+          <div class="proc-card-arrow">자세히 보기 →</div>
+        </div>
+      </div>
+      <!-- 6. 각종 서류작업 -->
+      <div class="proc-card" onclick="navigate('process');setTimeout(()=>document.getElementById('ps6').scrollIntoView({behavior:'smooth'}),320)">
+        <div class="proc-card-bg" style="background:linear-gradient(135deg,#1A4A1A,#2E7D32,#4CAF50)"></div>
+        <div class="proc-card-num">6</div>
+        <div class="proc-card-icon">📋</div>
+        <div class="proc-card-body">
+          <div class="proc-card-title">각종 서류작업</div>
+          <div class="proc-card-sub">비자 · 혼인신고 · 서류 대행</div>
+          <div class="proc-card-arrow">자세히 보기 →</div>
+        </div>
+      </div>
     </div>
   </div>
 
