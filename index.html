@@ -508,18 +508,21 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
   .hero-img-card{display:none}
   .inquiry-inner{grid-template-columns:1fr}
   .footer-top{grid-template-columns:1fr 1fr}
-  .nav-links{display:none;position:fixed;top:56px;left:0;right:0;background:var(--white);flex-direction:column;border-top:3px solid var(--red);box-shadow:0 8px 36px rgba(0,0,0,0.18);padding:12px 16px 20px;z-index:99;max-height:calc(100vh - 56px);overflow-y:auto}
+  .nav-links{display:none;position:fixed;top:56px;left:0;right:0;background:var(--white);flex-direction:column;border-top:3px solid var(--red);box-shadow:0 8px 36px rgba(0,0,0,0.18);padding:0;z-index:99;max-height:calc(100vh - 56px);overflow-y:auto}
   .nav-links.open{display:flex}
   .nav-sep{display:none}
-  .mnav-group{display:grid !important;grid-template-columns:1fr 1fr;gap:6px;padding:14px 0 10px}
-  .mnav-group+.mnav-group{border-top:1px solid rgba(0,0,0,0.07);padding-top:14px}
-  .mnav-label{display:block !important;grid-column:1/-1;font-size:10px;font-weight:800;color:var(--red);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px}
-  .nav-links a{padding:12px 14px;font-size:14px;border-radius:10px;font-weight:500;background:rgba(0,0,0,0.025);display:flex;align-items:center;gap:6px;width:100%;border:1px solid transparent}
-  .nav-links a:hover,.nav-links a.nav-active{background:rgba(200,16,46,0.06);border-color:rgba(200,16,46,0.1);color:var(--red)}
-  .nav-links .nav-community{background:rgba(184,134,11,0.05);color:var(--gold)}
-  .nav-links .nav-community:hover,.nav-links .nav-community.nav-active{background:rgba(184,134,11,0.12) !important;color:#8B6914 !important;border-color:rgba(184,134,11,0.2)}
-  .mobile-nav-cta-wrap{display:block;margin-top:12px;padding-top:14px;border-top:1px solid rgba(0,0,0,0.07)}
-  .mobile-nav-cta{display:block;width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;transition:.2s}
+  .mnav-group{display:grid !important;grid-template-columns:1fr 1fr;gap:8px;padding:20px 16px 16px}
+  .mnav-group+.mnav-group{border-top:1px solid rgba(0,0,0,0.07)}
+  .mnav-label{display:flex !important;align-items:center;gap:8px;grid-column:1/-1;font-size:14px;font-weight:800;color:var(--red);letter-spacing:0;text-transform:none;margin-bottom:6px;padding-left:0}
+  .mnav-label::before{content:'';display:block;width:4px;height:18px;background:var(--red);border-radius:2px;flex-shrink:0}
+  .nav-links a{padding:11px 14px;font-size:14px;border-radius:10px;font-weight:600;background:rgba(0,0,0,0.03);display:flex;align-items:center;gap:6px;width:100%;border:1px solid rgba(0,0,0,0.06);transition:.2s;color:var(--dark)}
+  .nav-links a:hover,.nav-links a.nav-active{background:rgba(200,16,46,0.07);border-color:rgba(200,16,46,0.15);color:var(--red)}
+  .nav-links .nav-community{background:rgba(184,134,11,0.06);color:#7A5500;border-color:rgba(184,134,11,0.15)}
+  .nav-links .nav-community:hover,.nav-links .nav-community.nav-active{background:rgba(184,134,11,0.14) !important;color:#5C3D00 !important;border-color:rgba(184,134,11,0.25)}
+  .mnav-community .mnav-label{color:var(--gold)}
+  .mnav-community .mnav-label::before{background:var(--gold)}
+  .mobile-nav-cta-wrap{display:block;padding:12px 16px 20px;border-top:1px solid rgba(0,0,0,0.07)}
+  .mobile-nav-cta{display:block;width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;transition:.2s}
   .mobile-nav-cta:hover{background:#a50d26}
   .menu-btn{display:block}
 }
@@ -1126,7 +1129,6 @@ html.mobile-view .float-btn span{display:none !important}
         <a data-page="success" onclick="navigate('success')">성공사례</a>
         <a data-page="faq" onclick="navigate('faq')">자주묻는질문</a>
         <a data-page="ranking" onclick="navigate('ranking')">🏆 랭킹</a>
-        <a data-page="guide" onclick="navigate('guide')">🗺️ 베트남가이드</a>
       </div>
       <span class="nav-sep">|</span>
       <div class="mnav-group mnav-community">
@@ -1136,6 +1138,7 @@ html.mobile-view .float-btn span{display:none !important}
         <a data-page="board-travel" onclick="navigate('board-travel')" class="nav-community">✈️ 여행&amp;정보</a>
         <a data-page="board-food" onclick="navigate('board-food')" class="nav-community">🍜 베트남음식</a>
         <a data-page="board-trade" onclick="navigate('board-trade')" class="nav-community">🤝 물물교환</a>
+        <a data-page="guide" onclick="navigate('guide')" class="nav-community">🗺️ 베트남가이드</a>
       </div>
       <div class="mobile-nav-cta-wrap">
         <button class="mobile-nav-cta" onclick="navigate('inquiry');toggleMenu()">💬 무료상담 신청</button>
