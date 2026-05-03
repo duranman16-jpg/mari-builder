@@ -181,9 +181,8 @@ body.dark-mode .dark-toggle{border-color:rgba(255,255,255,0.2);background:rgba(2
 .mypage-section h3{font-size:14px;font-weight:700;margin:0 0 14px;color:var(--dark)}
 
 /* ─── 베트남 가이드 ─── */
-.guide-tabs{display:flex;overflow-x:auto;gap:8px;padding-bottom:4px;margin-bottom:24px;scrollbar-width:none}
-.guide-tabs::-webkit-scrollbar{display:none}
-.guide-tab-btn{padding:8px 18px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;font-family:'Noto Sans KR',sans-serif;color:var(--gray)}
+.guide-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;justify-content:center}
+.guide-tab-btn{padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:var(--bg-card);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.2s;font-family:'Noto Sans KR',sans-serif;color:var(--gray)}
 .guide-tab-btn.active{background:var(--red);color:#fff;border-color:var(--red)}
 .guide-section{display:none}
 .guide-section.active{display:block}
