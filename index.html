@@ -2786,7 +2786,9 @@ function initWriteTab(boardType) {
   document.getElementById('site-footer').style.display = 'none';
   document.getElementById('floatWrap').style.display = 'none';
 
-  const user = JSON.parse(localStorage.getItem('maryUser'));
+  const user = JSON.parse(localStorage.getItem('maryUser'))
+    || (window.opener?.currentUser)
+    || JSON.parse(sessionStorage.getItem('maryUser'));
   if (!user) {
     document.getElementById('page-write').innerHTML = `
       <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:'Noto Sans KR',sans-serif">
