@@ -2780,6 +2780,8 @@ function openWrite(boardType) {
 }
 
 function initWriteTab(boardType) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-write').classList.add('active');
   document.getElementById('mainNav').style.display = 'none';
   document.getElementById('site-footer').style.display = 'none';
   document.getElementById('floatWrap').style.display = 'none';
@@ -2795,7 +2797,6 @@ function initWriteTab(boardType) {
           <button onclick="window.close()" style="padding:12px 28px;background:#C8102E;color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700">창 닫기</button>
         </div>
       </div>`;
-    document.getElementById('page-write').classList.add('active');
     return;
   }
 
@@ -2825,9 +2826,6 @@ function initWriteTab(boardType) {
   } else {
     if (prefixRow) prefixRow.style.display = 'none';
   }
-
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-write').classList.add('active');
 
   setTimeout(() => {
     initQuill();
