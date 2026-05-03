@@ -201,67 +201,67 @@ service cloud.firestore {
 
     match /posts_qna/{postId} {
       allow read: if true;
-      allow create: if request.auth != null && validPost(request.resource.data);
-      allow update: if postUpdateOnly() || request.auth != null;
-      allow delete: if request.auth != null;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly();
+      allow delete: if true;
     }
     match /posts_qna/{postId}/comments/{commentId} {
       allow read: if true;
-      allow create: if request.auth != null && validComment(request.resource.data);
+      allow create: if validComment(request.resource.data);
       allow update: if commentUpdateOnly();
-      allow delete: if request.auth != null;
+      allow delete: if true;
     }
 
     match /posts_photo/{postId} {
       allow read: if true;
-      allow create: if request.auth != null && validPost(request.resource.data);
-      allow update: if postUpdateOnly() || request.auth != null;
-      allow delete: if request.auth != null;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly();
+      allow delete: if true;
     }
     match /posts_photo/{postId}/comments/{commentId} {
       allow read: if true;
-      allow create: if request.auth != null && validComment(request.resource.data);
+      allow create: if validComment(request.resource.data);
       allow update: if commentUpdateOnly();
-      allow delete: if request.auth != null;
+      allow delete: if true;
     }
 
     match /posts_travel_north/{postId} {
       allow read: if true;
-      allow create: if request.auth != null && validPost(request.resource.data);
-      allow update: if postUpdateOnly() || request.auth != null;
-      allow delete: if request.auth != null;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly();
+      allow delete: if true;
     }
     match /posts_travel_north/{postId}/comments/{commentId} {
       allow read: if true;
-      allow create: if request.auth != null && validComment(request.resource.data);
+      allow create: if validComment(request.resource.data);
       allow update: if commentUpdateOnly();
-      allow delete: if request.auth != null;
+      allow delete: if true;
     }
 
     match /posts_travel_central/{postId} {
       allow read: if true;
-      allow create: if request.auth != null && validPost(request.resource.data);
-      allow update: if postUpdateOnly() || request.auth != null;
-      allow delete: if request.auth != null;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly();
+      allow delete: if true;
     }
     match /posts_travel_central/{postId}/comments/{commentId} {
       allow read: if true;
-      allow create: if request.auth != null && validComment(request.resource.data);
+      allow create: if validComment(request.resource.data);
       allow update: if commentUpdateOnly();
-      allow delete: if request.auth != null;
+      allow delete: if true;
     }
 
     match /posts_travel_south/{postId} {
       allow read: if true;
-      allow create: if request.auth != null && validPost(request.resource.data);
-      allow update: if postUpdateOnly() || request.auth != null;
-      allow delete: if request.auth != null;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly();
+      allow delete: if true;
     }
     match /posts_travel_south/{postId}/comments/{commentId} {
       allow read: if true;
-      allow create: if request.auth != null && validComment(request.resource.data);
+      allow create: if validComment(request.resource.data);
       allow update: if commentUpdateOnly();
-      allow delete: if request.auth != null;
+      allow delete: if true;
     }
 
     // ═══════════════════════════════════════
