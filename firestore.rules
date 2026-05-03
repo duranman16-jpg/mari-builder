@@ -18,11 +18,11 @@ service cloud.firestore {
           && data.authorId.size() > 0;
     }
 
-    // 게시글 수정 허용 필드 (좋아요·공지·조회수·댓글수만 변경 가능)
+    // 게시글 수정 허용 필드 (좋아요·공지·조회수·댓글수·신고수만 변경 가능)
     function postUpdateOnly() {
       return request.resource.data.diff(resource.data)
              .affectedKeys()
-             .hasOnly(['likes', 'likeCount', 'isPinned', 'commentCount', 'views']);
+             .hasOnly(['likes', 'likeCount', 'isPinned', 'commentCount', 'views', 'reportCount']);
     }
 
     // 댓글 수정 허용 필드 (좋아요만 변경 가능)

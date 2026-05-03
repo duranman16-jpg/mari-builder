@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>오프라인 — 마리 국제결혼</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Noto Sans KR',sans-serif;background:linear-gradient(135deg,#0D0505,#2A0808);min-height:100vh;display:flex;align-items:center;justify-content:center;color:#fff;text-align:center;padding:24px}
+  .card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:48px 40px;max-width:420px;width:100%}
+  .icon{font-size:64px;margin-bottom:24px;opacity:.85}
+  h1{font-size:22px;font-weight:700;margin-bottom:12px;color:#fff}
+  p{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:28px}
+  .retry-btn{background:#C8102E;color:#fff;border:none;border-radius:12px;padding:14px 36px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
+  .retry-btn:hover{background:#a50d26}
+  .logo{font-size:13px;color:rgba(255,255,255,0.3);margin-top:32px}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="card">
+  <div class="icon">📡</div>
+  <h1>인터넷 연결이 끊겼습니다</h1>
+  <p>네트워크 연결을 확인하고 다시 시도해 주세요.<br>연결이 복구되면 자동으로 새로고침됩니다.</p>
+  <button class="retry-btn" onclick="location.reload()">다시 시도</button>
+  <div class="logo">마리 국제결혼 · marivnkr.com</div>
+</div>
+<script>
+  window.addEventListener('online', () => location.reload());
+</script>
+</body>
+</html>

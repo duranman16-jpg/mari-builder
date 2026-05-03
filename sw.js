@@ -1,5 +1,5 @@
-const CACHE_NAME = 'mari-v3';
-const STATIC_ASSETS = ['/심볼.png'];
+const CACHE_NAME = 'mari-v4';
+const STATIC_ASSETS = ['/심볼.png', '/offline.html'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -21,7 +21,7 @@ self.addEventListener('fetch', e => {
   if (e.request.mode === 'navigate') {
     e.respondWith(
       fetch(new Request(e.request, { cache: 'no-store' }))
-        .catch(() => caches.match('/심볼.png').then(() => fetch('/')))
+        .catch(() => caches.match('/offline.html'))
     );
     return;
   }

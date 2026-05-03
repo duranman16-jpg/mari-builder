@@ -143,12 +143,22 @@ exports.sendVerificationEmail = functions
       throw new functions.https.HttpsError('invalid-argument', '이메일 형식이 올바르지 않습니다.');
     }
 
+    // ── 레이트 리밋: 60초 이내 재발송 차단
+    const existing = await admin.firestore().collection('email_otps').doc(email).get();
+    if (existing.exists) {
+      const lastCreatedAt = existing.data().requestedAt || 0;
+      if (Date.now() - lastCreatedAt < 60 * 1000) {
+        throw new functions.https.HttpsError('resource-exhausted', '60초 후 다시 시도해주세요.');
+      }
+    }
+
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     await admin.firestore().collection('email_otps').doc(email).set({
       otp,
       expiresAt: Date.now() + 10 * 60 * 1000,
       attempts: 0,
+      requestedAt: Date.now(),
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
@@ -179,6 +189,8 @@ exports.sendVerificationEmail = functions
           </div>`
       });
     } catch (mailErr) {
+      // 이메일 발송 실패 시 OTP 문서 삭제 (재시도 가능하도록)
+      await admin.firestore().collection('email_otps').doc(email).delete().catch(() => {});
       console.error('sendMail error:', mailErr.message, mailErr.code);
       throw new functions.https.HttpsError('internal', '이메일 발송 오류: ' + mailErr.message);
     }
