@@ -4304,6 +4304,9 @@ async function submitDeleteAccount() {
 
 function logout() {
   cleanupMsgListener();
+  // 임시저장 데이터 전체 삭제 (다른 사용자 노출 방지)
+  Object.keys(localStorage).filter(k => k.startsWith('mariDraft_')).forEach(k => localStorage.removeItem(k));
+  if (_autoSaveInterval) clearInterval(_autoSaveInterval);
   currentUser = null;
   _msgAllUsers = null;
   localStorage.removeItem('maryUser');

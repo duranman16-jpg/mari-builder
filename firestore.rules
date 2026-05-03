@@ -2,77 +2,231 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ─── 회원 정보 ───
+    // ═══════════════════════════════════════
+    // 공통 검증 함수
+    // ═══════════════════════════════════════
+
+    // 게시글 생성 시 필수 필드 검증
+    function validPost(data) {
+      return data.keys().hasAll(['title', 'content', 'authorId', 'createdAt'])
+          && data.title is string
+          && data.title.size() > 0
+          && data.title.size() <= 200
+          && data.content is string
+          && data.content.size() > 0
+          && data.authorId is string
+          && data.authorId.size() > 0;
+    }
+
+    // 게시글 수정 허용 필드 (좋아요·공지·조회수·댓글수만 변경 가능)
+    function postUpdateOnly() {
+      return request.resource.data.diff(resource.data)
+             .affectedKeys()
+             .hasOnly(['likes', 'likeCount', 'isPinned', 'commentCount', 'views']);
+    }
+
+    // 댓글 수정 허용 필드 (좋아요만 변경 가능)
+    function commentUpdateOnly() {
+      return request.resource.data.diff(resource.data)
+             .affectedKeys()
+             .hasOnly(['likes', 'likeCount']);
+    }
+
+    // 댓글 생성 시 필수 필드 검증
+    function validComment(data) {
+      return data.keys().hasAll(['content', 'authorId', 'createdAt'])
+          && data.content is string
+          && data.content.size() > 0
+          && data.content.size() <= 3000
+          && data.authorId is string
+          && data.authorId.size() > 0;
+    }
+
+    // ═══════════════════════════════════════
+    // 회원 정보
+    // ═══════════════════════════════════════
     match /users/{userId} {
-      // 읽기: 허용 (회원 목록, 로그인 조회 등에 필요)
       allow read: if true;
-      // 가입: memberType은 반드시 'member', adminToken 포함 불가
-      allow create: if request.resource.data.memberType == 'member'
+
+      // ✅ 수정 1: 이메일 중복 방지 — 이미 존재하는 이메일로는 계정 생성 불가
+      // (클라이언트 검사를 우회해도 서버에서 차단)
+      allow create: if !exists(/databases/$(database)/documents/users/$(userId))
+                    && request.resource.data.memberType == 'member'
                     && !('adminToken' in request.resource.data);
-      // 수정: memberType / adminToken 직접 변경 차단 (Cloud Function에서만 처리)
+
+      // memberType / adminToken 직접 변경 차단 (Cloud Function에서만 처리)
       allow update: if !request.resource.data.diff(resource.data)
                         .affectedKeys().hasAny(['memberType', 'adminToken']);
-      // 탈퇴: 허용
       allow delete: if true;
     }
 
-    // ─── 이메일 OTP ───
+    // ═══════════════════════════════════════
+    // 이메일 OTP (Cloud Function Admin SDK 전용)
+    // ═══════════════════════════════════════
     match /email_otps/{emailDoc} {
-      allow read, write: if false; // Cloud Function Admin SDK에서만 접근 (규칙 우회)
+      allow read, write: if false;
     }
 
-    // ─── AI 이미지 ───
+    // ═══════════════════════════════════════
+    // AI 이미지 (Cloud Function에서만 생성)
+    // ═══════════════════════════════════════
     match /ai_images/{imgId} {
       allow read: if true;
-      allow write: if false; // Cloud Function에서만 씀
+      allow write: if false;
     }
 
-    // ─── 게시판 ───
-    match /posts_vn_life/{postId} { allow read, write: if true; }
-    match /posts_vn_life/{postId}/comments/{commentId} { allow read, write: if true; }
-    match /posts_kr_life/{postId} { allow read, write: if true; }
-    match /posts_kr_life/{postId}/comments/{commentId} { allow read, write: if true; }
-    match /posts_free/{postId} { allow read, write: if true; }
-    match /posts_free/{postId}/comments/{commentId} { allow read, write: if true; }
-    match /posts_travel/{postId} { allow read, write: if true; }
-    match /posts_travel/{postId}/comments/{commentId} { allow read, write: if true; }
-    match /posts_food/{postId} { allow read, write: if true; }
-    match /posts_food/{postId}/comments/{commentId} { allow read, write: if true; }
-    match /posts_trade/{postId} { allow read, write: if true; }
-    match /posts_trade/{postId}/comments/{commentId} { allow read, write: if true; }
+    // ═══════════════════════════════════════
+    // ✅ 수정 2: 게시판 — write 권한 제한
+    // 누구나 읽기 가능, 쓰기는 필수 필드 필요
+    // 수정은 좋아요·공지·조회수·댓글수만 허용 (내용 변조 방지)
+    // ═══════════════════════════════════════
 
-    // ─── 쪽지 ───
-    match /messages/{msgId} { allow read, write: if true; }
+    match /posts_vn_life/{postId} {
+      allow read: if true;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly();
+      allow delete: if true;
+    }
+    match /posts_vn_life/{postId}/comments/{commentId} {
+      allow read: if true;
+      allow create: if validComment(request.resource.data);
+      allow update: if commentUpdateOnly();
+      allow delete: if true;
+    }
 
-    // ─── 상담 신청 ───
+    match /posts_kr_life/{postId} {
+      allow read: if true;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly();
+      allow delete: if true;
+    }
+    match /posts_kr_life/{postId}/comments/{commentId} {
+      allow read: if true;
+      allow create: if validComment(request.resource.data);
+      allow update: if commentUpdateOnly();
+      allow delete: if true;
+    }
+
+    match /posts_free/{postId} {
+      allow read: if true;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly();
+      allow delete: if true;
+    }
+    match /posts_free/{postId}/comments/{commentId} {
+      allow read: if true;
+      allow create: if validComment(request.resource.data);
+      allow update: if commentUpdateOnly();
+      allow delete: if true;
+    }
+
+    match /posts_travel/{postId} {
+      allow read: if true;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly();
+      allow delete: if true;
+    }
+    match /posts_travel/{postId}/comments/{commentId} {
+      allow read: if true;
+      allow create: if validComment(request.resource.data);
+      allow update: if commentUpdateOnly();
+      allow delete: if true;
+    }
+
+    match /posts_food/{postId} {
+      allow read: if true;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly();
+      allow delete: if true;
+    }
+    match /posts_food/{postId}/comments/{commentId} {
+      allow read: if true;
+      allow create: if validComment(request.resource.data);
+      allow update: if commentUpdateOnly();
+      allow delete: if true;
+    }
+
+    match /posts_trade/{postId} {
+      allow read: if true;
+      allow create: if validPost(request.resource.data);
+      allow update: if postUpdateOnly();
+      allow delete: if true;
+    }
+    match /posts_trade/{postId}/comments/{commentId} {
+      allow read: if true;
+      allow create: if validComment(request.resource.data);
+      allow update: if commentUpdateOnly();
+      allow delete: if true;
+    }
+
+    // ═══════════════════════════════════════
+    // ✅ 수정 3: 쪽지 — 필드 검증 + 수정 제한
+    // ※ Firebase Auth 미적용으로 발신/수신자 본인 검증 불가
+    //   → 생성 시 필수 필드 검증, 수정은 읽음 처리만 허용
+    //   → 완전한 비공개는 Firebase Auth 도입 후 가능
+    // ═══════════════════════════════════════
+    match /messages/{msgId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['to', 'from', 'subject', 'body', 'createdAt'])
+                   && request.resource.data.to is string
+                   && request.resource.data.to.size() > 0
+                   && request.resource.data.from is string
+                   && request.resource.data.from.size() > 0
+                   && request.resource.data.subject is string
+                   && request.resource.data.subject.size() > 0
+                   && request.resource.data.body is string
+                   && request.resource.data.body.size() > 0;
+      // 수정: 읽음 표시(read 필드)만 허용 — 내용 변조 차단
+      allow update: if request.resource.data.diff(resource.data)
+                       .affectedKeys().hasOnly(['read']);
+      allow delete: if true;
+    }
+
+    // ═══════════════════════════════════════
+    // 상담 신청
+    // ═══════════════════════════════════════
     match /consultations/{docId} {
       allow create: if true;
-      allow read: if true;   // 관리자 패널에서 조회
+      allow read: if true;
       allow update, delete: if false;
     }
 
-    // ─── 성공사례 / FAQ ───
-    match /success_stories/{docId} { allow read: if true; allow write: if true; }
-    match /faqs/{docId} { allow read: if true; allow write: if true; }
+    // ═══════════════════════════════════════
+    // 성공사례 / FAQ
+    // ═══════════════════════════════════════
+    match /success_stories/{docId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /faqs/{docId} {
+      allow read: if true;
+      allow write: if true;
+    }
 
-    // ─── 신고 ───
+    // ═══════════════════════════════════════
+    // 신고
+    // ═══════════════════════════════════════
     match /reports/{reportId} {
-      allow create: if true;           // 누구나 신고 가능
-      allow read, delete: if true;     // 관리자 패널에서 조회/삭제
+      allow create: if true;
+      allow read, delete: if true;
       allow update: if false;
     }
 
-    // ─── 사이트 설정 (금칙어 등) ───
+    // ═══════════════════════════════════════
+    // 사이트 설정 (금칙어 등)
+    // ═══════════════════════════════════════
     match /settings/{docId} {
-      allow read: if true;   // 금칙어 목록은 모든 사용자가 로드
-      allow write: if true;  // 관리자 패널에서 직접 업데이트 (UI는 관리자만 접근 가능)
+      allow read: if true;
+      allow write: if true;
     }
 
-    // ─── 실시간 채팅 ───
+    // ═══════════════════════════════════════
+    // 실시간 채팅
+    // ═══════════════════════════════════════
     match /chats/{chatId} {
-      allow read, write: if true;   // 비로그인 포함 누구나 채팅 생성/조회 가능
+      allow read, write: if true;
       match /messages/{msgId} {
-        allow read, write: if true; // 메시지 읽기/쓰기
+        allow read, write: if true;
       }
     }
   }
