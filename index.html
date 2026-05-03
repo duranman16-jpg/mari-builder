@@ -7381,42 +7381,58 @@ function toggleChatWin() {
   }
 }
 
-function _chatOpen() {
-  const savedId = localStorage.getItem('mariChatId');
+async function _chatOpen() {
   if (currentUser) {
+    // 로그인 유저 — userId로 기존 채팅방 우선 검색 (1인 1채팅방)
+    try {
+      const snap = await db.collection('chats')
+        .where('userId', '==', currentUser.email)
+        .orderBy('updatedAt', 'desc')
+        .limit(1).get();
+
+      if (!snap.empty) {
+        const doc = snap.docs[0];
+        currentChatId = doc.id;
+        const d = doc.data();
+        selectedStaffName = d.assignedName || null;
+        selectedStaffEmail = d.assignedTo || null;
+        // 종료된 채팅이면 재오픈
+        if (d.status === 'closed') {
+          await db.collection('chats').doc(currentChatId).update({
+            status: 'waiting',
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            unreadStaff: firebase.firestore.FieldValue.increment(1)
+          });
+          await db.collection('chats').doc(currentChatId).collection('messages').add({
+            text: '새로운 상담 요청이 접수되었습니다. 잠시만 기다려 주세요.',
+            sender: 'system', senderName: '마리 상담센터', role: 'system',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
+        localStorage.setItem('mariChatId', currentChatId);
+        _showChatMain();
+        _subChatMessages(currentChatId);
+        return;
+      }
+    } catch(e) { /* 검색 실패 시 아래로 fall-through */ }
+    // 기존 채팅방 없음 → 담당자 선택
+    _showStaffStep();
+  } else {
+    // 비로그인 — localStorage 기반
+    const savedId = localStorage.getItem('mariChatId');
     if (savedId) {
       currentChatId = savedId;
       db.collection('chats').doc(savedId).get().then(doc => {
-        if (doc.exists) {
-          const d = doc.data();
-          // 종료된 채팅이면 새로 시작
-          if (d.status === 'closed') {
-            localStorage.removeItem('mariChatId');
-            currentChatId = null;
-            _showStaffStep();
-            return;
-          }
-          selectedStaffName = d.assignedName || null;
-          selectedStaffEmail = d.assignedTo || null;
-        } else {
-          // 문서 없으면 새로 시작
-          localStorage.removeItem('mariChatId');
-          currentChatId = null;
-          _showStaffStep();
-          return;
-        }
+        if (!doc.exists) { localStorage.removeItem('mariChatId'); currentChatId = null; _showStaffStep(); return; }
+        const d = doc.data();
+        selectedStaffName = d.assignedName || null;
+        selectedStaffEmail = d.assignedTo || null;
         _showChatMain();
         _subChatMessages(currentChatId);
       }).catch(() => { _showChatMain(); _subChatMessages(currentChatId); });
     } else {
       _showStaffStep();
     }
-  } else if (savedId) {
-    currentChatId = savedId;
-    _showChatMain();
-    _subChatMessages(currentChatId);
-  } else {
-    _showStaffStep();
   }
 }
 
@@ -7510,19 +7526,19 @@ async function startGuestChat() {
   } catch(e) { console.error(e); }
 }
 
-// 로그인 유저 채팅 로드/생성
+// 로그인 유저 첫 채팅방 생성 (담당자 선택 후 호출)
 async function _loadOrCreateUserChat() {
   try {
     const ref = await db.collection('chats').add({
       userId: currentUser.email,
-      userName: currentUser.name || currentUser.email,
+      userName: currentUser.userId || currentUser.name || currentUser.email,
       userPhone: currentUser.phone || '',
-      status: selectedStaffEmail ? 'active' : 'waiting',
+      status: 'waiting',
       assignedTo: selectedStaffEmail || null,
       assignedName: selectedStaffName || null,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      lastMsg: '', unreadStaff: 0
+      lastMsg: '', unreadStaff: 1
     });
     currentChatId = ref.id;
     localStorage.setItem('mariChatId', currentChatId);
@@ -7636,14 +7652,40 @@ function _subAdminChatList() {
       const listEl = document.getElementById('adminChatList');
       if (!listEl) return;
       if (snap.empty) { listEl.innerHTML = '<div style="padding:20px;text-align:center;font-size:13px;color:var(--gray)">상담 내역이 없습니다</div>'; return; }
-      listEl.innerHTML = '';
+
+      // userId별 최신 채팅 1개만 (updatedAt desc이므로 첫 번째가 최신)
+      const seen = new Map();
       snap.forEach(doc => {
         const c = {id:doc.id,...doc.data()};
+        if (!seen.has(c.userId)) seen.set(c.userId, c);
+      });
+      const list = Array.from(seen.values());
+      // 미읽 있는 것 먼저, 그 다음 최신순
+      list.sort((a,b) => {
+        if ((b.unreadStaff||0) !== (a.unreadStaff||0)) return (b.unreadStaff||0)-(a.unreadStaff||0);
+        return (b.updatedAt?.seconds||0)-(a.updatedAt?.seconds||0);
+      });
+
+      listEl.innerHTML = '';
+      list.forEach(c => {
         const badge = c.status==='waiting'?'<span class="cs-badge cs-waiting">대기</span>':c.status==='active'?'<span class="cs-badge cs-active">상담중</span>':'<span class="cs-badge cs-closed">종료</span>';
         const unread = c.unreadStaff > 0 ? `<span style="background:var(--red);color:#fff;border-radius:99px;padding:1px 6px;font-size:11px;font-weight:700;margin-left:4px">${c.unreadStaff}</span>` : '';
+        // 마지막 메시지 시간 (오늘이면 시:분, 이전이면 날짜)
+        let timeStr = '';
+        if (c.updatedAt) {
+          const dt = new Date(c.updatedAt.toDate ? c.updatedAt.toDate() : c.updatedAt.seconds*1000);
+          const now = new Date();
+          timeStr = dt.toDateString()===now.toDateString()
+            ? dt.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})
+            : dt.toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'});
+        }
         const item = document.createElement('div');
         item.className = 'chat-list-item' + (c.id===adminSelChatId?' sel':'');
-        item.innerHTML = `<div class="chat-list-name">${c.userName}${unread}</div>
+        item.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="chat-list-name">${c.userName}${unread}</div>
+            <div style="font-size:11px;color:var(--gray);flex-shrink:0;margin-left:8px">${timeStr}</div>
+          </div>
           <div class="chat-list-preview">${c.lastMsg||'(메시지 없음)'}</div>
           <div class="chat-list-foot">${badge}<span style="font-size:11px;color:var(--gray)">${c.assignedName||'미배정'}</span></div>`;
         item.onclick = () => openAdminChatDetail(c.id, c.userName);
