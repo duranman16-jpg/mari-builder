@@ -3790,13 +3790,13 @@ html.mobile-view .float-btn span{display:none !important}
     <div class="admin-topnav-wrap">
       <button class="admin-nav-arrow" id="adminNavLeft" onclick="scrollAdminNav(-1)">&#8249;</button>
       <nav class="admin-topnav" id="adminSidebar">
-        <button class="admin-topnav-btn active" onclick="showAdminTab('members',this)">👥 회원관리</button>
+        <button id="adminMembersTabBtn" class="admin-topnav-btn active" onclick="showAdminTab('members',this)">👥 회원관리</button>
         <button class="admin-topnav-btn" onclick="showAdminTab('addvn',this)">📋 회원등록</button>
         <button class="admin-topnav-btn" onclick="showAdminTab('consult',this)">📞 상담신청</button>
-        <button class="admin-topnav-btn" onclick="showAdminTab('allmsgs',this)">🔍 전체쪽지</button>
+        <button id="adminAllmsgsTabBtn" class="admin-topnav-btn" onclick="showAdminTab('allmsgs',this)">🔍 전체쪽지</button>
         <button class="admin-topnav-btn" onclick="showAdminTab('content',this)">✨ 콘텐츠</button>
-        <button class="admin-topnav-btn" onclick="showAdminTab('broadcast',this)">📨 전체발송</button>
-        <button class="admin-topnav-btn" onclick="showAdminTab('settings',this)">⚙️ 설정</button>
+        <button id="adminBroadcastTabBtn" class="admin-topnav-btn" onclick="showAdminTab('broadcast',this)">📨 전체발송</button>
+        <button id="adminSettingsTabBtn" class="admin-topnav-btn" onclick="showAdminTab('settings',this)">⚙️ 설정</button>
         <button id="adminAiImageTabBtn" class="admin-topnav-btn" style="display:none" onclick="showAdminTab('aiimage',this)">🎨 AI이미지</button>
         <button id="adminProfileTabBtn" class="admin-topnav-btn" style="display:none" onclick="showAdminTab('profile',this)">📷 프로필등록</button>
         <button class="admin-topnav-btn" onclick="showAdminTab('reports',this)">🚨 신고관리</button>
@@ -4975,15 +4975,17 @@ document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
 
 // ─── 등급 ───
 function roleLabel(type) {
-  return {admin:'최고 관리자',manager:'매니저',married:'결혼 회원',member:'일반 회원'}[type] || '일반 회원';
+  return {admin:'최고 관리자',manager:'한국 매니저',vn_manager:'베트남 매니저',married:'결혼 회원',member:'일반 회원'}[type] || '일반 회원';
 }
 function isAdmin(u) { return u && u.memberType==='admin'; }
-function isManager(u) { return u && (u.memberType==='admin'||u.memberType==='manager'); }
+function isKrManager(u) { return u && (u.memberType==='admin'||u.memberType==='manager'); }
+function isVnManager(u) { return u && u.memberType==='vn_manager'; }
+function isManager(u) { return u && (u.memberType==='admin'||u.memberType==='manager'||u.memberType==='vn_manager'); }
 function sanitizeText(str) {
   return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function canAccessMarried(u) { return u && (u.memberType==='married'||u.memberType==='admin'||u.memberType==='manager'); }
+function canAccessMarried(u) { return u && (u.memberType==='married'||u.memberType==='admin'||u.memberType==='manager'||u.memberType==='vn_manager'); }
 
 
 // ─── 신고 기능 ───
@@ -5119,15 +5121,24 @@ async function deleteReport(id) {
 // ─── 관리자 패널 ───
 function openAdmin() {
   document.getElementById('adminModal').classList.add('open');
-  // 🎨 AI 이미지 탭은 최고관리자만 표시
   const aiBtn = document.getElementById('adminAiImageTabBtn');
   if (aiBtn) aiBtn.style.display = isAdmin(currentUser) ? 'inline-block' : 'none';
-  // 📷 프로필 등록 탭은 관리자+매니저 표시
   const profileBtn = document.getElementById('adminProfileTabBtn');
   if (profileBtn) profileBtn.style.display = isManager(currentUser) ? 'inline-block' : 'none';
-  const activeBtn = document.querySelector('.admin-topnav-btn.active') || document.querySelector('.admin-topnav-btn');
-  showAdminTab('members', activeBtn);
-  renderAdminMembers();
+  // 베트남 매니저: 제한 탭 숨김
+  const vnRestricted = ['adminMembersTabBtn','adminAllmsgsTabBtn','adminBroadcastTabBtn','adminSettingsTabBtn'];
+  vnRestricted.forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.style.display = isVnManager(currentUser) ? 'none' : '';
+  });
+  if (isVnManager(currentUser)) {
+    const chatBtn = document.querySelector('.admin-topnav-btn[onclick*="\'chat\'"]');
+    showAdminTab('chat', chatBtn);
+  } else {
+    const activeBtn = document.querySelector('.admin-topnav-btn.active') || document.querySelector('.admin-topnav-btn');
+    showAdminTab('members', activeBtn);
+    renderAdminMembers();
+  }
 }
 function closeAdmin() { document.getElementById('adminModal').classList.remove('open'); }
 function closeAdminBg(e) { if (e.target.id==='adminModal') closeAdmin(); }
@@ -5214,6 +5225,9 @@ function scrollAdminNav(dir) {
 }
 
 function showAdminTab(tab, btn) {
+  if (isVnManager(currentUser) && ['members','allmsgs','broadcast','settings'].includes(tab)) {
+    alert('베트남 매니저는 해당 메뉴에 접근할 수 없습니다.'); return;
+  }
   document.querySelectorAll('.admin-topnav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.admin-tab-panel').forEach(p => p.style.display='none');
   if (btn) btn.classList.add('active');
@@ -5235,6 +5249,7 @@ function showAdminTab(tab, btn) {
 }
 
 async function renderAdminMembers() {
+  if (isVnManager(currentUser)) { document.getElementById('adminUserList').innerHTML = '<p style="text-align:center;padding:40px;color:var(--gray)">🔒 베트남 매니저는 회원관리에 접근할 수 없습니다.</p>'; return; }
   const el = document.getElementById('adminUserList');
   el.innerHTML = '<p style="text-align:center;padding:24px;color:var(--gray)">⏳ 불러오는 중...</p>';
   try {
@@ -5259,7 +5274,7 @@ function filterAdminMembers(q) {
 
 function _buildMemberTable(users, q) {
   const el = document.getElementById('adminUserList');
-  const RS = {admin:'background:#1a1a1a;color:#FFD700',manager:'background:#1A4B8B;color:#fff',married:'background:#1A6B3C;color:#fff',member:'background:#e0e0e0;color:#444',couple:'background:#8B1A6B;color:#fff'};
+  const RS = {admin:'background:#1a1a1a;color:#FFD700',manager:'background:#1A4B8B;color:#fff',vn_manager:'background:#006400;color:#FFD700',married:'background:#1A6B3C;color:#fff',member:'background:#e0e0e0;color:#444',couple:'background:#8B1A6B;color:#fff'};
   const total = (window._adminUsers||[]).length;
 
   const rows = users.map((u, i) => {
@@ -5328,13 +5343,13 @@ function openMemberEdit(email, idx) {
   const formEl = document.getElementById('meditForm-' + idx);
   if (!formEl) return;
 
-  const canRoleChange = isAdmin(currentUser) || (isManager(currentUser) && u.memberType !== 'admin' && u.memberType !== 'manager');
+  const canRoleChange = isAdmin(currentUser) || (isKrManager(currentUser) && u.memberType !== 'admin' && u.memberType !== 'manager' && u.memberType !== 'vn_manager');
   const roles = [
     {v:'member',l:'일반 회원'},{v:'married',l:'결혼 회원'},{v:'couple',l:'부부 회원'},
-    {v:'manager',l:'매니저'},{v:'admin',l:'최고관리자'}
+    {v:'manager',l:'한국 매니저'},{v:'vn_manager',l:'베트남 매니저'},{v:'admin',l:'최고관리자'}
   ];
   const roleOpts = roles.map(r => {
-    const dis = (!isAdmin(currentUser) && (r.v==='admin'||r.v==='manager')) ? 'disabled' : '';
+    const dis = (!isAdmin(currentUser) && (r.v==='admin'||r.v==='manager'||r.v==='vn_manager')) ? 'disabled' : '';
     return `<option value="${r.v}" ${u.memberType===r.v?'selected':''} ${dis}>${r.l}</option>`;
   }).join('');
 
@@ -5500,6 +5515,56 @@ async function loadForbiddenWords() {
 
 // ─── 인증 ───
 let currentUser = JSON.parse(localStorage.getItem('maryUser') || sessionStorage.getItem('maryUser'));
+let _userDocUnsub = null;
+
+// 로그인 유저 문서 실시간 감지 — memberType 변경 즉시 반영
+function _startUserDocListener(email) {
+  if (_userDocUnsub) { _userDocUnsub(); _userDocUnsub = null; }
+  if (!email) return;
+  _userDocUnsub = db.collection('users').doc(email).onSnapshot(snap => {
+    if (!snap.exists || !currentUser) return;
+    const fresh = snap.data();
+    const prevType = currentUser.memberType;
+    // memberType 변경 감지
+    if (fresh.memberType !== prevType) {
+      currentUser = { ...currentUser, ...safeUser(fresh) };
+      // 저장소 동기화
+      if (localStorage.getItem('maryUser')) localStorage.setItem('maryUser', JSON.stringify(currentUser));
+      else sessionStorage.setItem('maryUser', JSON.stringify(currentUser));
+      // 매니저 임명 시 패널 즉시 활성화
+      if (isManager(currentUser) && !isManager({memberType: prevType})) {
+        const adminBtn = document.getElementById('adminPanelBtn');
+        if (adminBtn) adminBtn.style.display = 'inline-block';
+        setTimeout(() => { _startChatNotify(); _startMgrPanel(); }, 100);
+        const label = isVnManager(currentUser) ? '베트남 매니저' : '한국 매니저';
+        _showSystemToast(`✅ ${label}로 임명되었습니다. 상담 패널이 활성화됩니다.`);
+      }
+      // 매니저 해제 시 패널 비활성화
+      if (!isManager(currentUser) && isManager({memberType: prevType})) {
+        const adminBtn = document.getElementById('adminPanelBtn');
+        if (adminBtn) adminBtn.style.display = 'none';
+        _stopChatNotify(); _stopMgrPanel();
+      }
+    }
+  }, () => {});
+}
+
+function _showSystemToast(msg) {
+  let t = document.getElementById('sysToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'sysToast';
+    t.style.cssText = 'position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:12px 22px;border-radius:12px;font-size:13px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.3);font-family:"Noto Sans KR",sans-serif;white-space:nowrap';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.remove(), 4000);
+}
+
+function _stopUserDocListener() {
+  if (_userDocUnsub) { _userDocUnsub(); _userDocUnsub = null; }
+}
 
 function updateAuthUI() {
   const navAuth = document.getElementById('navAuth');
@@ -5516,6 +5581,7 @@ function updateAuthUI() {
     if (changePwBtn) changePwBtn.style.display = currentUser.tempPassword ? 'inline-block' : 'none';
     initMsgListener();
     if (isManager(currentUser)) { setTimeout(() => { _startChatNotify(); _startMgrPanel(); }, 200); }
+    _startUserDocListener(currentUser.email);
   } else {
     navAuth.style.display = 'flex';
     navUser.style.display = 'none';
@@ -5524,6 +5590,7 @@ function updateAuthUI() {
     cleanupMsgListener();
     _stopChatNotify();
     _stopMgrPanel();
+    _stopUserDocListener();
   }
   renderBoards();
 }
@@ -5672,6 +5739,7 @@ async function submitDeleteAccount() {
 }
 
 function logout() {
+  if (!confirm('로그아웃 하시겠습니까?')) return;
   cleanupMsgListener();
   // 임시저장 데이터 전체 삭제 (다른 사용자 노출 방지)
   Object.keys(localStorage).filter(k => k.startsWith('mariDraft_')).forEach(k => localStorage.removeItem(k));
@@ -6250,6 +6318,7 @@ function openEditPost(colName, docId, postData) {
 }
 
 async function deletePost(colName, docId) {
+  if (isVnManager(currentUser)) { alert('베트남 매니저는 게시글을 삭제할 수 없습니다.'); return; }
   if (!confirm('게시글을 삭제하시겠습니까?\n삭제된 게시글은 복구할 수 없습니다.')) return;
   try {
     // 댓글 연쇄 삭제 (최대 500개 배치)
@@ -6559,7 +6628,8 @@ async function submitReply(colName, docId, parentId, rootId) {
 function gradeBadge(memberType) {
   const map = {
     admin: `<span class="grade-badge grade-admin">&#128081; 최고관리자</span>`,
-    manager: `<span class="grade-badge grade-manager">&#11088; 매니저</span>`,
+    manager: `<span class="grade-badge grade-manager">&#11088; 한국매니저</span>`,
+    vn_manager: `<span class="grade-badge grade-manager" style="background:linear-gradient(135deg,#006400,#228B22)">&#11088; 베트남매니저</span>`,
     married: `<span class="grade-badge grade-married">&#128141; 부부회원</span>`,
     member: `<span class="grade-badge grade-member">&#127807; 일반회원</span>`
   };
@@ -7322,6 +7392,7 @@ async function submitAddVN() {
 // ─── 관리자 설정 탭 ───
 async function renderAdminSettings() {
   const el = document.getElementById('adminTabSettings');
+  if (isVnManager(currentUser)) { el.innerHTML = '<p style="text-align:center;padding:40px;color:var(--gray)">🔒 베트남 매니저는 설정에 접근할 수 없습니다.</p>'; return; }
   const perm = localStorage.getItem('msgPerm') || 'all';
   const statsHtml = await renderSystemStats();
   el.innerHTML = `
@@ -7739,6 +7810,7 @@ async function renderMatchingPage() {
 // ─── 관리자: 전체 쪽지 감시 탭 ───
 async function renderAdminAllMsgs() {
   const el = document.getElementById('adminTabAllmsgs');
+  if (isVnManager(currentUser)) { el.innerHTML = '<p style="text-align:center;padding:40px;color:var(--gray)">🔒 베트남 매니저는 전체 쪽지에 접근할 수 없습니다.</p>'; return; }
   el.innerHTML = '<p style="text-align:center;padding:20px;color:var(--gray)">불러오는 중...</p>';
   try {
     const snap = await db.collection('messages').orderBy('createdAt','desc').limit(100).get();
@@ -8015,6 +8087,7 @@ async function addFaq(order) {
 // ─── 관리자 전체 발송 탭 ───
 async function renderAdminBroadcast() {
   const el = document.getElementById('adminTabBroadcast');
+  if (isVnManager(currentUser)) { el.innerHTML = '<p style="text-align:center;padding:40px;color:var(--gray)">🔒 베트남 매니저는 전체 발송에 접근할 수 없습니다.</p>'; return; }
   el.innerHTML = '<p style="text-align:center;padding:20px;color:var(--gray)">불러오는 중...</p>';
   const snapshot = await db.collection('users').get();
   const users = snapshot.docs.map(d => d.data());
@@ -8544,6 +8617,23 @@ function _stopChatNotify() {
 let _mgrPanelOpen = true;
 let _mgrChatUnsub = null;
 let _mgrChats = {};
+let _mgrPrevUnread = 0;
+
+function _mgrBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [880, 1100].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = freq;
+      const t = ctx.currentTime + i * 0.15;
+      gain.gain.setValueAtTime(0.25, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+      osc.start(t); osc.stop(t + 0.2);
+    });
+  } catch(e) {}
+}
 
 function _startMgrPanel() {
   if (!isManager(currentUser)) return;
@@ -8557,7 +8647,7 @@ function _startMgrPanel() {
       _mgrChats = {};
       snap.forEach(doc => { _mgrChats[doc.id] = {id: doc.id, ...doc.data()}; });
       _renderMgrPanel();
-    });
+    }, err => console.error('[mgrPanel 구독 오류]', err));
 }
 
 function _stopMgrPanel() {
@@ -8589,6 +8679,23 @@ function _renderMgrPanel() {
   });
   const totalUnread = list.reduce((s, c) => s + (c.unreadStaff || 0), 0);
   if (badge) badge.textContent = totalUnread > 0 ? totalUnread : list.length;
+  // 새 미읽 메시지 도착 시 소리 + 패널 자동 펼침
+  if (totalUnread > _mgrPrevUnread) {
+    _mgrBeep();
+    if (!_mgrPanelOpen) {
+      _mgrPanelOpen = true;
+      const arrow = document.getElementById('mgrArrow');
+      const body = document.getElementById('mgrCards');
+      if (arrow) arrow.textContent = '▲';
+      if (body) body.style.display = '';
+    }
+    const panelEl = document.getElementById('mgrPanel');
+    if (panelEl) {
+      panelEl.style.boxShadow = '0 0 0 3px var(--red), 0 6px 32px rgba(200,16,46,0.4)';
+      setTimeout(() => { panelEl.style.boxShadow = '0 6px 32px rgba(0,0,0,0.18)'; }, 2000);
+    }
+  }
+  _mgrPrevUnread = totalUnread;
   if (!_mgrPanelOpen) return;
   if (list.length === 0) {
     cards.innerHTML = '<div class="mgr-empty">대기 중인 상담이 없습니다</div>';
@@ -8754,7 +8861,7 @@ async function _loadChatStaffList() {
   if (!listEl) return;
   try {
     const snap = await db.collection('users')
-      .where('memberType', 'in', ['admin', 'manager']).get();
+      .where('memberType', 'in', ['admin', 'manager', 'vn_manager']).get();
     if (snap.empty) {
       listEl.innerHTML = '<div style="text-align:center;padding:16px;font-size:13px;color:var(--gray)">현재 상담 가능한 상담사가 없습니다</div>';
       return;
@@ -8762,7 +8869,7 @@ async function _loadChatStaffList() {
     listEl.innerHTML = '';
     snap.forEach(doc => {
       const u = doc.data();
-      const roleLabel = u.memberType === 'admin' ? '최고관리자' : '매니저';
+      const roleLabel = u.memberType === 'admin' ? '최고관리자' : u.memberType === 'vn_manager' ? '베트남 매니저' : '한국 매니저';
       const displayId = u.userId || u.name || doc.id;
       const card = document.createElement('div');
       card.className = 'chat-staff-card';
