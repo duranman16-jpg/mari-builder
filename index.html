@@ -1458,6 +1458,46 @@ html.mobile-view .float-btn span{display:none !important}
 @media(max-width:600px){.vni-tab-bar{top:56px}}
 /* ─── 포인트·레벨 뱃지 ─── */
 .lv-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;color:#fff;vertical-align:middle;margin-left:4px;line-height:1.6;flex-shrink:0}
+/* ─── 상담 예약 시스템 ─── */
+.iq-tab-bar{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:28px}
+.iq-tab-btn{padding:12px 28px;border:none;background:transparent;font-size:14px;font-weight:700;color:var(--gray);cursor:pointer;font-family:'Noto Sans KR',sans-serif;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s}
+.iq-tab-btn.active{color:var(--red);border-bottom-color:var(--red)}
+.booking-wrap{max-width:780px;margin:0 auto;padding:0 20px 40px}
+.booking-calendar{background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.07);overflow:hidden;margin-bottom:24px}
+.cal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--dark);color:#fff}
+.cal-title{font-size:15px;font-weight:700}
+.cal-nav-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:.2s}
+.cal-nav-btn:hover{background:rgba(255,255,255,0.3)}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);background:#f8f8f8;border-bottom:1px solid var(--border)}
+.cal-weekday{text-align:center;padding:8px;font-size:11px;font-weight:700;color:var(--gray)}
+.cal-weekday:first-child{color:var(--red)}
+.cal-weekday:last-child{color:#2E86AB}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);padding:8px}
+.cal-day{text-align:center;padding:9px 4px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;min-height:42px;display:flex;align-items:center;justify-content:center;position:relative;border-radius:8px;margin:2px}
+.cal-day:hover:not(.cal-day-empty):not(.cal-day-past):not(.cal-day-closed):not(.cal-day-full){background:rgba(200,16,46,0.08)}
+.cal-day.selected{background:var(--red);color:#fff}
+.cal-day.today:not(.selected){color:var(--red);font-weight:800}
+.cal-day-empty,.cal-day-past{color:#d0d0d0;cursor:default}
+.cal-day-closed{color:#ccc;cursor:not-allowed;font-style:italic}
+.cal-day-full{color:#ccc;cursor:not-allowed}
+.cal-day-dot{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.cal-day-sun{color:var(--red)}
+.cal-day-sat{color:#2E86AB}
+.booking-section-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:10px}
+.time-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.time-slot-btn{padding:10px 6px;border:1.5px solid var(--border);background:#fff;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;color:var(--dark);transition:.2s;text-align:center}
+.time-slot-btn:hover:not(:disabled){border-color:var(--red);color:var(--red)}
+.time-slot-btn.selected{background:var(--red);border-color:var(--red);color:#fff}
+.time-slot-btn:disabled{background:#f5f5f5;color:#bbb;cursor:not-allowed;border-color:#e8e8e8}
+.method-pills{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.method-pill{padding:8px 20px;border:1.5px solid var(--border);border-radius:20px;background:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;color:var(--dark);transition:.2s}
+.method-pill.selected{background:var(--red);border-color:var(--red);color:#fff}
+.book-status-badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700}
+.bst-pending{background:#FFF3CD;color:#856404}
+.bst-confirmed{background:#D1ECF1;color:#0C5460}
+.bst-completed{background:#D4EDDA;color:#155724}
+.bst-cancelled{background:#F8D7DA;color:#721C24}
+@media(max-width:600px){.time-slots{grid-template-columns:repeat(2,1fr)}.iq-tab-btn{padding:10px 16px;font-size:13px}.booking-wrap{padding:0 12px 32px}}
 /* ─── 매니저 팀 소개 ─── */
 .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:28px;padding:40px 7%;max-width:1100px;margin:0 auto}
 .team-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.07);transition:.3s;border:1.5px solid rgba(0,0,0,0.06)}
@@ -3246,44 +3286,128 @@ html.mobile-view .float-btn span{display:none !important}
       <p>부담 없이 연락주세요. 상담은 100% 무료입니다.</p>
     </div>
   </div>
-  <section class="inquiry" style="margin-top:0;padding-top:60px">
-    <div class="inquiry-inner">
-      <div>
-        <p class="section-label" style="color:var(--gold-light)">무료 상담</p>
-        <h2>지금 바로<br>상담 신청하세요</h2>
-        <p class="inquiry-sub">부담 없이 연락주세요. 전문 상담사가 친절하게 안내드립니다.</p>
-        <div class="contact-info">
-          <div class="contact-row"><div class="contact-icon">📞</div><span>대표전화: 051-000-0000</span></div>
-          <div class="contact-row"><div class="contact-icon">💬</div><span>카카오톡: @마리 국제 결혼</span></div>
-          <div class="contact-row"><div class="contact-icon">📍</div><span>부산시 ○○구 ○○로 000</span></div>
-          <div class="contact-row"><div class="contact-icon">🕘</div><span>평일 09:00 – 18:00 · 토 09:00 – 15:00</span></div>
-          <div class="contact-row"><div class="contact-icon">🌏</div><span>베트남 현지 직통: +84-00-0000-0000</span></div>
+  <!-- 탭 전환 -->
+  <div style="max-width:900px;margin:0 auto;padding:0 20px">
+    <div class="iq-tab-bar">
+      <button class="iq-tab-btn active" id="iqTabBasic" onclick="switchIqTab('basic',this)">📋 바로 신청</button>
+      <button class="iq-tab-btn" id="iqTabBook" onclick="switchIqTab('book',this)">📅 날짜 예약</button>
+    </div>
+  </div>
+
+  <!-- 탭1: 바로 신청 (기존) -->
+  <div id="iqPanelBasic">
+    <section class="inquiry" style="margin-top:0;padding-top:0">
+      <div class="inquiry-inner">
+        <div>
+          <p class="section-label" style="color:var(--gold-light)">무료 상담</p>
+          <h2>지금 바로<br>상담 신청하세요</h2>
+          <p class="inquiry-sub">부담 없이 연락주세요. 전문 상담사가 친절하게 안내드립니다.</p>
+          <div class="contact-info">
+            <div class="contact-row"><div class="contact-icon">📞</div><span>대표전화: 051-000-0000</span></div>
+            <div class="contact-row"><div class="contact-icon">💬</div><span>카카오톡: @마리 국제 결혼</span></div>
+            <div class="contact-row"><div class="contact-icon">📍</div><span>부산시 ○○구 ○○로 000</span></div>
+            <div class="contact-row"><div class="contact-icon">🕘</div><span>평일 09:00 – 18:00 · 토 09:00 – 15:00</span></div>
+            <div class="contact-row"><div class="contact-icon">🌏</div><span>베트남 현지 직통: +84-00-0000-0000</span></div>
+          </div>
+        </div>
+        <div class="form-card">
+          <div class="form-row"><label>성함</label><input type="text" placeholder="홍길동" id="iqName"></div>
+          <div class="form-2col">
+            <div class="form-row"><label>연락처</label><input type="tel" placeholder="010-0000-0000" id="iqPhone"></div>
+            <div class="form-row"><label>나이</label><input type="number" placeholder="만 나이" min="20" max="70" id="iqAge"></div>
+          </div>
+          <div class="form-row">
+            <label>거주 지역</label>
+            <select id="iqRegion">
+              <option value="">선택해 주세요</option>
+              <option>서울</option><option>부산</option><option>대구</option><option>인천</option>
+              <option>광주</option><option>대전</option><option>울산</option><option>세종</option>
+              <option>경기도</option><option>강원도</option>
+              <option>충청북도</option><option>충청남도</option>
+              <option>전라북도</option><option>전라남도</option>
+              <option>경상북도</option><option>경상남도</option>
+              <option>제주도</option><option>기타</option>
+            </select>
+          </div>
+          <div class="form-row"><label>상담 희망 내용</label><textarea placeholder="궁금한 점이나 희망 조건을 자유롭게 적어주세요." id="iqMsg"></textarea></div>
+          <button class="form-submit" onclick="submitInquiry()">상담 신청하기</button>
         </div>
       </div>
-      <div class="form-card">
-        <div class="form-row"><label>성함</label><input type="text" placeholder="홍길동" id="iqName"></div>
-        <div class="form-2col">
-          <div class="form-row"><label>연락처</label><input type="tel" placeholder="010-0000-0000" id="iqPhone"></div>
-          <div class="form-row"><label>나이</label><input type="number" placeholder="만 나이" min="20" max="70" id="iqAge"></div>
+    </section>
+  </div>
+
+  <!-- 탭2: 날짜 예약 -->
+  <div id="iqPanelBook" style="display:none">
+    <div class="booking-wrap">
+      <p style="font-size:13px;color:var(--gray);margin-bottom:20px;line-height:1.7">
+        원하시는 날짜와 시간을 선택하시면 담당 매니저가 확인 후 연락드립니다.<br>
+        <b>운영시간: 평일 09:00–18:00, 토 09:00–15:00 (일요일 휴무)</b>
+      </p>
+
+      <!-- 캘린더 -->
+      <div class="booking-section-title">📅 날짜 선택</div>
+      <div class="booking-calendar">
+        <div class="cal-header">
+          <button class="cal-nav-btn" onclick="calNav(-1)">&#8249;</button>
+          <div class="cal-title" id="calTitle"></div>
+          <button class="cal-nav-btn" onclick="calNav(1)">&#8250;</button>
         </div>
-        <div class="form-row">
-          <label>거주 지역</label>
-          <select id="iqRegion">
-            <option value="">선택해 주세요</option>
-            <option>서울</option><option>부산</option><option>대구</option><option>인천</option>
-            <option>광주</option><option>대전</option><option>울산</option><option>세종</option>
-            <option>경기도</option><option>강원도</option>
-            <option>충청북도</option><option>충청남도</option>
-            <option>전라북도</option><option>전라남도</option>
-            <option>경상북도</option><option>경상남도</option>
-            <option>제주도</option><option>기타</option>
-          </select>
+        <div class="cal-weekdays">
+          <div class="cal-weekday">일</div><div class="cal-weekday">월</div>
+          <div class="cal-weekday">화</div><div class="cal-weekday">수</div>
+          <div class="cal-weekday">목</div><div class="cal-weekday">금</div>
+          <div class="cal-weekday" style="color:#2E86AB">토</div>
         </div>
-        <div class="form-row"><label>상담 희망 내용</label><textarea placeholder="궁금한 점이나 희망 조건을 자유롭게 적어주세요." id="iqMsg"></textarea></div>
-        <button class="form-submit" onclick="submitInquiry()">상담 신청하기</button>
+        <div class="cal-days" id="calDays"></div>
+      </div>
+
+      <!-- 시간 선택 -->
+      <div id="bookTimeSection" style="display:none">
+        <div class="booking-section-title">⏰ 시간 선택 <span id="bookSelDate" style="color:var(--red);font-weight:800"></span></div>
+        <div class="time-slots" id="timeSlots"></div>
+      </div>
+
+      <!-- 상담 방법 -->
+      <div id="bookMethodSection" style="display:none">
+        <div class="booking-section-title">💬 상담 방법</div>
+        <div class="method-pills">
+          <button class="method-pill" onclick="selectMethod('전화',this)">📞 전화</button>
+          <button class="method-pill" onclick="selectMethod('카카오',this)">💛 카카오</button>
+          <button class="method-pill" onclick="selectMethod('화상',this)">🎥 화상</button>
+          <button class="method-pill" onclick="selectMethod('방문',this)">🏢 방문</button>
+        </div>
+      </div>
+
+      <!-- 예약자 정보 -->
+      <div id="bookFormSection" style="display:none">
+        <div class="booking-section-title">📝 예약자 정보</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+          <div>
+            <label style="font-size:12px;color:var(--gray);font-weight:600;display:block;margin-bottom:4px">성함 *</label>
+            <input id="bookName" type="text" placeholder="홍길동" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Noto Sans KR',sans-serif;box-sizing:border-box;background:var(--bg);color:var(--dark)">
+          </div>
+          <div>
+            <label style="font-size:12px;color:var(--gray);font-weight:600;display:block;margin-bottom:4px">연락처 *</label>
+            <input id="bookPhone" type="tel" placeholder="010-0000-0000" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Noto Sans KR',sans-serif;box-sizing:border-box;background:var(--bg);color:var(--dark)">
+          </div>
+        </div>
+        <div style="margin-bottom:20px">
+          <label style="font-size:12px;color:var(--gray);font-weight:600;display:block;margin-bottom:4px">상담 내용 (선택)</label>
+          <textarea id="bookMsg" rows="3" placeholder="궁금하신 점이나 희망 조건을 간략히 적어주세요." style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Noto Sans KR',sans-serif;box-sizing:border-box;resize:vertical;background:var(--bg);color:var(--dark)"></textarea>
+        </div>
+        <!-- 선택 요약 -->
+        <div id="bookSummary" style="background:linear-gradient(135deg,rgba(200,16,46,0.05),rgba(184,134,11,0.05));border:1px solid rgba(200,16,46,0.15);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;line-height:1.9"></div>
+        <button onclick="submitBooking()" style="width:100%;padding:14px;background:var(--red);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s">📅 예약 신청하기</button>
+      </div>
+
+      <div id="bookSuccessMsg" style="display:none;text-align:center;padding:40px 20px">
+        <div style="font-size:48px;margin-bottom:12px">✅</div>
+        <h3 style="font-size:18px;font-weight:800;margin-bottom:8px;color:var(--dark)">예약이 접수되었습니다!</h3>
+        <p style="color:var(--gray);font-size:14px;line-height:1.7">담당 매니저가 확인 후 입력하신 연락처로 연락드립니다.<br>예약 확인까지 1 영업일 이내 소요될 수 있습니다.</p>
+        <button onclick="resetBooking()" style="margin-top:20px;padding:10px 28px;background:var(--red);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif">다시 예약하기</button>
       </div>
     </div>
-  </section>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════ -->
@@ -4403,6 +4527,7 @@ html.mobile-view .float-btn span{display:none !important}
         <button id="adminMembersTabBtn" class="admin-topnav-btn active" onclick="showAdminTab('members',this)">👥 회원관리</button>
         <button class="admin-topnav-btn" onclick="showAdminTab('addvn',this)">📋 회원등록</button>
         <button class="admin-topnav-btn" onclick="showAdminTab('consult',this)">📞 상담신청</button>
+        <button class="admin-topnav-btn" onclick="showAdminTab('booking',this)">📅 예약관리</button>
         <button id="adminAllmsgsTabBtn" class="admin-topnav-btn" onclick="showAdminTab('allmsgs',this)">🔍 전체쪽지</button>
         <button class="admin-topnav-btn" onclick="showAdminTab('content',this)">✨ 콘텐츠</button>
         <button id="adminBroadcastTabBtn" class="admin-topnav-btn" onclick="showAdminTab('broadcast',this)">📨 전체발송</button>
@@ -4421,6 +4546,7 @@ html.mobile-view .float-btn span{display:none !important}
       <div id="adminTabMembers" class="admin-tab-panel"><div id="adminUserList"></div></div>
       <div id="adminTabAddvn" class="admin-tab-panel" style="display:none"></div>
       <div id="adminTabConsult" class="admin-tab-panel" style="display:none"></div>
+      <div id="adminTabBooking" class="admin-tab-panel" style="display:none"></div>
       <div id="adminTabAllmsgs" class="admin-tab-panel" style="display:none"></div>
       <div id="adminTabContent" class="admin-tab-panel" style="display:none"></div>
       <div id="adminTabBroadcast" class="admin-tab-panel" style="display:none"></div>
@@ -6010,6 +6136,7 @@ function showAdminTab(tab, btn) {
   if (tab==='members') renderAdminMembers();
   else if (tab==='addvn') renderAdminAddVN();
   else if (tab==='consult') renderAdminConsult();
+  else if (tab==='booking') renderAdminBooking();
   else if (tab==='allmsgs') renderAdminAllMsgs();
   else if (tab==='content') renderAdminContent();
   else if (tab==='broadcast') renderAdminBroadcast();
@@ -8785,6 +8912,250 @@ async function adminDeleteMsg(docId) {
     await db.collection('messages').doc(docId).delete();
     renderAdminAllMsgs();
   } catch(e) { alert('삭제 오류: ' + e.message); }
+}
+
+// ─── 상담 예약 시스템 ───
+const BOOK_SLOTS = ['09:00','10:00','11:00','13:00','14:00','15:00','16:00','17:00'];
+let _calYear = 0, _calMonth = 0, _bookDate = '', _bookTime = '', _bookMethod = '';
+let _bookedMap = {};
+
+function switchIqTab(tab, btn) {
+  document.querySelectorAll('.iq-tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('iqPanelBasic').style.display = tab==='basic' ? '' : 'none';
+  document.getElementById('iqPanelBook').style.display  = tab==='book'  ? '' : 'none';
+  if (tab==='book' && !_calYear) initCalendar();
+}
+
+function initCalendar() {
+  const now = new Date();
+  _calYear = now.getFullYear();
+  _calMonth = now.getMonth();
+  loadBookedSlots();
+  renderCalendar();
+}
+
+async function loadBookedSlots() {
+  try {
+    const snap = await db.collection('appointments')
+      .where('status','in',['pending','confirmed'])
+      .get();
+    _bookedMap = {};
+    snap.docs.forEach(d => {
+      const a = d.data();
+      if (!_bookedMap[a.date]) _bookedMap[a.date] = {};
+      _bookedMap[a.date][a.time] = (_bookedMap[a.date][a.time]||0) + 1;
+    });
+    renderCalendar();
+  } catch(e) {}
+}
+
+function renderCalendar() {
+  const el = document.getElementById('calDays');
+  const titleEl = document.getElementById('calTitle');
+  if (!el || !titleEl) return;
+  titleEl.textContent = `${_calYear}년 ${_calMonth+1}월`;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const firstDay = new Date(_calYear, _calMonth, 1).getDay();
+  const daysInMonth = new Date(_calYear, _calMonth+1, 0).getDate();
+  let html = '';
+  for (let i=0;i<firstDay;i++) html += '<div class="cal-day cal-day-empty"></div>';
+  for (let d=1;d<=daysInMonth;d++) {
+    const date = new Date(_calYear, _calMonth, d);
+    const dStr = `${_calYear}-${String(_calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dow = date.getDay();
+    const isSun = dow===0, isSat = dow===6;
+    const isPast = date < today;
+    const isFull = _bookedMap[dStr] && BOOK_SLOTS.every(t=>(_bookedMap[dStr][t]||0)>=2);
+    const isSelected = dStr === _bookDate;
+    const isTodayDay = date.getTime()===today.getTime();
+    let cls = 'cal-day';
+    if (isSun) cls += ' cal-day-sun';
+    else if (isSat) cls += ' cal-day-sat';
+    if (isPast) cls += ' cal-day-past';
+    else if (isFull) cls += ' cal-day-full';
+    if (isSelected) cls += ' selected';
+    if (isTodayDay) cls += ' today';
+    const hasDot = !isPast && _bookedMap[dStr] && Object.keys(_bookedMap[dStr]).length > 0 && !isFull;
+    const dot = hasDot ? '<div class="cal-day-dot"></div>' : '';
+    const clickable = !isPast && !isFull;
+    html += `<div class="${cls}" ${clickable?`onclick="selectCalDay('${dStr}',${d})"`:''}>${d}${dot}</div>`;
+  }
+  el.innerHTML = html;
+}
+
+function calNav(dir) {
+  _calMonth += dir;
+  if (_calMonth > 11) { _calMonth=0; _calYear++; }
+  if (_calMonth < 0)  { _calMonth=11; _calYear--; }
+  renderCalendar();
+}
+
+function selectCalDay(dStr, d) {
+  _bookDate = dStr;
+  _bookTime = ''; _bookMethod = '';
+  document.querySelectorAll('.method-pill').forEach(p=>p.classList.remove('selected'));
+  renderCalendar();
+  const dateLabel = `${_calYear}년 ${_calMonth+1}월 ${d}일`;
+  document.getElementById('bookSelDate').textContent = dateLabel;
+  renderTimeSlots();
+  document.getElementById('bookTimeSection').style.display = '';
+  document.getElementById('bookMethodSection').style.display = 'none';
+  document.getElementById('bookFormSection').style.display = 'none';
+  document.getElementById('bookSuccessMsg').style.display = 'none';
+  document.getElementById('bookTimeSection').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function renderTimeSlots() {
+  const el = document.getElementById('timeSlots');
+  if (!el) return;
+  const dayBooked = _bookedMap[_bookDate] || {};
+  el.innerHTML = BOOK_SLOTS.map(t => {
+    const cnt = dayBooked[t]||0;
+    const full = cnt >= 2;
+    const sel  = t===_bookTime;
+    return `<button class="time-slot-btn${sel?' selected':''}" ${full?'disabled':''} onclick="selectTime('${t}')">
+      ${t}${full?' <span style="font-size:10px;color:#bbb">마감</span>':''}
+    </button>`;
+  }).join('');
+}
+
+function selectTime(t) {
+  _bookTime = t;
+  _bookMethod = '';
+  document.querySelectorAll('.method-pill').forEach(p=>p.classList.remove('selected'));
+  renderTimeSlots();
+  document.getElementById('bookMethodSection').style.display = '';
+  document.getElementById('bookFormSection').style.display = 'none';
+  document.getElementById('bookMethodSection').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function selectMethod(m, btn) {
+  _bookMethod = m;
+  document.querySelectorAll('.method-pill').forEach(p=>p.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateBookSummary();
+  document.getElementById('bookFormSection').style.display = '';
+  if (currentUser) {
+    const nameEl = document.getElementById('bookName');
+    const phoneEl = document.getElementById('bookPhone');
+    if (nameEl && !nameEl.value) nameEl.value = currentUser.name||'';
+    if (phoneEl && !phoneEl.value) phoneEl.value = currentUser.phone||'';
+  }
+  document.getElementById('bookFormSection').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function updateBookSummary() {
+  const el = document.getElementById('bookSummary');
+  if (!el) return;
+  const [y,mo,d] = _bookDate.split('-');
+  const methodIcon = {전화:'📞',카카오:'💛',화상:'🎥',방문:'🏢'};
+  el.innerHTML = `
+    <b>📋 예약 요약</b><br>
+    📅 날짜: <b>${y}년 ${parseInt(mo)}월 ${parseInt(d)}일</b><br>
+    ⏰ 시간: <b>${_bookTime}</b><br>
+    ${methodIcon[_bookMethod]||''} 방법: <b>${_bookMethod} 상담</b>`;
+}
+
+async function submitBooking() {
+  const name  = (document.getElementById('bookName')?.value||'').trim();
+  const phone = (document.getElementById('bookPhone')?.value||'').trim();
+  const msg   = (document.getElementById('bookMsg')?.value||'').trim();
+  if (!_bookDate) { alert('날짜를 선택해 주세요.'); return; }
+  if (!_bookTime) { alert('시간을 선택해 주세요.'); return; }
+  if (!_bookMethod) { alert('상담 방법을 선택해 주세요.'); return; }
+  if (!name) { alert('성함을 입력해 주세요.'); return; }
+  if (!phone) { alert('연락처를 입력해 주세요.'); return; }
+  try {
+    await db.collection('appointments').add({
+      date: _bookDate, time: _bookTime, method: _bookMethod,
+      name, phone, message: msg,
+      email: currentUser?.email||'',
+      status: 'pending',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    document.getElementById('bookFormSection').style.display = 'none';
+    document.getElementById('bookTimeSection').style.display = 'none';
+    document.getElementById('bookMethodSection').style.display = 'none';
+    document.getElementById('bookSuccessMsg').style.display = '';
+    loadBookedSlots();
+  } catch(e) { alert('예약 중 오류: ' + e.message); }
+}
+
+function resetBooking() {
+  _bookDate=''; _bookTime=''; _bookMethod='';
+  document.getElementById('bookSuccessMsg').style.display = 'none';
+  document.getElementById('bookTimeSection').style.display = 'none';
+  document.getElementById('bookMethodSection').style.display = 'none';
+  document.getElementById('bookFormSection').style.display = 'none';
+  document.getElementById('bookName').value = '';
+  document.getElementById('bookPhone').value = '';
+  document.getElementById('bookMsg').value = '';
+  renderCalendar();
+  document.getElementById('iqPanelBook').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ─── 관리자: 예약 관리 탭 ───
+async function renderAdminBooking() {
+  const el = document.getElementById('adminTabBooking');
+  el.innerHTML = '<p style="text-align:center;padding:20px;color:var(--gray)">불러오는 중...</p>';
+  try {
+    const snap = await db.collection('appointments').orderBy('date','asc').orderBy('time','asc').get();
+    if (snap.empty) { el.innerHTML = '<p style="text-align:center;color:var(--gray);padding:30px">예약이 없습니다.</p>'; return; }
+    const bstMap = {pending:'bst-pending',confirmed:'bst-confirmed',completed:'bst-completed',cancelled:'bst-cancelled'};
+    const bstLabel = {pending:'접수',confirmed:'확정',completed:'완료',cancelled:'취소'};
+    const methodIcon = {전화:'📞',카카오:'💛',화상:'🎥',방문:'🏢'};
+    const rows = snap.docs.map(d=>{
+      const a = d.data();
+      const [y,mo,day] = a.date.split('-');
+      const dateLabel = `${y}.${mo}.${day}`;
+      const created = a.createdAt ? new Date(a.createdAt.seconds*1000).toLocaleDateString('ko-KR') : '';
+      return `<tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:10px 8px;font-size:13px;font-weight:700;white-space:nowrap">${dateLabel}</td>
+        <td style="padding:10px 8px;font-size:13px;white-space:nowrap">${a.time}</td>
+        <td style="padding:10px 8px;font-size:13px">${methodIcon[a.method]||''} ${a.method||''}</td>
+        <td style="padding:10px 8px;font-weight:600">${sanitizeText(a.name||'')}</td>
+        <td style="padding:10px 8px">${sanitizeText(a.phone||'')}</td>
+        <td style="padding:10px 8px;max-width:160px;font-size:12px;color:var(--gray)">${sanitizeText((a.message||'').substring(0,40))}${(a.message||'').length>40?'…':''}</td>
+        <td style="padding:10px 8px;font-size:11px;color:var(--gray);white-space:nowrap">${created}</td>
+        <td style="padding:10px 8px">
+          <select onchange="updateBookingStatus('${d.id}',this.value)"
+            style="padding:4px 8px;border:1px solid #ddd;border-radius:6px;font-size:12px;font-family:'Noto Sans KR',sans-serif;background:#fff;cursor:pointer">
+            ${['pending','confirmed','completed','cancelled'].map(s=>
+              `<option value="${s}" ${s===a.status?'selected':''}>${bstLabel[s]}</option>`
+            ).join('')}
+          </select>
+        </td>
+      </tr>`;
+    }).join('');
+    const total = snap.size;
+    const pending = snap.docs.filter(d=>d.data().status==='pending').length;
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+        <h4 style="margin:0">📅 상담 예약 목록</h4>
+        <div style="font-size:13px;color:var(--gray)">전체 ${total}건 · <span style="color:#856404;font-weight:700">접수 ${pending}건</span></div>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:700px">
+          <thead><tr style="background:var(--dark);color:rgba(255,255,255,0.7)">
+            <th style="padding:10px 8px;text-align:left;font-size:11px;white-space:nowrap">날짜</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px">시간</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px">방법</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px">성함</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px">연락처</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px">내용</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px">신청일</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px">상태</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  } catch(e) { el.innerHTML = `<p style="color:red;padding:20px">오류: ${e.message}</p>`; }
+}
+
+async function updateBookingStatus(docId, status) {
+  try { await db.collection('appointments').doc(docId).update({ status }); }
+  catch(e) { alert('상태 변경 오류: ' + e.message); }
 }
 
 // ─── 관리자: 상담 신청 탭 ───

@@ -261,6 +261,19 @@ service cloud.firestore {
     }
 
     // ═══════════════════════════════════════
+    // 상담 예약 (날짜/시간 선택)
+    // ═══════════════════════════════════════
+    match /appointments/{docId} {
+      allow create: if request.resource.data.keys().hasAll(['date','time','method','name','phone','status'])
+                    && request.resource.data.status == 'pending';
+      allow read: if true;
+      allow update: if request.auth != null
+                    && get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.memberType in ['admin','manager','vn_manager'];
+      allow delete: if request.auth != null
+                    && get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.memberType in ['admin','manager'];
+    }
+
+    // ═══════════════════════════════════════
     // 블로그 (관리자·매니저만 쓰기)
     // ═══════════════════════════════════════
     match /blog_posts/{postId} {
