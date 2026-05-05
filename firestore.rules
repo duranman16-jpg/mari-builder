@@ -261,6 +261,17 @@ service cloud.firestore {
     }
 
     // ═══════════════════════════════════════
+    // 블로그 (관리자·매니저만 쓰기)
+    // ═══════════════════════════════════════
+    match /blog_posts/{postId} {
+      allow read: if true;
+      allow create, update: if request.auth != null
+                            && get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.memberType in ['admin','manager'];
+      allow delete: if request.auth != null
+                    && get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.memberType in ['admin','manager'];
+    }
+
+    // ═══════════════════════════════════════
     // 성공사례 / FAQ
     // ═══════════════════════════════════════
     match /success_stories/{docId} {
