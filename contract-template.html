@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>국제결혼중개 서비스 이용계약서 — 마리국제결혼</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', '맑은 고딕', Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.8;
+    color: #1a1a1a;
+    background: #fff;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 18mm 20mm 18mm 20mm;
+    background: #fff;
+  }
+
+  /* ── 표지 헤더 ── */
+  .doc-header {
+    border-top: 4px solid #C8102E;
+    padding-top: 12px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    font-size: 13pt;
+    font-weight: 900;
+    color: #C8102E;
+    letter-spacing: -0.5px;
+  }
+  .brand-sub {
+    font-size: 9pt;
+    color: #888;
+    margin-top: 2px;
+  }
+  .doc-badge {
+    font-size: 8pt;
+    color: #888;
+    border: 1px solid #ddd;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-align: right;
+  }
+
+  /* ── 제목 ── */
+  .doc-title {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .doc-title h1 {
+    font-size: 18pt;
+    font-weight: 900;
+    color: #1a1a1a;
+    letter-spacing: -1px;
+    line-height: 1.3;
+  }
+  .doc-title p {
+    font-size: 9pt;
+    color: #888;
+    margin-top: 4px;
+  }
+  .title-divider {
+    border: none;
+    border-top: 2px solid #C8102E;
+    margin: 14px 0 20px;
+  }
+
+  /* ── 당사자 박스 ── */
+  .parties-box {
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .parties-box-title {
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 9.5pt;
+    font-weight: 700;
+    padding: 7px 14px;
+  }
+  .parties-body {
+    padding: 12px 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .party-block {
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 10px 12px;
+  }
+  .party-label {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #C8102E;
+    margin-bottom: 6px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 4px;
+  }
+  .party-row {
+    display: flex;
+    font-size: 9pt;
+    margin-bottom: 3px;
+  }
+  .party-key {
+    color: #888;
+    min-width: 70px;
+    flex-shrink: 0;
+  }
+  .party-val {
+    color: #1a1a1a;
+    font-weight: 500;
+    border-bottom: 1px solid #ccc;
+    flex: 1;
+    min-height: 16px;
+  }
+
+  /* ── 조항 ── */
+  .article {
+    margin-bottom: 18px;
+    page-break-inside: avoid;
+  }
+  .article-title {
+    font-size: 11pt;
+    font-weight: 900;
+    color: #1a1a1a;
+    background: #f5f5f5;
+    padding: 6px 12px;
+    border-left: 4px solid #C8102E;
+    margin-bottom: 8px;
+  }
+  .article-body {
+    padding: 0 4px;
+  }
+  .article-sub {
+    font-size: 10pt;
+    font-weight: 700;
+    color: #333;
+    margin: 10px 0 5px;
+  }
+
+  ol.main-list {
+    padding-left: 20px;
+    margin: 4px 0;
+  }
+  ol.main-list li {
+    font-size: 10pt;
+    margin-bottom: 4px;
+    line-height: 1.7;
+  }
+  ul.sub-list {
+    list-style: none;
+    padding-left: 10px;
+    margin: 4px 0;
+  }
+  ul.sub-list li::before {
+    content: "- ";
+    color: #C8102E;
+  }
+  ul.sub-list li {
+    font-size: 9.5pt;
+    margin-bottom: 3px;
+    color: #333;
+  }
+
+  /* ── 표 ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    margin: 8px 0;
+  }
+  th {
+    background: #1a1a1a;
+    color: rgba(255,255,255,0.85);
+    padding: 7px 10px;
+    font-weight: 600;
+    text-align: left;
+    font-size: 9pt;
+  }
+  td {
+    padding: 7px 10px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #fafafa; }
+  .td-amt { text-align: right; font-weight: 700; }
+  .td-center { text-align: center; }
+
+  /* ── 경고 박스 ── */
+  .warn-box {
+    background: #fff8f8;
+    border: 1.5px solid rgba(200,16,46,0.25);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 9.5pt;
+    color: #555;
+    line-height: 1.7;
+  }
+  .warn-box strong {
+    color: #C8102E;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .info-box {
+    background: #f0f8ff;
+    border: 1px solid #b8d4f0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-size: 9.5pt;
+    color: #333;
+    line-height: 1.7;
+  }
+  .info-box strong { color: #1A4B8B; }
+
+  /* ── 체크리스트 ── */
+  .checklist {
+    list-style: none;
+    padding-left: 4px;
+    margin: 6px 0;
+  }
+  .checklist li {
+    font-size: 9.5pt;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.6;
+  }
+  .chk-box {
+    width: 13px;
+    height: 13px;
+    border: 1.5px solid #999;
+    display: inline-block;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── 서명란 ── */
+  .sign-section {
+    margin-top: 28px;
+    border-top: 2px solid #1a1a1a;
+    padding-top: 16px;
+    page-break-inside: avoid;
+  }
+  .sign-date {
+    text-align: center;
+    font-size: 12pt;
+    font-weight: 700;
+    margin-bottom: 24px;
+    letter-spacing: 2px;
+  }
+  .sign-date span {
+    border-bottom: 2px solid #1a1a1a;
+    padding: 0 20px;
+    margin: 0 4px;
+  }
+  .sign-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .sign-block {
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .sign-role {
+    font-size: 9pt;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .sign-name {
+    font-size: 12pt;
+    font-weight: 900;
+    margin-bottom: 40px;
+  }
+  .sign-line {
+    border-top: 1.5px solid #999;
+    padding-top: 4px;
+    font-size: 8.5pt;
+    color: #aaa;
+  }
+  .seal-area {
+    font-size: 8pt;
+    color: #bbb;
+    float: right;
+    margin-top: -36px;
+    margin-right: 8px;
+    border: 1px dashed #ccc;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  /* ── 하단 고지 ── */
+  .footer-note {
+    margin-top: 20px;
+    padding: 10px 14px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    font-size: 8.5pt;
+    color: #888;
+    line-height: 1.7;
+  }
+
+  /* ── 페이지 구분선 ── */
+  .page-break { page-break-before: always; }
+  .section-gap { margin-top: 20px; }
+
+  /* ── 인쇄 설정 ── */
+  @media print {
+    body { background: #fff; }
+    .page {
+      width: 100%;
+      padding: 15mm 18mm;
+      margin: 0;
+    }
+    .article { page-break-inside: avoid; }
+    .sign-section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- 헤더 -->
+  <div class="doc-header">
+    <div>
+      <div class="brand">마리국제결혼 MARI International Marriage</div>
+      <div class="brand-sub">결혼중개업 등록번호: 제○○-○○○호 | 대표: ○○○</div>
+    </div>
+    <div class="doc-badge">
+      결혼중개업의 관리에 관한<br>법률 제12조 준거 계약서<br>공정위 표준약관 제10065호 참조
+    </div>
+  </div>
+
+  <!-- 제목 -->
+  <div class="doc-title">
+    <h1>국제결혼중개 서비스 이용계약서</h1>
+    <p>International Marriage Agency Service Agreement</p>
+  </div>
+  <hr class="title-divider">
+
+  <!-- 계약 당사자 -->
+  <div class="parties-box">
+    <div class="parties-box-title">▶ 계약 당사자</div>
+    <div class="parties-body">
+      <div class="party-block">
+        <div class="party-label">【 중개업체 】</div>
+        <div class="party-row"><span class="party-key">상 호</span><span class="party-val">마리국제결혼</span></div>
+        <div class="party-row"><span class="party-key">대 표 자</span><span class="party-val">&nbsp;</span></div>
+        <div class="party-row"><span class="party-key">등록번호</span><span class="party-val">&nbsp;</span></div>
+        <div class="party-row"><span class="party-key">주 소</span><span class="party-val">부산시 ○○구 ○○로</span></div>
+        <div class="party-row"><span class="party-key">연락처</span><span class="party-val">051-000-0000</span></div>
+      </div>
+      <div class="party-block">
+        <div class="party-label">【 의뢰인 (남성 회원) 】</div>
+        <div class="party-row"><span class="party-key">성 명</span><span class="party-val">&nbsp;</span></div>
+        <div class="party-row"><span class="party-key">생년월일</span><span class="party-val">&nbsp;</span></div>
+        <div class="party-row"><span class="party-key">연락처</span><span class="party-val">&nbsp;</span></div>
+        <div class="party-row"><span class="party-key">주 소</span><span class="party-val">&nbsp;</span></div>
+        <div class="party-row"><span class="party-key">혼인경력</span><span class="party-val">&nbsp;</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 제1조 -->
+  <div class="article">
+    <div class="article-title">제1조 (서비스 범위 및 업무 한계)</div>
+    <div class="article-body">
+      <div class="article-sub">① 업체가 제공하는 서비스</div>
+      <ol class="main-list">
+        <li>베트남 현지 여성 회원 신상정보 제공 및 소개</li>
+        <li>상견례 주선 및 현지 방문 일정 지원</li>
+        <li>결혼 성사 후 결혼식 진행 지원</li>
+        <li>베트남 현지 혼인신고 및 한국 혼인신고 서류 안내</li>
+        <li>배우자 초청 비자(F-6) 서류 준비 안내</li>
+      </ol>
+      <div class="article-sub">② 서비스 종료 시점</div>
+      <div class="warn-box">
+        <strong>⚠ 핵심 조항</strong>
+        업체의 중개 의무는 <u>혼인신고 완료 시점</u>에 종결됩니다. 이후 발생하는 모든 부부간 문제, 생활 갈등, 법적 분쟁은 업체의 서비스 범위 밖이며 어떠한 책임도 지지 않습니다.
+      </div>
+      <div class="article-sub">③ 서비스 제외 범위 (업체 무책임 사항)</div>
+      <ul class="sub-list">
+        <li>혼인신고 완료 이후 발생하는 모든 부부간 문제</li>
+        <li>입국 후 배우자의 가출·잠적·이혼 요구</li>
+        <li>성격 차이, 문화 차이, 생활방식으로 인한 갈등</li>
+        <li>배우자의 한국 내 취업·경제활동 관련 문제</li>
+        <li>배우자가 취득한 체류자격·국적 관련 사항</li>
+        <li>배우자 가족(처가)과의 금전 분쟁</li>
+        <li>이혼 소송, 위자료, 재산분할 등 법적 절차 일체</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 제2조 -->
+  <div class="article">
+    <div class="article-title">제2조 (업체의 의무)</div>
+    <div class="article-body">
+      <ol class="main-list">
+        <li><strong>신상정보 제공 의무:</strong> 소개 전 상대방 여성 회원의 신상정보(이름·생년월일·국적·직업·결혼 경력·건강 상태)를 공증·인증된 서면으로 제공합니다.</li>
+        <li><strong>통역 제공:</strong> 상견례 및 주요 상담 시 통역을 제공합니다.</li>
+        <li><strong>거짓 정보 금지:</strong> 업체는 허위 신상정보를 제공하지 않으며, 확인 가능한 범위에서 정보의 진실성을 검증합니다.</li>
+        <li><strong>비밀 보장:</strong> 의뢰인의 개인정보를 제3자에게 무단 제공하지 않습니다.</li>
+        <li><strong>보증보험 가입:</strong> 소비자 피해 보상을 위한 보증보험 가입을 유지합니다.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 제3조 -->
+  <div class="article">
+    <div class="article-title">제3조 (의뢰인의 의무)</div>
+    <div class="article-body">
+      <ol class="main-list">
+        <li><strong>정확한 정보 제공:</strong> 의뢰인은 자신의 신상정보(혼인 경력·건강 상태·직업·재산)를 정확하게 제공해야 합니다. <u>허위 정보 제공 시 계약은 즉시 해지되며 환불 없이 이용료 전액이 몰취됩니다.</u></li>
+        <li><strong>진정한 혼인 의사:</strong> 의뢰인은 진정한 혼인 의사를 가지고 서비스를 이용해야 합니다.</li>
+        <li><strong>비용 납부:</strong> 제4조에 따른 비용을 약정 시기에 납부해야 합니다.</li>
+        <li><strong>법령 준수:</strong> 출입국관리법, 혼인 관련 법령 등 국내외 관련 법령을 준수할 의무가 있습니다.</li>
+        <li><strong>업체 안내 협조:</strong> 서류 준비, 방문 일정 등 서비스 진행을 위한 업체의 안내에 협조해야 합니다.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 제4조 -->
+  <div class="article">
+    <div class="article-title">제4조 (서비스 비용)</div>
+    <div class="article-body">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:40%">항목</th>
+            <th style="width:30%">금액 (원)</th>
+            <th style="width:30%">납부 시기</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>가입비 (서비스 개시)</td><td class="td-amt">&nbsp;</td><td>계약 체결 시</td></tr>
+          <tr><td>현지 방문비</td><td class="td-amt">&nbsp;</td><td>방문 출발 전</td></tr>
+          <tr><td>결혼 성사비</td><td class="td-amt">&nbsp;</td><td>결혼식 일주일 전</td></tr>
+          <tr><td>비자 서류 지원비</td><td class="td-amt">&nbsp;</td><td>비자 신청 시</td></tr>
+          <tr><td><strong>합 계</strong></td><td class="td-amt"><strong>&nbsp;</strong></td><td>&nbsp;</td></tr>
+        </tbody>
+      </table>
+      <div class="info-box" style="margin-top:6px; font-size:8.5pt;">
+        ※ 현지 항공료·숙박비·통역비 포함 여부: <strong>포함 □ / 별도 □</strong> (해당 항목에 ✓ 표시)
+      </div>
+    </div>
+  </div>
+
+  <!-- 제5조 -->
+  <div class="article">
+    <div class="article-title">제5조 (계약 해지 및 환불 기준)</div>
+    <div class="article-body">
+      <div class="article-sub">① 의뢰인 귀책 해지</div>
+      <table>
+        <thead>
+          <tr><th>해지 시점</th><th>환불 기준</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>가입 후 7일 이내 (서비스 미제공)</td><td>전액 환불</td></tr>
+          <tr><td>신상정보 제공 후 ~ 현지 방문 전</td><td>가입비의 50% 환불</td></tr>
+          <tr><td>현지 방문 후 ~ 결혼식 전</td><td>가입비 환불 불가 / 방문비 30% 환불</td></tr>
+          <tr><td>결혼식 완료 후</td><td>환불 불가</td></tr>
+        </tbody>
+      </table>
+      <div class="article-sub">② 업체 귀책 해지</div>
+      <p style="font-size:10pt; margin-bottom:6px;">업체의 귀책(허위 정보 제공·서비스 불이행 등)으로 계약이 해지될 경우, 납부한 금액 전액 및 피해액의 20%를 추가 배상합니다.</p>
+      <div class="article-sub">③ 환불 불가 사유 (명시적 제외)</div>
+      <ul class="sub-list">
+        <li>결혼 후 배우자의 귀책으로 인한 이혼</li>
+        <li>배우자의 가출·잠적</li>
+        <li>배우자의 한국 국적 취득 후 이혼</li>
+        <li>성격·문화 차이로 인한 이혼</li>
+        <li>의뢰인 개인의 단순 변심</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- 제6조 -->
+  <div class="article">
+    <div class="article-title">제6조 (상대방 회원 신원 확인 범위 및 한계)</div>
+    <div class="article-body">
+      <div class="article-sub">① 업체의 확인 범위</div>
+      <ol class="main-list">
+        <li>기본 신상정보 (이름·생년월일·주민등록 상당 서류)</li>
+        <li>혼인 경력 (공적 서류 기준)</li>
+        <li>학력·직업 (제출 서류 기준)</li>
+        <li>건강진단서 (제공한 경우에 한함)</li>
+      </ol>
+      <div class="article-sub">② 확인 한계 및 면책 사항</div>
+      <div class="warn-box">
+        <strong>⚠ 법적 면책 고지 — 의뢰인은 아래 내용을 반드시 숙지하십시오</strong>
+        아래 사항은 현실적·법적으로 확인이 불가능하며, 이로 인한 피해에 대해 업체는 법적 책임을 지지 않습니다.
+      </div>
+      <ul class="sub-list">
+        <li>상대방의 진정한 결혼 의사 여부 (본인의 내심(內心)에 해당)</li>
+        <li>상대방의 한국 국적 취득 후 이혼 계획 여부</li>
+        <li>상대방의 유흥업소 취업 의도 여부</li>
+        <li>상대방의 경제적 목적(취업·송금) 위장결혼 의도 여부</li>
+        <li>상대방 가족의 금전 요구 의도 여부</li>
+        <li>혼인 후 가출·연락 두절 가능성</li>
+        <li>상대방이 마음먹고 제공한 허위·위장 정보</li>
+      </ul>
+      <div class="info-box" style="margin-top:6px;">
+        <strong>※ 안내:</strong> 국제결혼 특성상 상대방의 내적 동기를 완벽히 검증하는 것은 법적·현실적으로 불가능합니다. 업체는 공적 서류로 확인 가능한 범위에서 최선을 다하지만, 상대방이 의도적으로 정보를 은닉하거나 위장할 경우 업체의 귀책으로 보지 않습니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- 제7조 -->
+  <div class="article">
+    <div class="article-title">제7조 (업체의 면책 조항)</div>
+    <div class="article-body">
+      <p style="font-size:10pt; margin-bottom:6px;">다음 사유로 발생한 손해에 대해 업체는 배상 책임을 지지 않습니다.</p>
+      <ol class="main-list">
+        <li><strong>배우자의 개인적 귀책:</strong> 상대방의 가출, 외도, 가정폭력, 알코올·도박 문제 등</li>
+        <li><strong>입국 후 태도 변화:</strong> 입국 후 생활방식·성격이 소개 당시와 달라지는 경우</li>
+        <li><strong>법적 절차 관련:</strong> 이혼, 양육권, 재산분할 등 가사 소송 관련 일체</li>
+        <li><strong>체류자격 문제:</strong> 배우자의 불법 취업, 체류자격 위반, 강제출국 등</li>
+        <li><strong>제3자 문제:</strong> 처가 측의 금전 요구, 사기, 압박 등</li>
+        <li><strong>천재지변·불가항력:</strong> 감염병, 자연재해, 전쟁 등으로 인한 일정 차질</li>
+        <li><strong>의뢰인 귀책:</strong> 의뢰인의 허위 정보 제공, 법령 위반, 폭력 행위 등</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 제8조 -->
+  <div class="article">
+    <div class="article-title">제8조 (특약사항 — 사회적 위험 대응 고지)</div>
+    <div class="article-body">
+      <p style="font-size:10pt; margin-bottom:8px;">업체는 의뢰인의 피해를 최소화하기 위해 아래 사항을 권고하며, 의뢰인은 이를 충분히 인지하고 서명합니다.</p>
+      <div class="article-sub">① 의뢰인 필수 확인 사항 (해당 항목에 ✓)</div>
+      <ul class="checklist">
+        <li><span class="chk-box"></span>결혼 전 상대방에게 <strong>과도한 금전 지원 금지</strong> (처가 요구 포함)함을 인지하였습니다.</li>
+        <li><span class="chk-box"></span>혼인신고 전 <strong>재산 증여·명의이전 절대 금지</strong>함을 인지하였습니다.</li>
+        <li><span class="chk-box"></span><strong>배우자 명의 금융 거래·대출</strong>을 허용하지 않겠습니다.</li>
+        <li><span class="chk-box"></span>입국 후 배우자의 이상 행동(잦은 외출, 연락 두절, 금전 요구) 발생 시 즉시 <strong>법률 전문가에게 상담</strong>함을 인지하였습니다.</li>
+        <li><span class="chk-box"></span>업체의 서비스 범위가 <strong>혼인신고 완료까지</strong>임을 충분히 이해하였습니다.</li>
+        <li><span class="chk-box"></span>결혼 후 발생하는 <strong>부부간 갈등·이혼 문제는 업체에 귀책이 없음</strong>을 인지하였습니다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 제9조 -->
+  <div class="article">
+    <div class="article-title">제9조 (개인정보 처리)</div>
+    <div class="article-body">
+      <ol class="main-list">
+        <li>업체는 의뢰인의 개인정보를 서비스 제공 목적으로만 사용합니다.</li>
+        <li>계약 종료 후 5년간 관련 서류를 보존하며, 이후 파기합니다.</li>
+        <li>의뢰인은 개인정보 열람·수정·삭제를 요청할 권리가 있습니다.</li>
+        <li>개인정보는 제3자(상대방 회원 제외)에게 무단 제공하지 않습니다.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 제10조 -->
+  <div class="article">
+    <div class="article-title">제10조 (분쟁 해결)</div>
+    <div class="article-body">
+      <ol class="main-list">
+        <li>본 계약에 관한 분쟁은 우선 당사자 간 협의로 해결합니다.</li>
+        <li>협의가 이루어지지 않을 경우 한국소비자원 분쟁조정 또는 관할 법원의 조정을 신청합니다.</li>
+        <li>소송이 필요한 경우 업체 소재지 관할 법원을 제1심 법원으로 합니다.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 제11조 -->
+  <div class="article">
+    <div class="article-title">제11조 (계약의 효력 및 보관)</div>
+    <div class="article-body">
+      <ol class="main-list">
+        <li>본 계약서는 양 당사자가 서명한 날로부터 효력이 발생합니다.</li>
+        <li>계약서 원본은 2부 작성하여 업체와 의뢰인이 각 1부씩 보관합니다.</li>
+        <li>본 계약에 명시되지 않은 사항은 <strong>결혼중개업의 관리에 관한 법률</strong> 및 관계 법령을 따릅니다.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 서명란 -->
+  <div class="sign-section">
+    <div class="sign-date">
+      20 <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> 년 &nbsp;
+      <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> 월 &nbsp;
+      <span>&nbsp;&nbsp;&nbsp;&nbsp;</span> 일
+    </div>
+    <div class="sign-grid">
+      <div class="sign-block">
+        <div class="sign-role">중개업체</div>
+        <div class="sign-name">마리국제결혼 대표 &nbsp; ○○○</div>
+        <div class="sign-line">서명 / 날인</div>
+        <div class="seal-area">인</div>
+      </div>
+      <div class="sign-block">
+        <div class="sign-role">의뢰인</div>
+        <div class="sign-name">&nbsp;</div>
+        <div class="sign-line">성명 자필 서명</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 하단 고지 -->
+  <div class="footer-note">
+    ※ 본 계약서는 「결혼중개업의 관리에 관한 법률」 및 공정거래위원회 표준약관(제10065호)을 참조하여 작성되었습니다.
+    실제 사용 전 반드시 법률 전문가(변호사·법무사)의 검토를 받으시기 바랍니다.
+    여성가족부 등록 업체 요건 및 지방자치단체 신고 사항을 사전에 확인하시기 바랍니다.
+  </div>
+
+</div>
+</body>
+</html>
