@@ -76,6 +76,13 @@ service cloud.firestore {
     }
 
     // ═══════════════════════════════════════
+    // KCP 본인인증 임시 토큰 (Cloud Function Admin SDK 전용)
+    // ═══════════════════════════════════════
+    match /kcpTemp/{token} {
+      allow read, write: if false;
+    }
+
+    // ═══════════════════════════════════════
     // AI 이미지 (Cloud Function에서만 생성)
     // ═══════════════════════════════════════
     match /ai_images/{imgId} {

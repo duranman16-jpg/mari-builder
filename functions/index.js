@@ -3,6 +3,10 @@ const admin = require('firebase-admin');
 const { OpenAI } = require('openai');
 const axios = require('axios');
 const nodemailer = require('nodemailer');
+const { execFileSync } = require('child_process');
+const crypto = require('crypto');
+const path = require('path');
+const fs = require('fs');
 
 admin.initializeApp();
 console.log('Functions module loaded v2');
@@ -316,6 +320,124 @@ exports.notifyConsultation = functions
     }
     return { success: true };
   });
+
+// ─── KCP 본인인증 ───
+const KCP_SITE_CD = 'SM1SQ';
+const KCP_BIN_PATH = path.join(__dirname, 'kcp/bin/ct_cli_x64');
+const KCP_CERT_URL = 'https://cert.kcp.co.kr/kcp_cert/cert_view.jsp';
+const KCP_CALLBACK_URL = 'https://marivnkr.com/api/kcpCallback';
+
+let _kcpBinReady = false;
+function kcpEnsureBin() {
+  if (!_kcpBinReady) {
+    try { fs.chmodSync(KCP_BIN_PATH, 0o755); } catch(e) {}
+    _kcpBinReady = true;
+  }
+}
+function kcpMakeHash(str) {
+  kcpEnsureBin();
+  try { return execFileSync(KCP_BIN_PATH, ['lf_CT_CLI__make_hash_data', str], { timeout: 5000 }).toString().trim(); }
+  catch(e) { return 'HS01'; }
+}
+function kcpCheckHash(hashData, str) {
+  kcpEnsureBin();
+  try { return execFileSync(KCP_BIN_PATH, ['lf_CT_CLI__check_valid_hash', hashData, str], { timeout: 5000 }).toString().trim() === '1'; }
+  catch(e) { return false; }
+}
+function kcpDecrypt(sitecd, certNo, encCertData) {
+  kcpEnsureBin();
+  try {
+    const raw = execFileSync(KCP_BIN_PATH, ['lf_CT_CLI__decrypt_enc_cert', sitecd, certNo, encCertData, '1'], { timeout: 5000 }).toString().trim();
+    const data = {};
+    raw.split(String.fromCharCode(31)).forEach(p => {
+      const idx = p.indexOf('=');
+      if (idx > 0) data[p.substring(0, idx)] = decodeURIComponent(p.substring(idx + 1).replace(/\+/g, ' '));
+    });
+    return data;
+  } catch(e) { return null; }
+}
+
+const _kcpCors = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+exports.kcpHashGen = functions.region('us-central1').https.onRequest((req, res) => {
+  Object.entries(_kcpCors).forEach(([k, v]) => res.set(k, v));
+  if (req.method === 'OPTIONS') { res.status(204).send(''); return; }
+  const ordr_idxx = Date.now().toString(36) + crypto.randomBytes(4).toString('hex');
+  const up_hash = kcpMakeHash(KCP_SITE_CD + ordr_idxx + '000000');
+  res.json({ ordr_idxx, up_hash, site_cd: KCP_SITE_CD, cert_url: KCP_CERT_URL, ret_url: KCP_CALLBACK_URL });
+});
+
+exports.kcpCallback = functions.region('us-central1').https.onRequest(async (req, res) => {
+  if (req.method !== 'POST') { res.status(405).send('Method Not Allowed'); return; }
+  const { res_cd, cert_enc_use, cert_no, enc_cert_data, site_cd, ordr_idxx, dn_hash } = req.body || {};
+  const sendHtml = html => { res.set('Content-Type', 'text/html; charset=utf-8'); res.send(html); };
+
+  if (cert_enc_use !== 'Y' || res_cd !== '0000') {
+    sendHtml(kcpPopupHtml(null, '인증이 취소되었습니다.')); return;
+  }
+  if (!kcpCheckHash(dn_hash, site_cd + ordr_idxx + cert_no)) {
+    sendHtml(kcpPopupHtml(null, '보안 검증에 실패했습니다.')); return;
+  }
+  const certData = kcpDecrypt(site_cd, cert_no, enc_cert_data);
+  if (!certData || !certData.phone_no) {
+    sendHtml(kcpPopupHtml(null, '인증 데이터를 처리할 수 없습니다.')); return;
+  }
+
+  const { user_name, phone_no, birth_day, sex_code, ci } = certData;
+
+  // 중복 가입 확인 (CI 기반)
+  const dupInfo = crypto.createHash('md5').update(ci + ci).digest('hex');
+  const dupSnap = await admin.firestore().collection('users').where('dupInfo', '==', dupInfo).limit(1).get();
+  if (!dupSnap.empty) { sendHtml(kcpPopupHtml(null, '이미 가입된 본인인증 정보입니다.')); return; }
+
+  // 전화번호 중복 확인
+  const phoneDigits = phone_no.replace(/[^0-9]/g, '');
+  const phoneDash = phoneDigits.replace(/^(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3');
+  const [p1, p2] = await Promise.all([
+    admin.firestore().collection('users').where('phone', '==', phoneDigits).limit(1).get(),
+    admin.firestore().collection('users').where('phone', '==', phoneDash).limit(1).get(),
+  ]);
+  if (!p1.empty || !p2.empty) { sendHtml(kcpPopupHtml(null, '이미 가입된 전화번호입니다.')); return; }
+
+  const token = crypto.randomBytes(20).toString('hex');
+  await admin.firestore().collection('kcpTemp').doc(token).set({
+    name: user_name, phone: phone_no, birth: birth_day, sex: sex_code, dupInfo,
+    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    expiresAt: admin.firestore.Timestamp.fromDate(new Date(Date.now() + 10 * 60 * 1000)),
+  });
+  sendHtml(kcpPopupHtml(token, null));
+});
+
+exports.kcpGetResult = functions.region('us-central1').https.onRequest(async (req, res) => {
+  Object.entries(_kcpCors).forEach(([k, v]) => res.set(k, v));
+  if (req.method === 'OPTIONS') { res.status(204).send(''); return; }
+  const { token } = req.query;
+  if (!token) { res.status(400).json({ error: '토큰이 없습니다.' }); return; }
+  const snap = await admin.firestore().collection('kcpTemp').doc(token).get();
+  if (!snap.exists) { res.status(404).json({ error: '인증 정보를 찾을 수 없습니다.' }); return; }
+  const data = snap.data();
+  if (data.expiresAt.toDate() < new Date()) {
+    await admin.firestore().collection('kcpTemp').doc(token).delete();
+    res.status(410).json({ error: '인증이 만료되었습니다. 다시 시도해주세요.' }); return;
+  }
+  await admin.firestore().collection('kcpTemp').doc(token).delete();
+  res.json({ name: data.name, phone: data.phone, birth: data.birth, sex: data.sex, dupInfo: data.dupInfo });
+});
+
+function kcpPopupHtml(token, errorMsg) {
+  if (errorMsg) {
+    return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"></head><body>
+<script>try{window.opener&&window.opener.kcpFailed(${JSON.stringify(errorMsg)});}catch(e){}
+alert(${JSON.stringify(errorMsg)});window.close();<\/script></body></html>`;
+  }
+  return `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"></head><body>
+<script>try{window.opener&&window.opener.kcpVerified(${JSON.stringify(token)});}catch(e){}
+window.close();<\/script></body></html>`;
+}
 
 // ─── 관리자 회원 직접 등록 (Cloud Function — 권한 상승 방지) ───
 exports.createAdminUser = functions
