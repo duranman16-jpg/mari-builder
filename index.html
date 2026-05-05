@@ -4018,7 +4018,7 @@ function showPage(page) {
 
   window.scrollTo(0, 0);
 
-  if (page === 'home') { renderHomeProfiles(); initHomeStoryCarousel(); }
+  if (page === 'home') { renderHomeProfiles(); initHomeStoryCarousel(); initHomeLifePreview(); }
   if (page.startsWith('board-')) renderBoards();
   if (page === 'messages') loadMessages(currentMsgTab);
   if (page === 'success') renderSuccessStories();
@@ -7022,17 +7022,22 @@ function updateHomeLifeCards() {
 }
 
 function initHomeLifePreview() {
-  if (homeLifeListener) return;
+  if (homeLifeListener) { updateHomeLifeCards(); return; }
+  const onErr = e => {
+    console.warn('[homeLife]', e.code, e.message);
+    const el = document.getElementById('homeLifePreview');
+    if (el) el.innerHTML = '<div style="padding:32px;color:var(--gray);font-size:14px">게시물을 불러올 수 없습니다.</div>';
+  };
   homeLifeListener = db.collection('posts_vn_life').orderBy('createdAt','desc').limit(5)
     .onSnapshot(snap => {
       homeVnPosts = snap.docs.map(d=>({id:d.id,...d.data(),_col:'posts_vn_life'}));
       updateHomeLifeCards();
-    }, ()=>{});
+    }, onErr);
   homeLifeListenerKr = db.collection('posts_kr_life').orderBy('createdAt','desc').limit(5)
     .onSnapshot(snap => {
       homeKrPosts = snap.docs.map(d=>({id:d.id,...d.data(),_col:'posts_kr_life'}));
       updateHomeLifeCards();
-    }, ()=>{});
+    }, onErr);
 }
 
 // ─── 캐러셀 제어 ───
@@ -8539,22 +8544,24 @@ function toggleMobileView() {
 (async function() {
   const initPath = (location.pathname.replace(/^\//, '') || location.hash.replace(/^#/, '')) || 'home';
   loadForbiddenWords();
-  if (initPath.startsWith('write/')) {
-    initWriteTab(initPath.split('/')[1]);
-  } else {
-    updateAuthUI();
-    renderHomeProfiles();
-    initHomeStoryCarousel();
-    initHomeLifePreview();
-    currentPage = '';
-    if (initPath.startsWith('post/')) {
-      const parts = initPath.split('/');
-      currentPostCol = parts[1]; currentPostId = parts[2];
-      currentBoardPage = boardPages[parts[1]] || 'home';
-      showPostPage(parts[1], parts[2]);
+  try {
+    if (initPath.startsWith('write/')) {
+      initWriteTab(initPath.split('/')[1]);
     } else {
-      showPage(initPath === '' ? 'home' : initPath);
+      try { updateAuthUI(); } catch(e) { console.error('[updateAuthUI]', e); }
+      currentPage = '';
+      if (initPath.startsWith('post/')) {
+        const parts = initPath.split('/');
+        currentPostCol = parts[1]; currentPostId = parts[2];
+        currentBoardPage = boardPages[parts[1]] || 'home';
+        showPostPage(parts[1], parts[2]);
+      } else {
+        showPage(initPath === '' ? 'home' : initPath);
+      }
     }
+  } catch(e) {
+    console.error('[초기화 오류]', e);
+    try { currentPage = ''; showPage('home'); } catch(e2) {}
   }
 })();
 
