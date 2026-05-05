@@ -1456,6 +1456,29 @@ html.mobile-view .float-btn span{display:none !important}
 .vni-check-item input[type=checkbox]{cursor:pointer;width:16px;height:16px;flex-shrink:0;accent-color:var(--red)}
 @media(max-width:860px){.vni-info-grid{grid-template-columns:1fr}.vni-culture-grid{grid-template-columns:1fr}.vni-checklist-sections{grid-template-columns:1fr}.vni-tab-bar{top:92px}}
 @media(max-width:600px){.vni-tab-bar{top:56px}}
+/* ─── 포인트·레벨 뱃지 ─── */
+.lv-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;color:#fff;vertical-align:middle;margin-left:4px;line-height:1.6;flex-shrink:0}
+/* ─── 매니저 팀 소개 ─── */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:28px;padding:40px 7%;max-width:1100px;margin:0 auto}
+.team-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.07);transition:.3s;border:1.5px solid rgba(0,0,0,0.06)}
+.team-card:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(0,0,0,0.12)}
+.team-card-top{background:linear-gradient(135deg,var(--red),var(--gold));padding:32px 20px 20px;text-align:center;position:relative}
+.team-card-top.vn{background:linear-gradient(135deg,#006400,#228B22)}
+.team-card-avatar{width:88px;height:88px;border-radius:50%;border:3px solid rgba(255,255,255,0.8);object-fit:cover;display:block;margin:0 auto 12px}
+.team-card-avatar-init{width:88px;height:88px;border-radius:50%;border:3px solid rgba(255,255,255,0.8);background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:32px;color:#fff;margin:0 auto 12px}
+.team-card-name{font-size:1.1rem;font-weight:800;color:#fff;margin:0 0 4px}
+.team-card-role{font-size:12px;font-weight:600;color:rgba(255,255,255,0.85);background:rgba(0,0,0,0.2);display:inline-block;padding:2px 10px;border-radius:12px}
+.team-card-body{padding:20px}
+.team-card-area{font-size:12px;color:var(--gold);font-weight:700;margin-bottom:8px}
+.team-card-bio{font-size:13px;color:var(--gray);line-height:1.7;min-height:40px}
+.team-card-exp{font-size:12px;color:var(--gray);margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.team-card-contact{display:flex;gap:8px;margin-top:14px}
+.team-card-contact a{flex:1;padding:7px;border-radius:8px;font-size:12px;font-weight:700;text-align:center;text-decoration:none;transition:.2s}
+.team-card-kakao{background:#FEE500;color:#3A1D1D}
+.team-card-kakao:hover{background:#F0D800}
+.team-card-tel{background:var(--cream);color:var(--dark);border:1px solid var(--border)}
+.team-card-tel:hover{background:var(--border)}
+@media(max-width:600px){.team-grid{padding:24px 5%;grid-template-columns:1fr}}
 /* ─── 블로그 ─── */
 .blog-cat-bar{display:flex;gap:8px;padding:16px 7%;background:#fff;border-bottom:1px solid rgba(0,0,0,0.06);overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-wrap:wrap}
 .blog-cat-bar::-webkit-scrollbar{display:none}
@@ -1495,6 +1518,7 @@ html.mobile-view .float-btn span{display:none !important}
         <a data-page="success" onclick="navigate('success')">성공사례</a>
         <a data-page="faq" onclick="navigate('faq')">자주묻는질문</a>
         <a data-page="pricing" onclick="navigate('pricing')">💰 비용안내</a>
+        <a data-page="team" onclick="navigate('team')">👥 매니저소개</a>
         <a data-page="ranking" onclick="navigate('ranking')">🏆 랭킹</a>
       </div>
       <span class="nav-sep">|</span>
@@ -1526,6 +1550,7 @@ html.mobile-view .float-btn span{display:none !important}
           <a data-page="vn-info" onclick="navigate('vn-info')">📖 베트남 생활정보</a>
         </div>
       </div>
+      <a data-page="team" onclick="navigate('team')" class="nav-community nav-desktop-guide">👥 매니저소개</a>
       <a data-page="guide" onclick="navigate('guide')" class="nav-community nav-desktop-guide">🗺️ 베트남가이드</a>
       <!-- 모바일 전용 그룹 (데스크탑에서 숨김) -->
       <div class="mnav-group mnav-community mnav-mobile-only">
@@ -1541,6 +1566,7 @@ html.mobile-view .float-btn span{display:none !important}
         <a data-page="board-food" onclick="navigate('board-food')" class="nav-community">🍜 베트남음식</a>
         <a data-page="board-trade" onclick="navigate('board-trade')" class="nav-community">🤝 물물교환</a>
         <a data-page="blog" onclick="navigate('blog')" class="nav-community">📝 블로그</a>
+        <a data-page="team" onclick="navigate('team')" class="nav-community">👥 매니저소개</a>
         <a data-page="guide" onclick="navigate('guide')" class="nav-community">🗺️ 베트남가이드</a>
       </div>
       <div class="mnav-group mnav-community mnav-mobile-only">
@@ -4215,6 +4241,20 @@ html.mobile-view .float-btn span{display:none !important}
 </div>
 
 <!-- ══════════════════════════════════════ -->
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE: 👥 매니저 팀 소개               -->
+<!-- ══════════════════════════════════════ -->
+<div id="page-team" class="page">
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="breadcrumb"><a onclick="navigate('home')">홈</a><span>›</span>매니저 소개</div>
+      <h1>👥 매니저 소개</h1>
+      <p>마리국제결혼의 전문 매니저들이 여러분의 행복한 결혼을 도와드립니다.</p>
+    </div>
+  </div>
+  <div id="teamContent"><div class="post-loading">⏳ 불러오는 중...</div></div>
+</div>
+
 <!-- PAGE: BLOG                            -->
 <!-- ══════════════════════════════════════ -->
 <div id="page-blog" class="page">
@@ -4758,6 +4798,7 @@ function showPage(page) {
   if (page === 'pricing') renderPricing();
   if (page === 'vn-info') renderVnInfo();
   if (page === 'blog') renderBlog();
+  if (page === 'team') renderTeam();
 
   document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
     a.classList.toggle('nav-active', a.dataset.page === page);
@@ -5299,6 +5340,7 @@ async function submitWrite() {
       }
       await db.collection(colName).add(data);
       _lastPostTime = Date.now();
+      db.collection('users').doc(currentUser.email).update({ postCount: firebase.firestore.FieldValue.increment(1), points: firebase.firestore.FieldValue.increment(10) }).catch(()=>{});
       clearDraft();
       document.getElementById('writeTabBody').style.display = 'none';
       document.getElementById('writeSuccessMsg').style.display = 'block';
@@ -5918,12 +5960,12 @@ async function togglePostLike(colName, docId) {
   const authorId = data.authorId || data.author;
   if (likes[uid]) {
     await ref.update({ [`likes.${uid}`]: firebase.firestore.FieldValue.delete(), likeCount: firebase.firestore.FieldValue.increment(-1) });
-    if (authorId) db.collection('users').doc(authorId).update({ totalLikesReceived: firebase.firestore.FieldValue.increment(-1) }).catch(()=>{});
+    if (authorId) db.collection('users').doc(authorId).update({ totalLikesReceived: firebase.firestore.FieldValue.increment(-1), points: firebase.firestore.FieldValue.increment(-2) }).catch(()=>{});
     delete likes[uid];
     renderPostLikeBtn(colName, docId, likes, (data.likeCount||1)-1);
   } else {
     await ref.update({ [`likes.${uid}`]: true, likeCount: firebase.firestore.FieldValue.increment(1) });
-    if (authorId) db.collection('users').doc(authorId).update({ totalLikesReceived: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
+    if (authorId) db.collection('users').doc(authorId).update({ totalLikesReceived: firebase.firestore.FieldValue.increment(1), points: firebase.firestore.FieldValue.increment(2) }).catch(()=>{});
     likes[uid] = true;
     renderPostLikeBtn(colName, docId, likes, (data.likeCount||0)+1);
   }
@@ -5941,11 +5983,11 @@ async function toggleCommentLike(colName, docId, commentId, authorId) {
   const btn = document.getElementById('clbtn-' + commentId);
   if (likes[uid]) {
     await ref.update({ [`likes.${uid}`]: firebase.firestore.FieldValue.delete(), likeCount: firebase.firestore.FieldValue.increment(-1) });
-    if (authorId) db.collection('users').doc(authorId).update({ totalLikesReceived: firebase.firestore.FieldValue.increment(-1) }).catch(()=>{});
+    if (authorId) db.collection('users').doc(authorId).update({ totalLikesReceived: firebase.firestore.FieldValue.increment(-1), points: firebase.firestore.FieldValue.increment(-2) }).catch(()=>{});
     if (btn) { btn.classList.remove('liked'); btn.innerHTML = '❤️ ' + ((data.likeCount||1)-1); }
   } else {
     await ref.update({ [`likes.${uid}`]: true, likeCount: firebase.firestore.FieldValue.increment(1) });
-    if (authorId) db.collection('users').doc(authorId).update({ totalLikesReceived: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
+    if (authorId) db.collection('users').doc(authorId).update({ totalLikesReceived: firebase.firestore.FieldValue.increment(1), points: firebase.firestore.FieldValue.increment(2) }).catch(()=>{});
     if (btn) { btn.classList.add('liked'); btn.innerHTML = '❤️ ' + ((data.likeCount||0)+1); }
   }
 }
@@ -6134,7 +6176,21 @@ function openMemberEdit(email, idx) {
         </select>
       </div>
     </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
+    ${['admin','manager','vn_manager'].includes(u.memberType) ? `
+    <div style="margin-top:16px;padding:14px;background:rgba(200,16,46,0.04);border:1px dashed rgba(200,16,46,0.2);border-radius:10px">
+      <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:10px">👥 매니저 소개 페이지 정보</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+        ${inp(`me-area-${idx}`,'담당 지역',u.area,'text','예: 호치민, 하노이')}
+        ${inp(`me-exp-${idx}`,'경력',u.experience,'text','예: 국제결혼 전문 7년')}
+        ${inp(`me-kakao-${idx}`,'카카오오픈채팅 코드',u.kakao,'text','open.kakao.com/o/...')}
+      </div>
+      <div style="margin-top:10px">
+        <label style="font-size:11px;color:var(--gray);font-weight:600;display:block;margin-bottom:4px">자기소개</label>
+        <textarea id="me-bio-${idx}" rows="3" placeholder="간단한 자기소개를 입력하세요"
+          style="width:100%;padding:7px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px;font-family:'Noto Sans KR',sans-serif;box-sizing:border-box;resize:vertical">${sanitizeText(u.bio||'')}</textarea>
+      </div>
+    </div>` : ''}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
       <button onclick="saveMemberEdit('${u._docId||u.email}',${idx})"
         style="padding:8px 22px;background:var(--red);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif">💾 저장</button>
       <button onclick="document.getElementById('medit-${idx}').style.display='none'"
@@ -6159,6 +6215,14 @@ async function saveMemberEdit(email, idx) {
 
   const u = (window._adminUsers||[]).find(x => (x._docId||x.email) === email);
   const updates = { name, userId: userId||'', phone: phone||'', authMethod: auth||'이메일' };
+  const area = document.getElementById(`me-area-${idx}`)?.value.trim();
+  const exp  = document.getElementById(`me-exp-${idx}`)?.value.trim();
+  const kakao= document.getElementById(`me-kakao-${idx}`)?.value.trim();
+  const bio  = document.getElementById(`me-bio-${idx}`)?.value.trim();
+  if (area  !== undefined) updates.area = area;
+  if (exp   !== undefined) updates.experience = exp;
+  if (kakao !== undefined) updates.kakao = kakao;
+  if (bio   !== undefined) updates.bio = bio;
 
   // 비밀번호 변경
   if (newPw) {
@@ -7292,6 +7356,7 @@ async function submitComment(colName, docId) {
     await db.collection(colName).doc(docId).collection('comments').add(commentData);
     _lastCommentTime = Date.now();
     db.collection(colName).doc(docId).update({ commentCount: firebase.firestore.FieldValue.increment(1) }).catch(()=>{});
+    db.collection('users').doc(currentUser.email).update({ commentCount: firebase.firestore.FieldValue.increment(1), points: firebase.firestore.FieldValue.increment(5) }).catch(()=>{});
     input.value = '';
     const preview = document.getElementById('commentImgPreview');
     const status = document.getElementById('commentImgStatus');
@@ -7399,6 +7464,71 @@ function gradeBadge(memberType) {
     member: `<span class="grade-badge grade-member">&#127807; 일반회원</span>`
   };
   return map[memberType] || map.member;
+}
+
+// ─── 포인트·레벨 시스템 ───
+const LEVEL_TABLE = [
+  {min:0,    lv:1, label:'새싹',       icon:'🌱', color:'#7CB518'},
+  {min:100,  lv:2, label:'정회원',     icon:'⭐', color:'#2E86AB'},
+  {min:300,  lv:3, label:'활동왕',     icon:'🔥', color:'#E74C3C'},
+  {min:700,  lv:4, label:'MVP',        icon:'💎', color:'#9B59B6'},
+  {min:1500, lv:5, label:'레전드',     icon:'👑', color:'#F39C12'},
+];
+
+function getUserLevel(pts) {
+  let cur = LEVEL_TABLE[0];
+  for (const t of LEVEL_TABLE) { if ((pts||0) >= t.min) cur = t; }
+  return cur;
+}
+
+function levelBadge(pts) {
+  const l = getUserLevel(pts||0);
+  return `<span class="lv-badge" style="background:${l.color}" title="${pts||0}P">${l.icon} Lv.${l.lv}</span>`;
+}
+
+function addUserPoints(email, delta) {
+  if (!email) return;
+  db.collection('users').doc(email).update({ points: firebase.firestore.FieldValue.increment(delta) }).catch(()=>{});
+}
+
+// ─── 매니저 팀 소개 ───
+async function renderTeam() {
+  updateNavActive('team');
+  const el = document.getElementById('teamContent');
+  if (!el) return;
+  el.innerHTML = '<div class="post-loading">⏳ 불러오는 중...</div>';
+  try {
+    const snap = await db.collection('users').where('memberType','in',['admin','manager','vn_manager']).get();
+    const members = snap.docs.map(d=>d.data()).filter(u=>u.name);
+    if (!members.length) { el.innerHTML = '<p style="text-align:center;padding:60px;color:var(--gray)">등록된 매니저가 없습니다.</p>'; return; }
+    const order = {admin:0, manager:1, vn_manager:2};
+    members.sort((a,b)=>(order[a.memberType]||9)-(order[b.memberType]||9));
+    const roleLabel = {admin:'최고 관리자', manager:'한국 매니저', vn_manager:'베트남 매니저'};
+    el.innerHTML = `<div class="team-grid">${members.map(u => {
+      const isVn = u.memberType === 'vn_manager';
+      const avatar = u.photoURL
+        ? `<img class="team-card-avatar" src="${sanitizeText(u.photoURL)}" alt="${sanitizeText(u.name)}" onerror="this.style.display='none'">`
+        : `<div class="team-card-avatar-init">${(u.name||'?')[0]}</div>`;
+      const kakao = u.kakao ? `<a class="team-card-contact team-card-kakao" href="https://open.kakao.com/o/${sanitizeText(u.kakao)}" target="_blank" rel="noopener">💛 카카오</a>` : '';
+      const tel = u.phone ? `<a class="team-card-contact team-card-tel" href="tel:${sanitizeText(u.phone)}">📞 전화</a>` : '';
+      const contact = (kakao || tel) ? `<div class="team-card-contact">${kakao}${tel}</div>` : '';
+      return `<div class="team-card">
+        <div class="team-card-top${isVn?' vn':''}">
+          ${avatar}
+          <div class="team-card-name">${sanitizeText(u.name)}</div>
+          <div class="team-card-role">${roleLabel[u.memberType]||'매니저'}</div>
+        </div>
+        <div class="team-card-body">
+          ${u.area ? `<div class="team-card-area">📍 담당지역: ${sanitizeText(u.area)}</div>` : ''}
+          <div class="team-card-bio">${sanitizeText(u.bio||'안녕하세요! 행복한 만남을 도와드리겠습니다.')}</div>
+          ${u.experience ? `<div class="team-card-exp">🏅 경력: ${sanitizeText(u.experience)}</div>` : ''}
+          ${contact}
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+  } catch(e) {
+    el.innerHTML = '<p style="text-align:center;padding:60px;color:var(--gray)">오류가 발생했습니다.</p>';
+  }
 }
 
 // ─── 게시판 실시간 리스너 ───
@@ -8345,6 +8475,7 @@ async function renderRanking() {
   try {
     const snap = await db.collection('users').get();
     const users = snap.docs.map(d=>d.data()).filter(u=>u.name);
+    const byPoints = [...users].sort((a,b)=>(b.points||0)-(a.points||0)).slice(0,10);
     const byLikes = [...users].sort((a,b)=>(b.totalLikesReceived||0)-(a.totalLikesReceived||0)).slice(0,10);
     const byPosts = [...users].sort((a,b)=>(b.postCount||0)-(a.postCount||0)).slice(0,10);
     const byComments = [...users].sort((a,b)=>(b.commentCount||0)-(a.commentCount||0)).slice(0,10);
@@ -8352,11 +8483,11 @@ async function renderRanking() {
     const numCls = i => i===0?'gold':i===1?'silver':i===2?'bronze':'normal';
     const numIcon = i => i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
 
-    const mkList = (arr, valFn, label) => arr.map((u,i)=>`
+    const mkList = (arr, valFn, label, showLv) => arr.map((u,i)=>`
       <div class="rank-item">
         <div class="rank-num ${numCls(i)}">${numIcon(i)}</div>
         <div class="rank-info">
-          <div class="rank-name">${sanitizeText(u.name)}</div>
+          <div class="rank-name">${sanitizeText(u.name)}${showLv?levelBadge(u.points):''}</div>
           <div class="rank-sub">${sanitizeText(u.userId||u.email||'')}</div>
         </div>
         <div class="rank-val">${valFn(u)}<span style="font-size:11px;color:var(--gray);font-weight:400;margin-left:2px">${label}</span></div>
@@ -8365,19 +8496,24 @@ async function renderRanking() {
     el.innerHTML = `
       <div style="text-align:center;margin-bottom:32px">
         <p style="font-size:13px;color:var(--gray)">커뮤니티에서 가장 활발하게 활동하는 회원들입니다 🎉</p>
+        <div style="font-size:12px;color:var(--gray);margin-top:6px">🌱 새싹(0P) → ⭐ 정회원(100P) → 🔥 활동왕(300P) → 💎 MVP(700P) → 👑 레전드(1500P)</div>
       </div>
       <div class="rank-grid">
         <div class="rank-card">
+          <h3>🏅 포인트 랭킹</h3>
+          ${mkList(byPoints, u=>u.points||0, 'P', true)}
+        </div>
+        <div class="rank-card">
           <h3>❤️ 좋아요 많이 받은 회원</h3>
-          ${mkList(byLikes, u=>u.totalLikesReceived||0, '개')}
+          ${mkList(byLikes, u=>u.totalLikesReceived||0, '개', false)}
         </div>
         <div class="rank-card">
           <h3>✍️ 게시글 많이 쓴 회원</h3>
-          ${mkList(byPosts, u=>u.postCount||0, '개')}
+          ${mkList(byPosts, u=>u.postCount||0, '개', false)}
         </div>
         <div class="rank-card">
           <h3>💬 댓글 많이 단 회원</h3>
-          ${mkList(byComments, u=>u.commentCount||0, '개')}
+          ${mkList(byComments, u=>u.commentCount||0, '개', false)}
         </div>
       </div>`;
   } catch(e) {
@@ -8427,14 +8563,17 @@ async function renderMyPage() {
         ${avatarEl}
         <h2 style="margin:0 0 4px;font-size:20px">${sanitizeText(u.name||'')}</h2>
         <p style="margin:0;opacity:0.7;font-size:13px">${sanitizeText(u.userId||u.email||'')}</p>
-        <div style="margin-top:10px;display:inline-block;padding:3px 12px;border-radius:20px;background:rgba(255,255,255,0.15);font-size:12px;font-weight:700">${roleLabel(u.memberType||'member')}</div>
+        <div style="margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap">
+          <span style="display:inline-block;padding:3px 12px;border-radius:20px;background:rgba(255,255,255,0.15);font-size:12px;font-weight:700">${roleLabel(u.memberType||'member')}</span>
+          <span style="font-size:12px;font-weight:700;opacity:0.9">${levelBadge(u.points)} ${u.points||0}P</span>
+        </div>
       </div>
       <div style="padding:32px 7%;max-width:900px;margin:0 auto">
         <div class="mypage-stat-grid">
           <div class="mypage-stat"><div class="mypage-stat-val">${u.postCount||0}</div><div class="mypage-stat-label">✍️ 작성 게시글</div></div>
           <div class="mypage-stat"><div class="mypage-stat-val">${u.commentCount||0}</div><div class="mypage-stat-label">💬 작성 댓글</div></div>
           <div class="mypage-stat"><div class="mypage-stat-val" style="color:var(--red)">${u.totalLikesReceived||0}</div><div class="mypage-stat-label">❤️ 받은 좋아요</div></div>
-          <div class="mypage-stat"><div class="mypage-stat-val" style="color:var(--gold)">${u.profileViews||0}</div><div class="mypage-stat-label">👁 프로필 조회</div></div>
+          <div class="mypage-stat"><div class="mypage-stat-val" style="color:var(--gold)">${u.points||0}</div><div class="mypage-stat-label">${levelBadge(u.points)} 포인트</div></div>
         </div>
         <div class="mypage-section">
           <h3>📋 계정 정보</h3>
