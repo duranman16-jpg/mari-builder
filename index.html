@@ -649,6 +649,32 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .nav-consult-btn{background:var(--red);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;transition:.2s;flex-shrink:0}
 .nav-consult-btn:hover{background:#a50d26}
 
+/* ─── 중간 해상도 네비 압축 (861px ~ 1280px) ─── */
+@media(min-width:861px) and (max-width:1280px){
+  .nav-consult-btn{display:none}
+  .nav-right{gap:6px}
+}
+@media(min-width:861px) and (max-width:1100px){
+  .nav-links a{font-size:12px;padding:5px 7px}
+  .nav-dropdown-btn{font-size:12px!important;padding:5px 7px}
+  .nav-dropdown-btn.comm-btn{font-size:11.5px!important}
+  .nav-sep{margin:0 3px}
+  .nav-right{gap:4px}
+  .nav-auth{margin-left:6px;gap:5px}
+  .nav-user{margin-left:6px;gap:4px}
+  .btn-login,.btn-signup{font-size:12px;padding:6px 10px}
+  .btn-logout{font-size:11px;padding:5px 9px}
+  #adminPanelBtn{font-size:11px!important;padding:5px 10px!important}
+  #userGreeting{display:none!important}
+  .nav-profile-btn{padding:4px 8px 4px 5px}
+}
+@media(min-width:861px) and (max-width:960px){
+  .nav-desktop-guide{display:none!important}
+  .nav-sep{display:none}
+  .nav-links a{font-size:11.5px;padding:5px 5px}
+  .nav-dropdown-btn{font-size:11.5px!important;padding:5px 5px}
+}
+
 /* ─── 섹션 구분선 ─── */
 .section-divider{display:flex;align-items:center;gap:16px;padding:0 7%;margin:0}
 .section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(184,134,11,0.2),transparent)}
@@ -5562,6 +5588,40 @@ function _showSystemToast(msg) {
   t._timer = setTimeout(() => t.remove(), 4000);
 }
 
+function _showWelcomeToast(user) {
+  const prev = document.getElementById('welcomeToast');
+  if (prev) prev.remove();
+  const name = user.userId || user.name || '회원';
+  const label = roleLabel(user.memberType || 'member');
+  const badge = gradeBadge(user.memberType || 'member');
+  const t = document.createElement('div');
+  t.id = 'welcomeToast';
+  t.style.cssText = `position:fixed;top:76px;left:50%;transform:translateX(-50%) translateY(-20px);opacity:0;
+    background:linear-gradient(135deg,#fff 0%,#fff8f8 100%);
+    border:1.5px solid rgba(200,16,46,0.15);
+    color:#1a1a1a;padding:20px 28px 18px;border-radius:20px;
+    font-family:'Noto Sans KR',sans-serif;z-index:10000;
+    box-shadow:0 8px 40px rgba(200,16,46,0.18),0 2px 12px rgba(0,0,0,0.08);
+    text-align:center;min-width:260px;max-width:320px;
+    transition:opacity .35s ease,transform .35s ease`;
+  t.innerHTML = `
+    <div style="font-size:28px;margin-bottom:6px">🌸</div>
+    <div style="font-size:15px;font-weight:700;color:#C8102E;margin-bottom:4px">${name}님, 환영합니다!</div>
+    <div style="font-size:12px;color:#666;margin-bottom:10px">${badge} ${label}</div>
+    <div style="font-size:12px;color:#999;border-top:1px solid rgba(200,16,46,0.1);padding-top:10px">마리 국제결혼에 오신 것을 환영합니다 ❤</div>`;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => {
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+  });
+  t._timer = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(-10px)';
+    setTimeout(() => t.remove(), 350);
+  }, 3500);
+  t.onclick = () => { clearTimeout(t._timer); t.style.opacity='0'; setTimeout(() => t.remove(), 350); };
+}
+
 function _stopUserDocListener() {
   if (_userDocUnsub) { _userDocUnsub(); _userDocUnsub = null; }
 }
@@ -5816,7 +5876,7 @@ async function submitLogin() {
     db.collection('users').doc(email).update({ lastLogin: firebase.firestore.FieldValue.serverTimestamp() }).catch(()=>{});
     closeLogin();
     updateAuthUI();
-    alert((user.userId || user.name) + '님, 환영합니다!');
+    _showWelcomeToast(user);
   } catch(e) {
     alert('로그인 오류: ' + e.message);
   } finally {
