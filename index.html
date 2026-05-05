@@ -1556,10 +1556,9 @@ html.mobile-view .float-btn span{display:none !important}
         <a data-page="profiles" onclick="navigate('profiles')">회원소개</a>
         <a data-page="matching" onclick="navigate('matching')">💑 매칭</a>
         <a data-page="success" onclick="navigate('success')">성공사례</a>
-        <a data-page="faq" onclick="navigate('faq')">자주묻는질문</a>
+        <a data-page="faq" onclick="navigate('faq')">FAQ</a>
         <a data-page="pricing" onclick="navigate('pricing')">💰 비용안내</a>
         <a data-page="team" onclick="navigate('team')">👥 매니저소개</a>
-        <a data-page="ranking" onclick="navigate('ranking')">🏆 랭킹</a>
       </div>
       <span class="nav-sep">|</span>
       <!-- 데스크탑 드롭다운 (모바일에서 숨김) -->
@@ -1572,6 +1571,7 @@ html.mobile-view .float-btn span{display:none !important}
           <a data-page="board-food" onclick="navigate('board-food')">🍜 베트남음식</a>
           <a data-page="board-trade" onclick="navigate('board-trade')">🤝 물물교환</a>
           <a data-page="blog" onclick="navigate('blog')">📝 블로그</a>
+          <a data-page="ranking" onclick="navigate('ranking')">🏆 랭킹</a>
         </div>
       </div>
       <div class="nav-dropdown">
@@ -1588,10 +1588,9 @@ html.mobile-view .float-btn span{display:none !important}
           <a data-page="board-travel-central" onclick="navigate('board-travel-central')">🌊 중부 지역</a>
           <a data-page="board-travel-south" onclick="navigate('board-travel-south')">🌴 남부 지역</a>
           <a data-page="vn-info" onclick="navigate('vn-info')">📖 베트남 생활정보</a>
+          <a data-page="guide" onclick="navigate('guide')">🗺️ 베트남가이드</a>
         </div>
       </div>
-      <a data-page="team" onclick="navigate('team')" class="nav-community nav-desktop-guide">👥 매니저소개</a>
-      <a data-page="guide" onclick="navigate('guide')" class="nav-community nav-desktop-guide">🗺️ 베트남가이드</a>
       <!-- 모바일 전용 그룹 (데스크탑에서 숨김) -->
       <div class="mnav-group mnav-community mnav-mobile-only">
         <div class="mnav-label">결혼생활</div>
@@ -1606,8 +1605,7 @@ html.mobile-view .float-btn span{display:none !important}
         <a data-page="board-food" onclick="navigate('board-food')" class="nav-community">🍜 베트남음식</a>
         <a data-page="board-trade" onclick="navigate('board-trade')" class="nav-community">🤝 물물교환</a>
         <a data-page="blog" onclick="navigate('blog')" class="nav-community">📝 블로그</a>
-        <a data-page="team" onclick="navigate('team')" class="nav-community">👥 매니저소개</a>
-        <a data-page="guide" onclick="navigate('guide')" class="nav-community">🗺️ 베트남가이드</a>
+        <a data-page="ranking" onclick="navigate('ranking')" class="nav-community">🏆 랭킹</a>
       </div>
       <div class="mnav-group mnav-community mnav-mobile-only">
         <div class="mnav-label">여행&amp;정보</div>
@@ -1615,6 +1613,7 @@ html.mobile-view .float-btn span{display:none !important}
         <a data-page="board-travel-central" onclick="navigate('board-travel-central')" class="nav-community">🌊 중부 지역</a>
         <a data-page="board-travel-south" onclick="navigate('board-travel-south')" class="nav-community">🌴 남부 지역</a>
         <a data-page="vn-info" onclick="navigate('vn-info')" class="nav-community">📖 생활정보</a>
+        <a data-page="guide" onclick="navigate('guide')" class="nav-community">🗺️ 베트남가이드</a>
       </div>
       <div class="mobile-nav-cta-wrap">
         <button class="mobile-nav-cta" onclick="navigate('inquiry');toggleMenu()">💬 무료상담 신청</button>
@@ -4486,16 +4485,19 @@ html.mobile-view .float-btn span{display:none !important}
       <a onclick="navigate('process')">결혼 절차 안내</a>
       <a onclick="navigate('profiles')">회원 프로필</a>
       <a onclick="navigate('success')">성공 사례</a>
-      <a onclick="navigate('inquiry')">무료 상담</a>
+      <a onclick="navigate('pricing')">💰 비용 안내</a>
+      <a onclick="navigate('team')">👥 매니저 소개</a>
+      <a onclick="navigate('inquiry')">📅 무료 상담 · 예약</a>
+      <a onclick="navigate('faq')">FAQ</a>
     </div>
     <div class="footer-col">
-      <h4>커뮤니티</h4>
-      <a onclick="navigate('board-life')">결혼생활 게시판</a>
-      <a onclick="navigate('board-free')">자유 게시판</a>
-      <a onclick="navigate('board-travel')">여행사진및 정보</a>
-      <a onclick="navigate('board-food')">베트남음식</a>
-      <a onclick="navigate('board-trade')">물물교환</a>
-      <a onclick="navigate('faq')">자주 묻는 질문</a>
+      <h4>커뮤니티 · 정보</h4>
+      <a onclick="navigate('board-free')">💬 자유 게시판</a>
+      <a onclick="navigate('board-life')">💍 결혼생활 게시판</a>
+      <a onclick="navigate('blog')">📝 블로그</a>
+      <a onclick="navigate('board-travel')">✈️ 여행 정보</a>
+      <a onclick="navigate('vn-info')">📖 베트남 생활정보</a>
+      <a onclick="navigate('ranking')">🏆 랭킹</a>
     </div>
   </div>
   <div class="footer-bottom">
