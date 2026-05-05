@@ -7620,7 +7620,6 @@ function addUserPoints(email, delta) {
 
 // ─── 매니저 팀 소개 ───
 async function renderTeam() {
-  updateNavActive('team');
   const el = document.getElementById('teamContent');
   if (!el) return;
   el.innerHTML = '<div class="post-loading">⏳ 불러오는 중...</div>';
