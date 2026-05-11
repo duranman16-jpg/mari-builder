@@ -6998,7 +6998,7 @@ let _kcpData = null;
 function resetKcpSignupForm() {
   _kcpData = null;
   const btn = document.getElementById('kcpCertBtn');
-  if (btn) { btn.disabled = false; btn.style.background = ''; btn.textContent = '📱 휴대폰 본인인증'; }
+  if (btn) { btn.disabled = false; btn.style.background = 'var(--red)'; btn.style.color = '#fff'; btn.textContent = '📱 휴대폰 본인인증'; }
   const fields = document.getElementById('kcpAutoFields');
   if (fields) fields.style.display = 'none';
   ['signupName','signupPhone','signupBirth','signupGenderDisplay','signupGender'].forEach(id => {
