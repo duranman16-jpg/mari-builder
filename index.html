@@ -36,7 +36,7 @@
 <meta name="naver-site-verification" content="ce41541bf87e52858f0e29177ed9fe7a7364cb5f">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;500;700;900&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
@@ -100,10 +100,44 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --red:#C8102E;--gold:#B8860B;--gold-light:#F5D87A;
-  --cream:#FDF8F0;--dark:#1A1A1A;--text:#333;--gray:#666;
-  --light:#F9F5EE;--white:#fff;--radius:12px;
-  --bg-card:#fff;--bg-page:#fff;--border:rgba(0,0,0,0.08);
+  /* ─── 따뜻한 동서양 융합 팔레트 (2026-05-18) ─── */
+  --red:#D94E4E;             /* 코럴 레드 */
+  --red-deep:#B83A3A;        /* 호버용 진한 코럴 */
+  --red-soft:#F4D5D5;        /* 연한 코럴 배경 */
+  --gold:#D4A574;            /* 소프트 골드 */
+  --gold-deep:#A67C45;       /* 진한 골드 */
+  --gold-light:#F0DDB8;      /* 연한 골드 (호버·강조) */
+  --cream:#FDF6E8;           /* 한지 크림 */
+  --ivory:#FAF6EE;           /* 아이보리 */
+  --dark:#2D1810;            /* 먹색 */
+  --text:#3D2820;            /* 본문 텍스트 */
+  --gray:#7A6855;            /* 그레이(따뜻한 톤) */
+  --gray-light:#B8A89A;      /* 연한 그레이 */
+  --light:#FBF7EF;           /* 페이지 배경 */
+  --white:#fff;
+  --bg-card:#fff;
+  --bg-page:#FBF7EF;
+  --border:rgba(45,24,16,0.10);    /* 먹색 기반 보더 */
+  --border-soft:rgba(45,24,16,0.06);
+  /* ─── 그라데이션 ─── */
+  --grad-hero:linear-gradient(135deg,#FDF6E8 0%,#F8E8D5 50%,#F0D5BE 100%);
+  --grad-red:linear-gradient(135deg,#D94E4E 0%,#B83A3A 100%);
+  --grad-gold:linear-gradient(135deg,#E8C896 0%,#D4A574 50%,#A67C45 100%);
+  --grad-warm:linear-gradient(180deg,#FDF6E8 0%,#FBF7EF 100%);
+  /* ─── 그림자 (따뜻한 톤) ─── */
+  --shadow-sm:0 2px 6px rgba(166,124,69,0.08);
+  --shadow-md:0 6px 18px rgba(166,124,69,0.10);
+  --shadow-lg:0 12px 32px rgba(166,124,69,0.14);
+  --shadow-hero:0 20px 60px rgba(217,78,78,0.20);
+  /* ─── 반경 ─── */
+  --radius:14px;
+  --radius-sm:8px;
+  --radius-lg:20px;
+  --radius-pill:99px;
+  /* ─── 타이포 ─── */
+  --font-serif:'Playfair Display','Noto Serif KR',serif;
+  --font-serif-kr:'Noto Serif KR','Playfair Display',serif;
+  --font-sans:'Noto Sans KR',sans-serif;
 }
 /* ─── 다크모드 ─── */
 body.dark-mode{
@@ -138,7 +172,7 @@ body.dark-mode .dark-toggle{border-color:rgba(255,255,255,0.2);background:rgba(2
 .couple-item{display:flex;align-items:flex-start;gap:32px;margin-bottom:48px;position:relative}
 .couple-item:nth-child(even){flex-direction:row-reverse}
 .couple-item:nth-child(even) .couple-card{text-align:right}
-.couple-dot{position:absolute;left:50%;top:20px;width:14px;height:14px;background:var(--red);border-radius:50%;transform:translateX(-50%);box-shadow:0 0 0 4px rgba(200,16,46,0.2);z-index:2}
+.couple-dot{position:absolute;left:50%;top:20px;width:14px;height:14px;background:var(--red);border-radius:50%;transform:translateX(-50%);box-shadow:0 0 0 4px rgba(217,78,78,0.2);z-index:2}
 .couple-card{flex:1;background:var(--bg-card);border-radius:14px;padding:20px;box-shadow:0 4px 20px rgba(0,0,0,0.08);border:1px solid var(--border);transition:.3s}
 .couple-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,0.12)}
 .couple-card img{width:100%;height:180px;object-fit:cover;border-radius:10px;margin-bottom:12px}
@@ -199,40 +233,40 @@ body{font-family:'Noto Sans KR',sans-serif;color:var(--text);background:var(--wh
 .page.active{display:block}
 
 /* ─── 네비 ─── */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-bottom:1px solid rgba(184,134,11,0.15);padding:0 20px}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-bottom:1px solid rgba(212,165,116,0.15);padding:0 20px}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;gap:8px}
 .logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;cursor:pointer}
 .logo-mark{height:52px;width:auto;object-fit:contain;flex-shrink:0;display:block}
-.logo-sep{width:1px;height:30px;background:linear-gradient(to bottom,transparent,rgba(184,134,11,0.4),transparent);margin:0 10px;flex-shrink:0}
+.logo-sep{width:1px;height:30px;background:linear-gradient(to bottom,transparent,rgba(212,165,116,0.4),transparent);margin:0 10px;flex-shrink:0}
 .logo-text{display:flex;flex-direction:column;justify-content:center;line-height:1.25}
 .logo-main{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--dark);letter-spacing:0.01em;white-space:nowrap}
 .logo-main .logo-accent{color:var(--red);font-weight:700}
 .logo-sub{font-family:'Playfair Display',serif;font-size:10px;color:var(--gold);font-weight:400;font-style:italic;letter-spacing:0.08em;margin-top:2px;white-space:nowrap}
 .nav-links{display:flex;gap:0;align-items:center}
 .nav-links a{text-decoration:none;color:var(--gray);font-size:13px;font-weight:500;padding:7px 10px;border-radius:6px;transition:.2s;white-space:nowrap;cursor:pointer}
-.nav-links a:hover{color:var(--red);background:rgba(200,16,46,0.06)}
+.nav-links a:hover{color:var(--red);background:rgba(217,78,78,0.06)}
 .nav-links a.nav-active{color:var(--red);font-weight:700}
 .nav-cta{background:var(--red)!important;color:#fff!important;border-radius:8px!important;padding:9px 20px!important;font-weight:700!important}
-.nav-cta:hover{background:#a50d26!important;color:#fff!important}
-.nav-cta.nav-active{background:#a50d26!important}
+.nav-cta:hover{background:var(--red-deep)!important;color:#fff!important}
+.nav-cta.nav-active{background:var(--red-deep)!important}
 .menu-btn{display:none;background:none;border:none;cursor:pointer;padding:6px}
 .menu-btn span{display:block;width:24px;height:2px;background:var(--dark);margin:5px 0;transition:.3s}
 .nav-sep{color:rgba(0,0,0,0.15);margin:0 6px;font-size:16px;display:flex;align-items:center}
 .nav-community{color:var(--gold)!important;font-weight:600!important;font-size:12.5px!important}
-.nav-community:hover{color:#8B6914!important;background:rgba(184,134,11,0.08)!important}
-.nav-community.nav-active{color:#8B6914!important}
+.nav-community:hover{color:var(--gold-deep)!important;background:rgba(212,165,116,0.08)!important}
+.nav-community.nav-active{color:var(--gold-deep)!important}
 /* ─── 드롭다운 네비 (데스크탑 전용) ─── */
 .nav-dropdown{position:relative;display:flex;align-items:center}
 .nav-dropdown-btn{display:flex;align-items:center;gap:2px;color:var(--gray);font-size:13px;font-weight:500;padding:7px 10px;border-radius:6px;transition:.2s;white-space:nowrap;cursor:pointer;background:none;border:none;font-family:'Noto Sans KR',sans-serif}
 .nav-dropdown-btn.comm-btn{color:var(--gold)!important;font-weight:600!important;font-size:12.5px!important}
 .nav-dropdown-btn::after{content:'▾';font-size:9px;opacity:0.5;margin-left:1px}
-.nav-dropdown:hover .nav-dropdown-btn{color:var(--red);background:rgba(200,16,46,0.06)}
-.nav-dropdown:hover .nav-dropdown-btn.comm-btn{color:#8B6914!important;background:rgba(184,134,11,0.08)!important}
+.nav-dropdown:hover .nav-dropdown-btn{color:var(--red);background:rgba(217,78,78,0.06)}
+.nav-dropdown:hover .nav-dropdown-btn.comm-btn{color:var(--gold-deep)!important;background:rgba(212,165,116,0.08)!important}
 .nav-dropdown-menu{display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);background:#fff;border:1px solid rgba(0,0,0,0.1);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.14);min-width:130px;z-index:200;padding:10px 6px 6px}
 .nav-dropdown:hover .nav-dropdown-menu{display:block}
 .nav-dropdown-menu a{display:block;padding:8px 14px;font-size:13px;color:var(--dark);text-decoration:none;cursor:pointer;border-radius:6px;white-space:nowrap;transition:.15s;font-weight:500}
-.nav-dropdown-menu a:hover{background:rgba(200,16,46,0.06);color:var(--red)}
-.nav-dropdown-menu a.nav-active{color:var(--red);font-weight:700;background:rgba(200,16,46,0.04)}
+.nav-dropdown-menu a:hover{background:rgba(217,78,78,0.06);color:var(--red)}
+.nav-dropdown-menu a.nav-active{color:var(--red);font-weight:700;background:rgba(217,78,78,0.04)}
 .nav-desktop-guide{display:flex;align-items:center}
 .mnav-mobile-only{display:none!important}
 /* ─── 모바일 메뉴 그룹 (데스크탑: display:contents로 투명하게) ─── */
@@ -244,24 +278,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 .btn-login{background:transparent;border:1.5px solid var(--red);color:var(--red);padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s;white-space:nowrap}
 .btn-login:hover{background:var(--red);color:#fff}
 .btn-signup{background:var(--red);border:none;color:#fff;padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s;white-space:nowrap}
-.btn-signup:hover{background:#a50d26}
+.btn-signup:hover{background:var(--red-deep)}
 .btn-logout{background:transparent;border:1px solid rgba(0,0,0,0.18);color:var(--gray);padding:6px 12px;border-radius:7px;font-size:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s;white-space:nowrap}
 .btn-logout:hover{border-color:var(--red);color:var(--red)}
 .user-greeting{font-size:13px;color:var(--dark);font-weight:600;white-space:nowrap}
 .nav-profile-btn{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(0,0,0,0.12);border-radius:8px;padding:4px 12px 4px 5px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
-.nav-profile-btn:hover{border-color:var(--red);background:rgba(200,16,46,0.04)}
+.nav-profile-btn:hover{border-color:var(--red);background:rgba(217,78,78,0.04)}
 .nav-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;overflow:hidden;flex-shrink:0;background:var(--red)}
 .author-avatar{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;overflow:hidden;flex-shrink:0;vertical-align:middle;font-weight:700;color:#fff;font-size:11px}
 
 /* ─── 서브 페이지 헤더 ─── */
-.page-hero{margin-top:64px;background:linear-gradient(135deg,#1A0A0A 0%,#3D0B0B 50%,#5C1A00 100%);padding:52px 7% 44px;position:relative;overflow:hidden}
-.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L35 20 L50 20 L38 30 L43 45 L30 35 L17 45 L22 30 L10 20 L25 20Z' fill='rgba(184,134,11,0.04)'/%3E%3C/svg%3E") repeat;opacity:0.6}
+.page-hero{margin-top:64px;background:linear-gradient(135deg,var(--dark) 0%,#4A2418 55%,#6B3520 100%);padding:68px 7% 56px;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 8 L46 28 L66 28 L50 40 L56 60 L40 48 L24 60 L30 40 L14 28 L34 28Z' fill='rgba(212,165,116,0.045)'/%3E%3C/svg%3E") repeat;opacity:0.7;pointer-events:none}
+.page-hero::after{content:'';position:absolute;top:50%;right:5%;width:200px;height:200px;background:url('mari-lotus.jpg') center center / contain no-repeat;opacity:0.10;transform:translateY(-50%);pointer-events:none;mix-blend-mode:lighten}
 .page-hero-inner{position:relative;z-index:1}
-.breadcrumb{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.breadcrumb{font-size:13px;color:rgba(253,246,232,0.55);margin-bottom:16px;display:flex;align-items:center;gap:8px;letter-spacing:0.02em}
 .breadcrumb a{color:var(--gold-light);text-decoration:none;cursor:pointer;transition:.2s}
 .breadcrumb a:hover{color:#fff}
-.page-hero h1{font-family:'Playfair Display',serif;color:#fff;font-size:clamp(2rem,4vw,3rem);margin-bottom:10px;line-height:1.2}
-.page-hero p{color:rgba(255,255,255,0.62);font-size:15px;line-height:1.75;max-width:560px}
+.page-hero h1{font-family:var(--font-serif-kr);color:#fff;font-size:clamp(2.1rem,4vw,3.2rem);font-weight:700;margin-bottom:14px;line-height:1.25;letter-spacing:-0.01em}
+.page-hero h1 em{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;color:var(--gold-light)}
+.page-hero p{color:rgba(253,246,232,0.72);font-size:15px;line-height:1.85;max-width:580px;font-weight:300}
 /* ─── 서브 페이지 개별 배경 SVG ─── */
 #page-process .page-hero{background-image:url('page-bg-process.svg');background-size:cover;background-position:center}
 #page-profiles .page-hero{background-image:url('page-bg-profiles.svg');background-size:cover;background-position:center}
@@ -274,34 +310,41 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 #page-board-trade .page-hero{background-image:url('page-bg-trade.svg');background-size:cover;background-position:center}
 
 /* ─── 히어로 ─── */
-.hero{margin-top:64px;min-height:48vh;background:url('배경.png') center center / cover no-repeat;position:relative;display:flex;align-items:center;overflow:hidden}
-.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,248,240,0.72) 0%,rgba(255,240,225,0.60) 45%,rgba(255,230,210,0.40) 100%);z-index:1}
-.hero::before{display:none}
-.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;padding:44px 7%;width:100%}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.45);border:1px solid rgba(139,80,20,0.30);border-radius:99px;padding:6px 16px;margin-bottom:24px;backdrop-filter:blur(4px)}
-.hero-badge span{font-size:12px;color:#7A3B00;font-weight:600;letter-spacing:0.05em}
-.hero-flag{font-size:16px}
-.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.4rem);color:#1A0A0A;line-height:1.25;margin-bottom:16px;text-shadow:0 1px 3px rgba(255,255,255,0.5)}
-.hero h1 em{font-style:italic;color:#8B3A00}
-.hero-desc{font-size:15px;color:rgba(30,12,4,0.72);line-height:1.8;margin-bottom:32px;max-width:480px}
-.hero-features{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
-.hero-feat{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.42);border-radius:12px;padding:11px 16px;border-left:3px solid var(--red);backdrop-filter:blur(6px)}
-.hero-feat.feat-gold{border-left-color:#B8860B}
-.hf-icon{font-size:22px;flex-shrink:0;line-height:1}
-.hf-title{font-size:14px;font-weight:700;color:#1A0A0A;line-height:1.3}
-.hf-desc{font-size:12px;color:rgba(30,12,4,0.55);margin-top:2px}
-.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
-.btn-main{background:var(--red);color:#fff;padding:14px 30px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;transition:.2s;border:none;cursor:pointer;display:inline-block}
-.btn-main:hover{background:#a50d26;transform:translateY(-1px)}
-.btn-outline{background:rgba(255,255,255,0.55);color:#1A0A0A;padding:14px 30px;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px;border:1px solid rgba(30,12,4,0.25);transition:.2s;display:inline-block;cursor:pointer;backdrop-filter:blur(4px)}
-.btn-outline:hover{background:rgba(255,255,255,0.75)}
+.hero{margin-top:64px;min-height:62vh;background:var(--grad-hero);position:relative;display:flex;align-items:center;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url('mari-hanji-bg.jpg') center center / cover no-repeat;opacity:0.45;mix-blend-mode:multiply;z-index:0}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(217,78,78,0.06) 0%,transparent 60%),linear-gradient(160deg,rgba(253,246,232,0.30) 0%,rgba(248,232,213,0.25) 50%,rgba(240,213,190,0.20) 100%);z-index:1;pointer-events:none}
+.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr 1fr;gap:64px;align-items:center;padding:60px 7%;width:100%}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,0.65);border:1px solid rgba(212,165,116,0.45);border-radius:var(--radius-pill);padding:7px 18px;margin-bottom:28px;backdrop-filter:blur(8px);box-shadow:var(--shadow-sm)}
+.hero-badge span{font-size:12px;color:var(--gold-deep);font-weight:700;letter-spacing:0.06em}
+.hero-flag{font-size:17px}
+.hero h1{font-family:var(--font-serif-kr);font-size:clamp(2.2rem,4.2vw,3.6rem);font-weight:700;color:var(--dark);line-height:1.28;margin-bottom:20px;letter-spacing:-0.01em}
+.hero h1 em{font-family:'Playfair Display',serif;font-style:italic;color:var(--red);font-weight:500;background:linear-gradient(135deg,var(--red) 0%,var(--gold-deep) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;position:relative}
+.hero h1 em::after{content:'';position:absolute;left:0;right:0;bottom:-4px;height:3px;background:linear-gradient(90deg,transparent 0%,var(--gold) 20%,var(--red) 50%,var(--gold) 80%,transparent 100%);border-radius:2px;opacity:0.6}
+.hero-desc{font-size:15.5px;color:var(--text);line-height:1.85;margin-bottom:32px;max-width:480px;font-weight:400}
+.hero-features{display:flex;flex-direction:column;gap:11px;margin-bottom:36px}
+.hero-feat{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.7);border-radius:var(--radius);padding:13px 18px;border-left:3px solid var(--red);backdrop-filter:blur(8px);box-shadow:var(--shadow-sm);transition:.25s}
+.hero-feat:hover{transform:translateX(2px);box-shadow:var(--shadow-md);background:rgba(255,255,255,0.85)}
+.hero-feat.feat-gold{border-left-color:var(--gold-deep)}
+.hf-icon{font-size:22px;flex-shrink:0;line-height:1;width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:rgba(217,78,78,0.08);border-radius:50%}
+.hero-feat.feat-gold .hf-icon{background:rgba(212,165,116,0.15)}
+.hf-title{font-size:14px;font-weight:700;color:var(--dark);line-height:1.3}
+.hf-desc{font-size:12px;color:var(--gray);margin-top:3px;line-height:1.5}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn-main{background:var(--grad-red);color:#fff;padding:15px 34px;border-radius:var(--radius);text-decoration:none;font-weight:700;font-size:15px;letter-spacing:0.02em;transition:.25s;border:none;cursor:pointer;display:inline-block;box-shadow:0 6px 18px rgba(217,78,78,0.30);position:relative;overflow:hidden}
+.btn-main::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);transition:.5s}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(217,78,78,0.40)}
+.btn-main:hover::before{left:100%}
+.btn-outline{background:rgba(255,255,255,0.7);color:var(--dark);padding:15px 32px;border-radius:var(--radius);text-decoration:none;font-weight:600;font-size:15px;border:1.5px solid var(--gold);transition:.25s;display:inline-block;cursor:pointer;backdrop-filter:blur(6px)}
+.btn-outline:hover{background:#fff;border-color:var(--gold-deep);transform:translateY(-1px);box-shadow:var(--shadow-md)}
 .hero-img-wrap{position:relative}
-.hero-woman-img{width:100%;max-height:540px;object-fit:cover;object-position:center top;display:block;-webkit-mask-image:linear-gradient(to right,transparent 0%,black 26%,black 72%,transparent 100%),linear-gradient(to bottom,transparent 0%,black 22%,black 80%,transparent 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent 0%,black 26%,black 72%,transparent 100%),linear-gradient(to bottom,transparent 0%,black 22%,black 80%,transparent 100%);mask-composite:intersect}
+.hero-img-wrap::before{content:'';position:absolute;top:-20px;right:-20px;width:120px;height:120px;background:url('mari-lotus.jpg') center center / contain no-repeat;opacity:0.55;z-index:1;pointer-events:none;mix-blend-mode:multiply}
+.hero-img-wrap::after{content:'';position:absolute;bottom:-30px;left:-30px;width:80px;height:200px;background:url('mari-maedeup.jpg') center center / contain no-repeat;opacity:0.35;z-index:1;pointer-events:none;mix-blend-mode:multiply}
+.hero-woman-img{width:100%;max-height:580px;object-fit:cover;object-position:center top;display:block;border-radius:var(--radius-lg);box-shadow:var(--shadow-hero);position:relative;z-index:2;-webkit-mask-image:radial-gradient(ellipse 75% 90% at center,black 55%,transparent 100%);mask-image:radial-gradient(ellipse 75% 90% at center,black 55%,transparent 100%)}
 .hero-img-card{position:absolute;bottom:16px;left:16px;right:16px;background:rgba(255,255,255,0.22);border:1px solid rgba(255,255,255,0.55);border-radius:16px;padding:18px 22px;backdrop-filter:blur(14px)}
 .couple-box{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .person-card{background:rgba(255,255,255,0.35);border-radius:14px;padding:18px;text-align:center}
 .avatar{width:70px;height:70px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(139,80,20,0.15)}
-.person-name{font-size:14px;font-weight:700;color:#1A0A0A}
+.person-name{font-size:14px;font-weight:700;color:var(--dark)}
 .person-info{font-size:11px;color:rgba(30,12,4,0.60);margin-top:3px;line-height:1.5}
 .match-bar{background:rgba(255,255,255,0.45);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
 .match-label{font-size:12px;color:rgba(30,12,4,0.65)}
@@ -311,31 +354,34 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 /* ─── 홈 섹션 카드 ─── */
 .home-cards{padding:60px 7%;background:var(--cream)}
 .home-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}
-.hcard{background:var(--white);border-radius:var(--radius);padding:28px 22px;border:1px solid rgba(184,134,11,0.12);cursor:pointer;transition:.25s;text-align:center}
-.hcard:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(184,134,11,0.12);transform:translateY(-4px)}
+.hcard{background:var(--white);border-radius:var(--radius);padding:28px 22px;border:1px solid rgba(212,165,116,0.12);cursor:pointer;transition:.25s;text-align:center}
+.hcard:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(212,165,116,0.12);transform:translateY(-4px)}
 .hcard-icon{font-size:36px;margin-bottom:14px}
 .hcard h3{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:6px}
 .hcard p{font-size:12px;color:var(--gray);line-height:1.6}
 
 /* ─── 섹션 공통 ─── */
-section{padding:80px 7%}
-.section-label{font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
-.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3vw,2.4rem);color:var(--dark);line-height:1.3;margin-bottom:16px}
-.section-desc{font-size:15px;color:var(--gray);line-height:1.8;max-width:600px;margin-bottom:48px}
+section{padding:84px 7%}
+.section-label{font-size:11.5px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px}
+.section-label::before,.section-label::after{content:'';width:24px;height:1px;background:linear-gradient(90deg,transparent,var(--gold) 50%,transparent)}
+.section-title{font-family:var(--font-serif-kr);font-size:clamp(1.8rem,3.2vw,2.6rem);font-weight:700;color:var(--dark);line-height:1.32;margin-bottom:18px;letter-spacing:-0.01em}
+.section-title em{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;color:var(--red);background:linear-gradient(135deg,var(--red),var(--gold-deep));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.section-desc{font-size:15px;color:var(--gray);line-height:1.85;max-width:620px;margin-bottom:48px}
 
 /* ─── 신뢰띠 ─── */
-.trust-bar{background:var(--dark);padding:14px 7%;display:flex;align-items:center;overflow:hidden}
-.trust-scroll{display:flex;gap:48px;animation:scroll-x 22s linear infinite;white-space:nowrap}
+.trust-bar{background:linear-gradient(135deg,var(--dark) 0%,#4A2418 50%,#3A1E12 100%);padding:16px 7%;display:flex;align-items:center;overflow:hidden;position:relative;border-top:1px solid rgba(212,165,116,0.18);border-bottom:1px solid rgba(212,165,116,0.18)}
+.trust-bar::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 5 L23 14 L32 14 L25 20 L28 29 L20 24 L12 29 L15 20 L8 14 L17 14Z' fill='rgba(212,165,116,0.025)'/%3E%3C/svg%3E") repeat;pointer-events:none}
+.trust-scroll{display:flex;gap:48px;animation:scroll-x 26s linear infinite;white-space:nowrap;position:relative;z-index:1}
 @keyframes scroll-x{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.trust-item{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.75);font-size:13px;font-weight:500}
+.trust-item{display:flex;align-items:center;gap:10px;color:rgba(253,246,232,0.82);font-size:13px;font-weight:500;letter-spacing:0.02em}
 .trust-icon{font-size:16px}
-.trust-divider{color:rgba(255,255,255,0.2);font-size:18px}
+.trust-divider{color:rgba(212,165,116,0.4);font-size:18px}
 
 /* ─── 절차 ─── */
 .process{background:var(--cream)}
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
-.step{background:var(--white);border-radius:var(--radius);padding:28px 24px;position:relative;border:1px solid rgba(184,134,11,0.12);transition:.25s}
-.step:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(184,134,11,0.1);transform:translateY(-3px)}
+.step{background:var(--white);border-radius:var(--radius);padding:28px 24px;position:relative;border:1px solid rgba(212,165,116,0.12);transition:.25s}
+.step:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(212,165,116,0.1);transform:translateY(-3px)}
 .step-num{width:36px;height:36px;background:var(--red);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;margin-bottom:16px}
 .step-icon{font-size:28px;margin-bottom:10px}
 .step h3{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:8px}
@@ -345,7 +391,7 @@ section{padding:80px 7%}
 /* ─── 프로필 ─── */
 .profiles{background:var(--light)}
 .profile-tabs{display:flex;gap:8px;margin-bottom:36px}
-.tab{padding:8px 20px;border-radius:99px;border:1px solid rgba(200,16,46,0.2);background:transparent;color:var(--gray);font-size:13px;font-weight:500;cursor:pointer;transition:.2s;font-family:'Noto Sans KR',sans-serif}
+.tab{padding:8px 20px;border-radius:99px;border:1px solid rgba(217,78,78,0.2);background:transparent;color:var(--gray);font-size:13px;font-weight:500;cursor:pointer;transition:.2s;font-family:'Noto Sans KR',sans-serif}
 .tab.active,.tab:hover{background:var(--red);color:#fff;border-color:var(--red)}
 .profile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}
 .profile-card{background:var(--white);border-radius:var(--radius);overflow:hidden;border:1px solid rgba(0,0,0,0.07);transition:.25s;cursor:pointer}
@@ -356,17 +402,19 @@ section{padding:80px 7%}
 .profile-name{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:4px}
 .profile-meta{font-size:12px;color:var(--gray);line-height:1.7}
 .profile-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
-.ptag{font-size:11px;background:rgba(200,16,46,0.06);color:var(--red);border-radius:4px;padding:2px 7px;border:1px solid rgba(200,16,46,0.15)}
+.ptag{font-size:11px;background:rgba(217,78,78,0.06);color:var(--red);border-radius:4px;padding:2px 7px;border:1px solid rgba(217,78,78,0.15)}
 .profile-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-top:1px solid rgba(0,0,0,0.06)}
 .profile-like{color:var(--gray);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:4px}
 .profile-btn{background:var(--red);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
-.profile-btn:hover{background:#a50d26}
+.profile-btn:hover{background:var(--red-deep)}
 
 /* ─── 성공사례 ─── */
 .success{background:var(--white)}
 .story-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
-.story-card{border-radius:var(--radius);overflow:hidden;border:1px solid rgba(184,134,11,0.15);background:var(--cream)}
-.story-top{height:180px;background:linear-gradient(135deg,#8B0000,#C8102E);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.story-card{border-radius:var(--radius);overflow:hidden;border:1px solid rgba(212,165,116,0.18);background:var(--cream);transition:.3s;box-shadow:var(--shadow-sm)}
+.story-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:rgba(212,165,116,0.45)}
+.story-top{height:180px;background:linear-gradient(135deg,var(--red-deep) 0%,var(--red) 50%,var(--gold-deep) 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.story-top::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 8 L34 22 L48 22 L37 31 L41 45 L30 36 L19 45 L23 31 L12 22 L26 22Z' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E") repeat;pointer-events:none}
 .story-couple{display:flex;align-items:center;gap:16px}
 .story-avatar{width:64px;height:64px;border-radius:50%;border:3px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(255,255,255,0.15)}
 .story-heart{font-size:22px;color:rgba(255,255,255,0.8)}
@@ -388,13 +436,13 @@ section{padding:80px 7%}
 .faq-icon.open{transform:rotate(45deg)}
 
 /* ─── 문의 ─── */
-.inquiry{background:linear-gradient(135deg,#1A0A0A,#5C1A00)}
+.inquiry{background:linear-gradient(135deg,var(--dark),#6B3520)}
 .inquiry-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
 .inquiry h2{font-family:'Playfair Display',serif;color:#fff;font-size:clamp(1.6rem,2.5vw,2.2rem);margin-bottom:12px}
 .inquiry-sub{color:rgba(255,255,255,0.6);font-size:14px;line-height:1.8;margin-bottom:28px}
 .contact-info{display:flex;flex-direction:column;gap:14px}
 .contact-row{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.85);font-size:14px}
-.contact-icon{width:36px;height:36px;background:rgba(184,134,11,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.contact-icon{width:36px;height:36px;background:rgba(212,165,116,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .form-card{background:rgba(255,255,255,0.07);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:32px}
 .form-row{margin-bottom:16px}
 .form-row label{display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,0.6);margin-bottom:6px;letter-spacing:0.05em}
@@ -404,18 +452,18 @@ section{padding:80px 7%}
 .form-row textarea{resize:vertical;min-height:90px}
 .form-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-submit{width:100%;background:var(--red);color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:8px;transition:.2s}
-.form-submit:hover{background:#a50d26}
+.form-submit:hover{background:var(--red-deep)}
 
 /* ─── 게시판 ─── */
 .board-section{padding:60px 7%}
 .board-alt{background:var(--light)}
 .board-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
 .board-write-btn{background:var(--red);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
-.board-write-btn:hover{background:#a50d26}
+.board-write-btn:hover{background:var(--red-deep)}
 .board-table{width:100%;border-collapse:collapse;margin-top:4px}
 .board-table th{background:var(--dark);color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;padding:12px 14px;text-align:left}
 .board-table td{padding:13px 14px;border-bottom:1px solid rgba(0,0,0,0.07);font-size:14px;color:var(--text);vertical-align:middle}
-.board-table tr:hover td{background:rgba(184,134,11,0.04)}
+.board-table tr:hover td{background:rgba(212,165,116,0.04)}
 .post-title{font-weight:500;cursor:pointer;color:var(--dark)}
 .post-title:hover{color:var(--red)}
 .post-meta{font-size:12px;color:var(--gray)}
@@ -429,7 +477,7 @@ section{padding:80px 7%}
 .photo-info{padding:12px 14px}
 .photo-title{font-size:14px;font-weight:600;color:var(--dark);margin-bottom:4px}
 .photo-meta{font-size:11px;color:var(--gray)}
-.auth-wall{text-align:center;padding:60px 20px;background:rgba(200,16,46,0.03);border:2px dashed rgba(200,16,46,0.15);border-radius:var(--radius)}
+.auth-wall{text-align:center;padding:60px 20px;background:rgba(217,78,78,0.03);border:2px dashed rgba(217,78,78,0.15);border-radius:var(--radius)}
 .auth-wall-icon{font-size:48px;margin-bottom:16px}
 .auth-wall h3{font-size:18px;font-weight:700;color:var(--dark);margin-bottom:8px}
 .auth-wall p{font-size:14px;color:var(--gray);margin-bottom:24px;line-height:1.7}
@@ -442,7 +490,7 @@ section{padding:80px 7%}
 .post-view-body p{margin-bottom:6px;line-height:1.85}
 
 /* ─── 글쓰기 탭 (새 창) ─── */
-.write-tab-nav{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-bottom:1px solid rgba(184,134,11,0.15);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:100}
+.write-tab-nav{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(255,255,255,0.97);backdrop-filter:blur(8px);border-bottom:1px solid rgba(212,165,116,0.15);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:100}
 .write-tab-title{font-size:15px;font-weight:700;color:var(--dark)}
 .write-tab-body{margin-top:84px;padding:0 5% 60px;max-width:900px;margin-left:auto;margin-right:auto}
 .write-tab-input{width:100%;border:1px solid rgba(0,0,0,0.15);border-radius:8px;padding:13px 16px;font-size:16px;font-weight:600;font-family:'Noto Sans KR',sans-serif;outline:none;transition:.2s;margin-bottom:14px}
@@ -451,7 +499,7 @@ section{padding:80px 7%}
 .write-tab-cancel{background:transparent;color:var(--gray);border:1px solid rgba(0,0,0,0.15);border-radius:10px;padding:12px 24px;font-size:14px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
 .write-tab-cancel:hover{border-color:var(--red);color:var(--red)}
 .write-tab-submit{background:var(--red);color:#fff;border:none;border-radius:10px;padding:12px 32px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
-.write-tab-submit:hover{background:#a50d26}
+.write-tab-submit:hover{background:var(--red-deep)}
 .write-tab-submit:disabled{background:#ccc;cursor:not-allowed}
 .write-success-wrap{text-align:center;padding:100px 20px}
 .write-success-wrap .ws-icon{font-size:60px;margin-bottom:20px}
@@ -471,7 +519,7 @@ section{padding:80px 7%}
 .ql-editor h1{font-size:28px;font-weight:800;margin:12px 0 6px;line-height:1.3}
 .ql-editor h2{font-size:22px;font-weight:700;margin:10px 0 5px;line-height:1.35}
 .ql-editor h3{font-size:18px;font-weight:700;margin:8px 0 4px}
-.ql-editor blockquote{border-left:4px solid var(--gold);background:rgba(184,134,11,0.06);margin:14px 0;padding:14px 20px;border-radius:0 8px 8px 0;font-style:italic;color:var(--text)}
+.ql-editor blockquote{border-left:4px solid var(--gold);background:rgba(212,165,116,0.06);margin:14px 0;padding:14px 20px;border-radius:0 8px 8px 0;font-style:italic;color:var(--text)}
 .ql-editor pre.ql-syntax{background:#1e1e2e;color:#cdd6f4;border-radius:8px;padding:16px 18px;font-family:'Consolas','Monaco',monospace;font-size:13px;line-height:1.65;overflow-x:auto;margin:12px 0}
 .ql-editor hr{border:none;border-top:2px solid rgba(0,0,0,0.1);margin:22px 0}
 .ql-editor .ql-video{display:block;width:100%;height:380px;border:none;border-radius:10px;margin:14px 0}
@@ -491,7 +539,7 @@ button.ql-video::before{content:'▶ YT';font-size:11px;font-weight:700;color:#c
 /* 에디터 하단 바 */
 .editor-bottom-bar{display:flex;justify-content:space-between;align-items:center;padding:5px 2px;margin-top:6px;font-size:12px;color:var(--gray);gap:10px}
 /* 임시저장 배너 */
-#draftBanner{display:none;background:rgba(184,134,11,0.07);border:1px solid rgba(184,134,11,0.28);border-radius:10px;padding:13px 16px;margin-bottom:14px;flex-direction:column;gap:10px}
+#draftBanner{display:none;background:rgba(212,165,116,0.07);border:1px solid rgba(212,165,116,0.28);border-radius:10px;padding:13px 16px;margin-bottom:14px;flex-direction:column;gap:10px}
 #draftBanner.show{display:flex}
 .draft-banner-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .draft-banner-text{font-size:13px;color:#7a5c00;font-weight:500;line-height:1.5}
@@ -516,7 +564,7 @@ button.ql-video::before{content:'▶ YT';font-size:11px;font-weight:700;color:#c
 .yt-modal-btns{display:flex;gap:10px;justify-content:flex-end}
 .yt-modal-btns button{padding:10px 22px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;border:none;transition:.2s}
 .yt-insert-btn{background:var(--red);color:#fff}
-.yt-insert-btn:hover{background:#a50d26}
+.yt-insert-btn:hover{background:var(--red-deep)}
 .yt-cancel-btn{background:transparent;color:var(--gray);border:1px solid rgba(0,0,0,0.15) !important}
 .yt-cancel-btn:hover{border-color:var(--red) !important;color:var(--red)}
 
@@ -525,7 +573,7 @@ button.ql-video::before{content:'▶ YT';font-size:11px;font-weight:700;color:#c
 #lightbox.open{display:flex}
 #lightbox img{max-width:92vw;max-height:90vh;object-fit:contain;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.6)}
 #lightboxClose{position:fixed;top:18px;right:22px;color:#fff;font-size:28px;cursor:pointer;background:rgba(0,0,0,0.5);border:none;border-radius:50%;width:42px;height:42px;display:flex;align-items:center;justify-content:center;z-index:9001;transition:.2s}
-#lightboxClose:hover{background:rgba(200,16,46,0.8)}
+#lightboxClose:hover{background:rgba(217,78,78,0.8)}
 
 /* ─── 검색 ─── */
 #searchModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:8000;align-items:flex-start;justify-content:center;padding:80px 16px 16px}
@@ -539,59 +587,67 @@ button.ql-video::before{content:'▶ YT';font-size:11px;font-weight:700;color:#c
 #searchCloseBtn:hover{color:var(--red)}
 #searchResults{max-height:480px;overflow-y:auto;padding:8px 0}
 .search-item{display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer;transition:.15s;border-bottom:1px solid rgba(0,0,0,0.05)}
-.search-item:hover{background:rgba(200,16,46,0.04)}
+.search-item:hover{background:rgba(217,78,78,0.04)}
 .search-item-board{font-size:11px;color:#fff;background:var(--red);border-radius:4px;padding:2px 7px;flex-shrink:0;white-space:nowrap}
 .search-item-title{font-size:14px;color:var(--dark);font-weight:500;line-height:1.4}
 .search-item-meta{font-size:12px;color:var(--gray);margin-top:2px}
 .search-empty{text-align:center;padding:40px 20px;color:var(--gray);font-size:14px}
 /* 검색 아이콘 버튼 (네비) */
 .nav-search-btn{background:none;border:none;font-size:18px;cursor:pointer;padding:4px 8px;color:var(--dark);transition:.2s;border-radius:8px}
-.nav-search-btn:hover{color:var(--red);background:rgba(200,16,46,0.06)}
+.nav-search-btn:hover{color:var(--red);background:rgba(217,78,78,0.06)}
 
 /* ─── 신고 숨김 처리 ─── */
 .post-card.reported-hidden{opacity:.45;pointer-events:none;filter:blur(2px)}
-.reported-notice{background:rgba(200,16,46,0.06);border:1px dashed rgba(200,16,46,0.2);border-radius:8px;padding:16px;text-align:center;color:var(--gray);font-size:13px;margin-bottom:8px}
+.reported-notice{background:rgba(217,78,78,0.06);border:1px dashed rgba(217,78,78,0.2);border-radius:8px;padding:16px;text-align:center;color:var(--gray);font-size:13px;margin-bottom:8px}
 
 /* ─── 모달 ─── */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(45,24,16,0.55);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:20px}
 .modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:16px;max-width:460px;width:100%;padding:36px;position:relative;animation:modal-in .25s ease}
-@keyframes modal-in{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
-.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--gray)}
-.modal h3{font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:6px}
-.modal-sub{font-size:13px;color:var(--gray);margin-bottom:24px}
-.modal input{width:100%;border:1px solid rgba(0,0,0,0.15);border-radius:8px;padding:11px 14px;font-size:14px;margin-bottom:12px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:.2s}
-.modal input:focus{border-color:var(--red)}
-.modal-submit{width:100%;background:var(--red);color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:4px}
+.modal{background:#fff;border-radius:var(--radius-lg);max-width:460px;width:100%;padding:38px;position:relative;animation:modal-in .3s cubic-bezier(0.16,1,0.3,1);box-shadow:0 30px 80px rgba(45,24,16,0.30);border:1px solid var(--border-soft)}
+@keyframes modal-in{from{opacity:0;transform:scale(0.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-close{position:absolute;top:16px;right:18px;background:rgba(0,0,0,0.04);border:none;font-size:18px;cursor:pointer;color:var(--gray);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:.2s}
+.modal-close:hover{background:rgba(217,78,78,0.1);color:var(--red)}
+.modal h3{font-family:var(--font-serif-kr);font-size:24px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:-0.01em}
+.modal-sub{font-size:13px;color:var(--gray);margin-bottom:24px;line-height:1.6}
+.modal input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:14px;margin-bottom:12px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:.25s;background:#fff}
+.modal input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(217,78,78,0.10)}
+.modal-submit{width:100%;background:var(--grad-red);color:#fff;border:none;border-radius:var(--radius);padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:4px;transition:.25s;box-shadow:0 4px 14px rgba(217,78,78,0.25)}
+.modal-submit:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(217,78,78,0.35)}
 .modal-note{font-size:11px;color:var(--gray);text-align:center;margin-top:12px;line-height:1.6}
-.auth-modal{background:#fff;border-radius:16px;max-width:480px;width:100%;padding:36px;position:relative;animation:modal-in .25s ease;max-height:90vh;overflow-y:auto}
-.auth-modal h3{font-family:'Playfair Display',serif;font-size:22px;color:var(--dark);margin-bottom:6px}
-.auth-input{width:100%;border:1px solid rgba(0,0,0,0.15);border-radius:8px;padding:11px 14px;font-size:14px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:.2s;box-sizing:border-box}
-.auth-input:focus{border-color:var(--red)}
-.auth-submit{width:100%;background:var(--red);color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:8px;transition:.2s}
-.auth-submit:hover{background:#a50d26}
-.auth-switch{font-size:13px;color:var(--gray);text-align:center;margin-top:14px}
-.auth-switch a{color:var(--red);font-weight:600;cursor:pointer}
-.form-group{margin-bottom:14px}
-.form-label{display:block;font-size:12px;font-weight:600;color:var(--gray);margin-bottom:5px;letter-spacing:0.02em}
+.auth-modal{background:#fff;border-radius:var(--radius-lg);max-width:480px;width:100%;padding:38px;position:relative;animation:modal-in .3s cubic-bezier(0.16,1,0.3,1);max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(45,24,16,0.30);border:1px solid var(--border-soft)}
+.auth-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--red) 0%,var(--gold) 50%,var(--red) 100%);border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+.auth-modal h3{font-family:var(--font-serif-kr);font-size:24px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:-0.01em}
+.auth-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:14px;font-family:'Noto Sans KR',sans-serif;outline:none;transition:.25s;box-sizing:border-box;background:#fff}
+.auth-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(217,78,78,0.10)}
+.auth-submit{width:100%;background:var(--grad-red);color:#fff;border:none;border-radius:var(--radius);padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:8px;transition:.25s;letter-spacing:0.02em;box-shadow:0 4px 14px rgba(217,78,78,0.25);position:relative;overflow:hidden}
+.auth-submit::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);transition:.5s}
+.auth-submit:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(217,78,78,0.35)}
+.auth-submit:hover::before{left:100%}
+.auth-switch{font-size:13px;color:var(--gray);text-align:center;margin-top:18px}
+.auth-switch a{color:var(--red);font-weight:600;cursor:pointer;transition:.2s}
+.auth-switch a:hover{color:var(--red-deep);text-decoration:underline}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;font-weight:700;color:var(--gray);margin-bottom:6px;letter-spacing:0.03em}
 .radio-group{display:flex;gap:20px}
 .radio-group label{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--text);cursor:pointer}
-.auth-divider{height:1px;background:rgba(0,0,0,0.08);margin:16px 0}
+.auth-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);margin:18px 0}
 
 /* ─── 푸터 ─── */
-footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
-.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:28px}
-.footer-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.footer-logo-text{font-size:16px;font-weight:700;color:#fff}
-.footer-info{font-size:12px;line-height:1.9}
-.footer-col h4{font-size:13px;font-weight:700;color:rgba(255,255,255,0.85);margin-bottom:14px}
-.footer-col a{display:block;font-size:12px;color:rgba(255,255,255,0.45);text-decoration:none;margin-bottom:8px;transition:.2s;cursor:pointer}
-.footer-col a:hover{color:rgba(255,255,255,0.85)}
-.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.footer-bottom p{font-size:11px}
-.footer-laws{display:flex;gap:16px}
-.footer-laws a{font-size:11px;color:rgba(255,255,255,0.4);text-decoration:none;cursor:pointer}
-.footer-laws a:hover{color:rgba(255,255,255,0.7)}
+footer{background:linear-gradient(180deg,var(--dark) 0%,#1A0E08 100%);color:rgba(253,246,232,0.55);padding:64px 7% 32px;position:relative;overflow:hidden}
+footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold) 50%,transparent)}
+footer::after{content:'';position:absolute;bottom:-100px;right:-50px;width:300px;height:300px;background:url('mari-lotus.jpg') center center / contain no-repeat;opacity:0.04;pointer-events:none}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;padding-bottom:36px;border-bottom:1px solid rgba(212,165,116,0.12);margin-bottom:32px;position:relative;z-index:1}
+.footer-logo{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.footer-logo-text{font-family:var(--font-serif);font-size:18px;font-weight:700;color:var(--gold-light);letter-spacing:0.02em}
+.footer-info{font-size:12px;line-height:2;color:rgba(253,246,232,0.62)}
+.footer-col h4{font-family:var(--font-serif-kr);font-size:14px;font-weight:700;color:var(--gold-light);margin-bottom:16px;letter-spacing:0.02em;padding-bottom:8px;border-bottom:1px solid rgba(212,165,116,0.18);display:inline-block}
+.footer-col a{display:block;font-size:12.5px;color:rgba(253,246,232,0.55);text-decoration:none;margin-bottom:10px;transition:.2s;cursor:pointer;letter-spacing:0.01em}
+.footer-col a:hover{color:var(--gold-light);transform:translateX(3px)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;position:relative;z-index:1;padding-top:20px;border-top:1px solid rgba(212,165,116,0.08)}
+.footer-bottom p{font-size:11px;color:rgba(253,246,232,0.40);letter-spacing:0.04em}
+.footer-laws{display:flex;gap:18px}
+.footer-laws a{font-size:11px;color:rgba(253,246,232,0.45);text-decoration:none;cursor:pointer;transition:.2s}
+.footer-laws a:hover{color:var(--gold-light)}
 
 /* ─── 플로팅 ─── */
 .float-wrap{position:fixed;bottom:28px;right:24px;z-index:99;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
@@ -627,9 +683,9 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
   .mnav-label{display:flex !important;align-items:center;gap:8px;grid-column:1/-1;font-size:14px;font-weight:800;color:var(--red);letter-spacing:0;text-transform:none;margin-bottom:4px;padding-left:0}
   .mnav-label::before{content:'';display:block;width:4px;height:18px;background:var(--red);border-radius:2px;flex-shrink:0}
   .nav-links a{padding:10px 8px;font-size:13px;border-radius:10px;font-weight:600;background:rgba(0,0,0,0.03);display:flex;align-items:center;justify-content:center;gap:4px;width:100%;border:1px solid rgba(0,0,0,0.06);transition:.2s;color:var(--dark);text-align:center}
-  .nav-links a:hover,.nav-links a.nav-active{background:rgba(200,16,46,0.07);border-color:rgba(200,16,46,0.15);color:var(--red)}
-  .nav-links .nav-community{background:rgba(184,134,11,0.06);color:#7A5500;border-color:rgba(184,134,11,0.15)}
-  .nav-links .nav-community:hover,.nav-links .nav-community.nav-active{background:rgba(184,134,11,0.14) !important;color:#5C3D00 !important;border-color:rgba(184,134,11,0.25)}
+  .nav-links a:hover,.nav-links a.nav-active{background:rgba(217,78,78,0.07);border-color:rgba(217,78,78,0.15);color:var(--red)}
+  .nav-links .nav-community{background:rgba(212,165,116,0.06);color:#7A5500;border-color:rgba(212,165,116,0.15)}
+  .nav-links .nav-community:hover,.nav-links .nav-community.nav-active{background:rgba(212,165,116,0.14) !important;color:#5C3D00 !important;border-color:rgba(212,165,116,0.25)}
   .mnav-community .mnav-label{color:var(--gold)}
   .mnav-community .mnav-label::before{background:var(--gold)}
   .nav-dropdown{display:none!important}
@@ -637,7 +693,7 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
   .mnav-mobile-only{display:grid!important}
   .mobile-nav-cta-wrap{display:block;padding:12px 16px 20px;border-top:1px solid rgba(0,0,0,0.07)}
   .mobile-nav-cta{display:block;width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;transition:.2s}
-  .mobile-nav-cta:hover{background:#a50d26}
+  .mobile-nav-cta:hover{background:var(--red-deep)}
   .menu-btn{display:block}
   .page-hero{margin-top:56px!important}
   .hero{margin-top:56px!important}
@@ -658,7 +714,7 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 /* ─── 네비 우측 CTA ─── */
 .nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .nav-consult-btn{background:var(--red);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;transition:.2s;flex-shrink:0}
-.nav-consult-btn:hover{background:#a50d26}
+.nav-consult-btn:hover{background:var(--red-deep)}
 
 /* ─── 두 줄 네비 레이아웃 (601px ~ 1500px) ─── */
 @media(min-width:601px) and (max-width:1500px){
@@ -667,7 +723,7 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
   .logo-mark{height:40px!important}
   .nav-right{order:2;margin-left:auto;flex-shrink:0;gap:6px}
   .menu-btn{display:none!important}
-  .nav-links{order:10;flex:0 0 100%;justify-content:center;flex-wrap:wrap;border-top:1px solid rgba(184,134,11,0.12);padding:5px 0;display:flex!important;gap:0}
+  .nav-links{order:10;flex:0 0 100%;justify-content:center;flex-wrap:wrap;border-top:1px solid rgba(212,165,116,0.12);padding:5px 0;display:flex!important;gap:0}
   .nav-sep{margin:0 4px;display:flex!important}
   .nav-consult-btn{display:none}
   .page-hero{margin-top:92px}
@@ -696,16 +752,17 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 }
 
 /* ─── 섹션 구분선 ─── */
-.section-divider{display:flex;align-items:center;gap:16px;padding:0 7%;margin:0}
-.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(184,134,11,0.2),transparent)}
-.section-divider-icon{font-size:18px;color:var(--gold);opacity:0.6}
+.section-divider{display:flex;align-items:center;gap:20px;padding:36px 7%;margin:0}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent 10%,rgba(212,165,116,0.35) 50%,transparent 90%)}
+.section-divider-icon{font-size:18px;color:var(--gold-deep);opacity:0.75;position:relative;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:rgba(212,165,116,0.06);border:1px solid rgba(212,165,116,0.20)}
+.section-divider-icon::before{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid rgba(212,165,116,0.12)}
 
 /* ─── 홈 프리뷰 공통 ─── */
 .home-preview{padding:72px 7%}
 .home-preview.bg-cream{background:var(--cream)}
 .home-preview.bg-light{background:var(--light)}
 .home-preview.bg-white{background:var(--white)}
-.home-preview.bg-dark{background:linear-gradient(135deg,#1A0A0A,#3D0B0B)}
+.home-preview.bg-dark{background:linear-gradient(135deg,var(--dark),#4A2418)}
 .section-header-row{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px;flex-wrap:wrap;gap:16px}
 .preview-more-btn{background:transparent;color:var(--red);border:1.5px solid var(--red);border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s;white-space:nowrap}
 .preview-more-btn:hover{background:var(--red);color:#fff}
@@ -722,7 +779,7 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .proc-card-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,0.72) 0%,rgba(0,0,0,0) 100%);color:#fff;font-size:12px;font-weight:700;padding:24px 6px 8px;text-align:center;z-index:2}
 @media(max-width:768px){.proc-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}}
 @media(max-width:400px){.proc-cards{gap:6px}.proc-card-label{font-size:10px;padding:18px 4px 6px}}
-.proc-steps-bar{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;padding:14px 20px;background:#fff;border-radius:14px;border:1px solid rgba(184,134,11,0.14);box-shadow:0 2px 12px rgba(0,0,0,0.04)}
+.proc-steps-bar{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;padding:14px 20px;background:#fff;border-radius:14px;border:1px solid rgba(212,165,116,0.14);box-shadow:0 2px 12px rgba(0,0,0,0.04)}
 .proc-step-item{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:var(--dark);white-space:nowrap}
 .proc-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
 .proc-arrow{color:var(--gold);font-size:16px;font-weight:700;opacity:0.7}
@@ -793,8 +850,8 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 @media(min-width:769px) and (max-width:1024px){
   .life-carousel-track .lpc{flex:0 0 calc(50% - 8px)}
 }
-.lpc{background:var(--white);border-radius:14px;overflow:hidden;border:1px solid rgba(184,134,11,0.12);cursor:pointer;transition:.25s}
-.lpc:hover{transform:translateY(-4px);box-shadow:0 10px 32px rgba(200,16,46,0.1);border-color:rgba(200,16,46,0.18)}
+.lpc{background:var(--white);border-radius:14px;overflow:hidden;border:1px solid rgba(212,165,116,0.12);cursor:pointer;transition:.25s}
+.lpc:hover{transform:translateY(-4px);box-shadow:0 10px 32px rgba(217,78,78,0.1);border-color:rgba(217,78,78,0.18)}
 .lpc-header{height:80px;display:flex;align-items:center;justify-content:center;font-size:32px;position:relative}
 .lpc-body{padding:14px 16px}
 .lpc-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:6px;line-height:1.4}
@@ -805,7 +862,7 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .lpc-lock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
 .lpc-lock-icon{font-size:16px}
 .lpc-lock-text{font-size:11px;font-weight:700;color:var(--red)}
-.life-upgrade-banner{background:linear-gradient(135deg,rgba(200,16,46,0.04),rgba(184,134,11,0.06));border:1.5px dashed rgba(200,16,46,0.18);border-radius:12px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.life-upgrade-banner{background:linear-gradient(135deg,rgba(217,78,78,0.04),rgba(212,165,116,0.06));border:1.5px dashed rgba(217,78,78,0.18);border-radius:12px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .life-upgrade-banner p{font-size:14px;color:var(--dark);font-weight:600;line-height:1.5}
 .life-upgrade-banner small{display:block;font-size:12px;color:var(--gray);font-weight:400;margin-top:2px}
 
@@ -816,22 +873,26 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .preview-faq-list{max-width:100%}
 .preview-faq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
 .pfaq-item{background:var(--white);border-radius:10px;padding:16px 18px;border:1px solid rgba(0,0,0,0.07);transition:.2s}
-.pfaq-item:hover{border-color:rgba(184,134,11,0.25);box-shadow:0 4px 16px rgba(184,134,11,0.08)}
+.pfaq-item:hover{border-color:rgba(212,165,116,0.25);box-shadow:0 4px 16px rgba(212,165,116,0.08)}
 .pfaq-q{font-size:14px;font-weight:600;color:var(--dark);margin-bottom:8px;display:flex;gap:8px;align-items:flex-start}
 .pfaq-q::before{content:'Q.';color:var(--red);font-weight:800;flex-shrink:0}
 .pfaq-a{font-size:13px;color:var(--gray);line-height:1.7}
 
 /* ─── CTA 배너 ─── */
-.home-cta-banner{background:url('배경아래.png') center center / cover no-repeat;padding:60px 7%;text-align:center;position:relative;overflow:hidden}
-.home-cta-banner::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,248,240,0.70) 0%,rgba(255,235,215,0.60) 100%);z-index:0}
-.home-cta-banner-inner{position:relative;z-index:1}
-.home-cta-banner h2{font-family:'Playfair Display',serif;color:#1A0A0A;font-size:clamp(1.8rem,3vw,2.6rem);margin-bottom:12px;text-shadow:0 1px 3px rgba(255,255,255,0.5)}
-.home-cta-banner p{color:rgba(30,12,4,0.68);font-size:15px;margin-bottom:28px;line-height:1.7}
+.home-cta-banner{background:var(--grad-hero);padding:80px 7%;text-align:center;position:relative;overflow:hidden}
+.home-cta-banner::before{content:'';position:absolute;inset:0;background:url('mari-hanji-bg.jpg') center center / cover no-repeat;opacity:0.45;mix-blend-mode:multiply;z-index:0}
+.home-cta-banner::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(217,78,78,0.08) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(212,165,116,0.10) 0%,transparent 60%);z-index:0;pointer-events:none}
+.home-cta-banner-inner{position:relative;z-index:1;max-width:720px;margin:0 auto}
+.home-cta-banner h2{font-family:var(--font-serif-kr);color:var(--dark);font-size:clamp(1.9rem,3.4vw,2.8rem);font-weight:700;margin-bottom:16px;letter-spacing:-0.01em;line-height:1.3}
+.home-cta-banner h2 em{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;background:linear-gradient(135deg,var(--red),var(--gold-deep));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.home-cta-banner p{color:var(--text);font-size:15px;margin-bottom:32px;line-height:1.8}
 .home-cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.btn-cta-primary{background:#8B3A00;color:#fff;padding:14px 32px;border-radius:10px;font-weight:800;font-size:15px;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
-.btn-cta-primary:hover{background:#6B2C00;transform:translateY(-1px)}
-.btn-cta-outline{background:rgba(255,255,255,0.55);color:#1A0A0A;padding:14px 32px;border-radius:10px;font-weight:600;font-size:15px;border:1.5px solid rgba(30,12,4,0.25);cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s;backdrop-filter:blur(4px)}
-.btn-cta-outline:hover{background:rgba(255,255,255,0.80)}
+.btn-cta-primary{background:var(--grad-red);color:#fff;padding:15px 36px;border-radius:var(--radius);font-weight:700;font-size:15px;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.25s;box-shadow:0 6px 18px rgba(217,78,78,0.30);letter-spacing:0.02em;position:relative;overflow:hidden}
+.btn-cta-primary::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);transition:.5s}
+.btn-cta-primary:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(217,78,78,0.40)}
+.btn-cta-primary:hover::before{left:100%}
+.btn-cta-outline{background:rgba(255,255,255,0.75);color:var(--dark);padding:15px 34px;border-radius:var(--radius);font-weight:600;font-size:15px;border:1.5px solid var(--gold);cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.25s;backdrop-filter:blur(6px)}
+.btn-cta-outline:hover{background:#fff;border-color:var(--gold-deep);transform:translateY(-1px);box-shadow:var(--shadow-md)}
 
 @media(max-width:860px){
   .section-header-row{flex-direction:column;align-items:flex-start;gap:12px}
@@ -850,28 +911,28 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .ps-body{padding:36px 40px}
 .ps-text{font-size:15px;color:#444;line-height:1.9;margin-bottom:14px}
 .ps-methods{display:flex;flex-direction:column;gap:10px;margin-top:20px}
-.ps-method{display:flex;align-items:center;gap:12px;background:#faf8f5;border-radius:10px;padding:12px 16px;font-size:14px;color:#333;border:1px solid rgba(184,134,11,0.1)}
+.ps-method{display:flex;align-items:center;gap:12px;background:#faf8f5;border-radius:10px;padding:12px 16px;font-size:14px;color:#333;border:1px solid rgba(212,165,116,0.1)}
 .ps-method-icon{font-size:20px;flex-shrink:0}
 .ps-doc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
-.ps-doc-item{background:#faf8f5;border:1px solid rgba(184,134,11,0.12);border-radius:8px;padding:10px 14px;font-size:13px;color:#333;display:flex;align-items:center;gap:8px}
-.ps-info-box{background:linear-gradient(135deg,rgba(184,134,11,0.06),rgba(200,16,46,0.04));border:1px solid rgba(184,134,11,0.2);border-left:4px solid #B8860B;border-radius:12px;padding:20px 22px;margin-top:20px}
+.ps-doc-item{background:#faf8f5;border:1px solid rgba(212,165,116,0.12);border-radius:8px;padding:10px 14px;font-size:13px;color:#333;display:flex;align-items:center;gap:8px}
+.ps-info-box{background:linear-gradient(135deg,rgba(212,165,116,0.06),rgba(217,78,78,0.04));border:1px solid rgba(212,165,116,0.2);border-left:4px solid #B8860B;border-radius:12px;padding:20px 22px;margin-top:20px}
 .ps-info-title{font-size:14px;font-weight:700;color:#8B6309;margin-bottom:10px}
 .ps-info-box p{font-size:13px;color:#555;line-height:1.8;margin:0}
-.ps-notice-box{display:flex;align-items:flex-start;gap:10px;background:rgba(200,16,46,0.04);border:1px dashed rgba(200,16,46,0.2);border-radius:10px;padding:14px 18px;font-size:13px;color:#555;line-height:1.7;margin-top:16px}
+.ps-notice-box{display:flex;align-items:flex-start;gap:10px;background:rgba(217,78,78,0.04);border:1px dashed rgba(217,78,78,0.2);border-radius:10px;padding:14px 18px;font-size:13px;color:#555;line-height:1.7;margin-top:16px}
 .ps-notice-icon{font-size:18px;flex-shrink:0;margin-top:1px}
 .ps-highlight-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}
 .ps-highlight-item{text-align:center;background:#f0f7ff;border-radius:12px;padding:18px 10px;border:1px solid rgba(0,119,182,0.12)}
 .ps-highlight-num{font-size:22px;font-weight:800;color:#0077B6;margin-bottom:4px}
 .ps-highlight-label{font-size:12px;color:#666}
 .ps-option-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
-.ps-option-card{background:#faf8f5;border:1px solid rgba(184,134,11,0.15);border-radius:12px;padding:20px;text-align:center}
+.ps-option-card{background:#faf8f5;border:1px solid rgba(212,165,116,0.15);border-radius:12px;padding:20px;text-align:center}
 .ps-option-icon{font-size:28px;margin-bottom:8px}
 .ps-option-title{font-size:14px;font-weight:700;color:#333;margin-bottom:6px}
 .ps-option-desc{font-size:12px;color:#666;line-height:1.6}
 .ps-connector{display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:0}
-.ps-connector-line{width:2px;height:28px;background:linear-gradient(to bottom,rgba(184,134,11,0.3),rgba(184,134,11,0.6))}
+.ps-connector-line{width:2px;height:28px;background:linear-gradient(to bottom,rgba(212,165,116,0.3),rgba(212,165,116,0.6))}
 .ps-connector-arrow{color:#B8860B;font-size:14px;margin-top:-2px;opacity:0.7}
-.ps-cta{background:linear-gradient(135deg,#1A0A0A,#3D0B0B);border-radius:20px;padding:48px 40px;text-align:center;margin-top:32px;color:#fff}
+.ps-cta{background:linear-gradient(135deg,var(--dark),#4A2418);border-radius:20px;padding:48px 40px;text-align:center;margin-top:32px;color:#fff}
 .ps-cta h3{font-family:'Playfair Display',serif;font-size:24px;margin-bottom:10px}
 .ps-cta p{font-size:14px;color:rgba(255,255,255,0.65);margin-bottom:24px;line-height:1.7}
 @media(max-width:640px){
@@ -887,7 +948,7 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 
 /* ─── 게시물 상세 페이지 ─── */
 .post-detail-outer{padding:0 7% 80px;max-width:960px;margin:0 auto}
-.post-detail-meta-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:2px solid rgba(200,16,46,0.08);margin-bottom:32px;flex-wrap:wrap;gap:10px}
+.post-detail-meta-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:2px solid rgba(217,78,78,0.08);margin-bottom:32px;flex-wrap:wrap;gap:10px}
 .post-detail-meta-info{font-size:13px;color:var(--gray);display:flex;gap:14px;flex-wrap:wrap}
 .post-detail-meta-info b{color:var(--dark)}
 .post-back-btn{background:transparent;border:1px solid rgba(0,0,0,0.15);color:var(--gray);border-radius:7px;padding:8px 18px;font-size:13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s;white-space:nowrap}
@@ -895,13 +956,13 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .post-detail-body{font-size:15px;line-height:1.95;color:var(--text);padding:4px 0 40px}
 .post-detail-body img{max-width:100%;border-radius:10px;margin:10px 0;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
 .post-detail-body p{margin-bottom:8px;line-height:1.9}
-.post-detail-divider{height:1px;background:linear-gradient(to right,transparent,rgba(184,134,11,0.2),transparent);margin:8px 0 32px}
+.post-detail-divider{height:1px;background:linear-gradient(to right,transparent,rgba(212,165,116,0.2),transparent);margin:8px 0 32px}
 
 /* 이전글/다음글 */
 .post-nav-bar{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;margin-bottom:48px}
 .post-nav-btn{background:var(--white);border:1px solid rgba(0,0,0,0.1);border-radius:10px;padding:14px 18px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s;text-align:left;min-width:0}
 .post-nav-btn:disabled{opacity:0.3;cursor:not-allowed;background:rgba(0,0,0,0.02)}
-.post-nav-btn:hover:not(:disabled){border-color:var(--gold);background:rgba(184,134,11,0.04);box-shadow:0 4px 16px rgba(184,134,11,0.1)}
+.post-nav-btn:hover:not(:disabled){border-color:var(--gold);background:rgba(212,165,116,0.04);box-shadow:0 4px 16px rgba(212,165,116,0.1)}
 .pnav-label{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:0.06em;margin-bottom:5px}
 .pnav-title{font-size:13px;color:var(--dark);font-weight:500;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .post-nav-btn.next-btn{text-align:right}
@@ -910,30 +971,30 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .post-nav-list-btn:hover{background:var(--red)}
 
 /* 댓글 */
-.comments-section{border-top:2px solid rgba(200,16,46,0.08);padding-top:36px}
+.comments-section{border-top:2px solid rgba(217,78,78,0.08);padding-top:36px}
 .comments-title{font-size:17px;font-weight:700;color:var(--dark);margin-bottom:24px;display:flex;align-items:center;gap:10px}
-.comments-count{font-size:13px;font-weight:700;color:var(--red);background:rgba(200,16,46,0.08);border-radius:99px;padding:3px 12px}
+.comments-count{font-size:13px;font-weight:700;color:var(--red);background:rgba(217,78,78,0.08);border-radius:99px;padding:3px 12px}
 .comment-item{padding:18px 0;border-bottom:1px solid rgba(0,0,0,0.06)}
 .comment-item:last-child{border-bottom:none}
 .comment-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
 .comment-author{font-size:13px;font-weight:700;color:var(--dark)}
 .comment-date{font-size:12px;color:rgba(0,0,0,0.35)}
 .comment-delete{margin-left:auto;background:none;border:none;color:rgba(0,0,0,0.28);font-size:12px;cursor:pointer;padding:2px 8px;font-family:'Noto Sans KR',sans-serif;transition:.2s;border-radius:4px}
-.comment-delete:hover{color:var(--red);background:rgba(200,16,46,0.06)}
+.comment-delete:hover{color:var(--red);background:rgba(217,78,78,0.06)}
 .comment-content{font-size:14px;color:var(--text);line-height:1.75;white-space:pre-wrap}
-.comment-reply{margin-left:32px;border-left:3px solid #f5e0e3;padding-left:14px;background:rgba(200,16,46,0.015);border-radius:0 8px 8px 0;margin-top:6px}
-.reply-form{margin-left:32px;border-left:3px solid #f5e0e3;padding:12px 14px;background:rgba(200,16,46,0.015);border-radius:0 8px 8px 0;margin-top:8px}
+.comment-reply{margin-left:32px;border-left:3px solid #f5e0e3;padding-left:14px;background:rgba(217,78,78,0.015);border-radius:0 8px 8px 0;margin-top:6px}
+.reply-form{margin-left:32px;border-left:3px solid #f5e0e3;padding:12px 14px;background:rgba(217,78,78,0.015);border-radius:0 8px 8px 0;margin-top:8px}
 .reply-form .comment-textarea{min-height:80px}
 .comment-actions{display:flex;gap:4px;margin-top:8px;justify-content:flex-end}
 .comment-action-btn{background:none;border:1px solid transparent;font-size:12px;color:rgba(0,0,0,0.35);cursor:pointer;padding:3px 10px;border-radius:4px;font-family:'Noto Sans KR',sans-serif;transition:.2s}
-.comment-action-btn:hover{color:var(--red);background:rgba(200,16,46,0.06);border-color:rgba(200,16,46,0.15)}
+.comment-action-btn:hover{color:var(--red);background:rgba(217,78,78,0.06);border-color:rgba(217,78,78,0.15)}
 .comment-action-btn.btn-reply{color:var(--gray);font-weight:600}
 .admin-tabs{overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
 .admin-tabs::-webkit-scrollbar{display:none}
 .post-cards{margin-top:4px}
 .post-card{display:flex;gap:14px;padding:14px 8px;border-bottom:1px solid rgba(0,0,0,0.07);cursor:pointer;align-items:center;transition:background .15s}
 .post-card:last-child{border-bottom:none}
-.post-card:hover{background:rgba(184,134,11,0.04)}
+.post-card:hover{background:rgba(212,165,116,0.04)}
 .pc-thumb{width:80px;height:64px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid rgba(0,0,0,0.08)}
 .pc-thumb-ph{width:80px;height:64px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,#f7e8ea,#fdf6f6);display:flex;align-items:center;justify-content:center;font-size:26px;border:1px solid rgba(0,0,0,0.06)}
 .pc-body{flex:1;min-width:0}
@@ -943,13 +1004,13 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 .pc-right b{display:block;font-size:16px;font-weight:700;color:var(--dark);line-height:1.2}
 .pc-right span{font-size:11px;color:var(--gray)}
 .no-comments{font-size:14px;color:var(--gray);text-align:center;padding:40px 0}
-.comment-form-wrap{margin-top:28px;background:var(--cream);border-radius:14px;padding:22px 24px;border:1px solid rgba(184,134,11,0.12)}
+.comment-form-wrap{margin-top:28px;background:var(--cream);border-radius:14px;padding:22px 24px;border:1px solid rgba(212,165,116,0.12)}
 .comment-form-header{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:14px}
 .comment-textarea{width:100%;border:1px solid rgba(0,0,0,0.12);border-radius:8px;padding:12px 14px;font-size:14px;font-family:'Noto Sans KR',sans-serif;resize:vertical;min-height:84px;outline:none;transition:.2s;box-sizing:border-box;background:#fff}
 .comment-textarea:focus{border-color:var(--red)}
 .comment-form-bottom{display:flex;justify-content:flex-end;margin-top:10px}
 .comment-submit-btn{background:var(--red);color:#fff;border:none;border-radius:8px;padding:10px 26px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
-.comment-submit-btn:hover{background:#a50d26}
+.comment-submit-btn:hover{background:var(--red-deep)}
 .comment-submit-btn:disabled{background:#ccc;cursor:not-allowed}
 .comment-login-notice{font-size:14px;color:var(--gray);text-align:center;padding:20px;background:rgba(0,0,0,0.03);border-radius:8px}
 .comment-login-notice a{color:var(--red);cursor:pointer;font-weight:600}
@@ -987,11 +1048,11 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 /* 상단 탭 네비 */
 .admin-topnav-wrap{display:flex;align-items:stretch;border-bottom:2px solid rgba(0,0,0,0.08);background:#fafafa;flex-shrink:0}
 .admin-nav-arrow{flex-shrink:0;width:32px;border:none;background:#fafafa;color:#aaa;font-size:20px;cursor:pointer;transition:.15s;padding:0;display:flex;align-items:center;justify-content:center}
-.admin-nav-arrow:hover{background:rgba(200,16,46,0.07);color:var(--red)}
+.admin-nav-arrow:hover{background:rgba(217,78,78,0.07);color:var(--red)}
 .admin-topnav{display:flex;flex:1;overflow-x:auto;scrollbar-width:none}
 .admin-topnav::-webkit-scrollbar{display:none}
 .admin-topnav-btn{display:flex;align-items:center;gap:5px;padding:12px 15px;border:none;background:transparent;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:600;color:#888;cursor:pointer;border-bottom:3px solid transparent;flex-shrink:0;white-space:nowrap;transition:.15s;margin-bottom:-2px}
-.admin-topnav-btn:hover{color:var(--dark);background:rgba(200,16,46,0.04)}
+.admin-topnav-btn:hover{color:var(--dark);background:rgba(217,78,78,0.04)}
 .admin-topnav-btn.active{color:var(--red);border-bottom-color:var(--red);background:#fff}
 .admin-content{flex:1;overflow-y:auto;padding:24px 28px}
 @media(max-width:600px){
@@ -1002,20 +1063,20 @@ footer{background:#0D0505;color:rgba(255,255,255,0.5);padding:48px 7% 28px}
 
 /* ─── 공지 / 좋아요 ─── */
 .notice-pin-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;background:var(--red);color:#fff;margin-right:5px;vertical-align:middle;flex-shrink:0}
-.post-card.is-pinned{background:rgba(200,16,46,0.03);border-left:3px solid var(--red)}
+.post-card.is-pinned{background:rgba(217,78,78,0.03);border-left:3px solid var(--red)}
 .like-btn{background:none;border:1px solid #ddd;border-radius:20px;padding:5px 14px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.2s;color:#999;font-family:'Noto Sans KR',sans-serif}
 .like-btn:hover{border-color:var(--red);color:var(--red)}
-.like-btn.liked{border-color:var(--red);color:var(--red);background:rgba(200,16,46,0.06)}
+.like-btn.liked{border-color:var(--red);color:var(--red);background:rgba(217,78,78,0.06)}
 .comment-like-btn{background:none;border:none;font-size:12px;color:#bbb;cursor:pointer;padding:2px 6px;border-radius:10px;transition:.15s;display:inline-flex;align-items:center;gap:3px;font-family:'Noto Sans KR',sans-serif}
 .comment-like-btn:hover{color:var(--red)}
 .comment-like-btn.liked{color:var(--red);font-weight:700}
-.pin-toggle-btn{background:none;border:1px solid rgba(200,16,46,0.3);color:var(--red);border-radius:7px;padding:6px 13px;font-size:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
+.pin-toggle-btn{background:none;border:1px solid rgba(217,78,78,0.3);color:var(--red);border-radius:7px;padding:6px 13px;font-size:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
 .pin-toggle-btn:hover{background:var(--red);color:#fff}
 
 /* ─── 쪽지함 ─── */
 .msg-item{display:flex;align-items:center;gap:14px;padding:14px 18px;border:1px solid rgba(0,0,0,0.07);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:.2s;background:#fff}
-.msg-item:hover{border-color:var(--gold);box-shadow:0 4px 16px rgba(184,134,11,0.08)}
-.msg-item.unread{background:#FDF8F0;border-color:rgba(200,16,46,0.12);font-weight:600}
+.msg-item:hover{border-color:var(--gold);box-shadow:0 4px 16px rgba(212,165,116,0.08)}
+.msg-item.unread{background:#FDF8F0;border-color:rgba(217,78,78,0.12);font-weight:600}
 .msg-unread-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0}
 .msg-meta{flex:1;min-width:0}
 .msg-sender{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:3px}
@@ -1324,18 +1385,18 @@ html.mobile-view .float-btn span{display:none !important}
 .chat-input{flex:1;border:1px solid var(--border);border-radius:20px;padding:8px 14px;font-size:13px;outline:none;font-family:'Noto Sans KR',sans-serif}
 .chat-input:focus{border-color:var(--red)}
 .chat-send-btn{background:var(--red);color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:15px;cursor:pointer;flex-shrink:0;transition:.2s;display:flex;align-items:center;justify-content:center}
-.chat-send-btn:hover{background:#a50d26}
+.chat-send-btn:hover{background:var(--red-deep)}
 .chat-guest-form{padding:24px 20px;display:flex;flex-direction:column;gap:12px;flex:1}
 .chat-guest-form h3{font-size:16px;font-weight:700;margin:0;color:var(--dark)}
 .chat-guest-form p{font-size:13px;color:var(--gray);margin:0}
 .chat-guest-input{border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:14px;font-family:'Noto Sans KR',sans-serif;outline:none;color:var(--dark)}
 .chat-guest-input:focus{border-color:var(--red)}
 .chat-guest-start{background:var(--red);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s;margin-top:4px}
-.chat-guest-start:hover{background:#a50d26}
+.chat-guest-start:hover{background:var(--red-deep)}
 .chat-staff-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:.2s;background:var(--white)}
-.chat-staff-card:hover{border-color:var(--red);background:rgba(200,16,46,0.04)}
-.chat-staff-card.sel{border-color:var(--red);background:rgba(200,16,46,0.07)}
-.chat-staff-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--red),#a50d26);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.chat-staff-card:hover{border-color:var(--red);background:rgba(217,78,78,0.04)}
+.chat-staff-card.sel{border-color:var(--red);background:rgba(217,78,78,0.07)}
+.chat-staff-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-deep));color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .chat-staff-info{flex:1;min-width:0}
 .chat-staff-name{font-size:14px;font-weight:700;color:var(--dark)}
 .chat-staff-role{font-size:11px;color:var(--gray);margin-top:2px}
@@ -1346,7 +1407,7 @@ html.mobile-view .float-btn span{display:none !important}
 .chat-list-panel{border-right:1px solid var(--border);overflow-y:auto;background:var(--white)}
 .chat-list-hd{padding:10px 14px;font-size:12px;font-weight:700;color:var(--gray);border-bottom:1px solid var(--border);background:var(--bg)}
 .chat-list-item{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s}
-.chat-list-item:hover,.chat-list-item.sel{background:rgba(200,16,46,0.05)}
+.chat-list-item:hover,.chat-list-item.sel{background:rgba(217,78,78,0.05)}
 .chat-list-name{font-size:13px;font-weight:700;color:var(--dark);display:flex;align-items:center;gap:6px}
 .chat-list-preview{font-size:12px;color:var(--gray);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chat-list-foot{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
@@ -1361,7 +1422,7 @@ html.mobile-view .float-btn span{display:none !important}
 .chat-detail-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;font-family:'Noto Sans KR',sans-serif;resize:none;outline:none;min-height:36px;max-height:80px}
 .chat-detail-input:focus{border-color:var(--red)}
 .chat-send-staff{background:var(--red);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;transition:.2s}
-.chat-send-staff:hover{background:#a50d26}
+.chat-send-staff:hover{background:var(--red-deep)}
 /* 채팅창 열릴 때 FAB 숨김 */
 .chat-fab.hidden{display:none!important}
 /* 채팅창 상담사 변경 바 */
@@ -1396,10 +1457,10 @@ html.mobile-view .float-btn span{display:none !important}
 .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:8px}
 .pricing-card{background:#fff;border:1.5px solid rgba(0,0,0,0.08);border-radius:20px;padding:32px 24px;text-align:center;transition:.3s;position:relative}
 .pricing-card:hover{box-shadow:0 12px 40px rgba(0,0,0,0.12);transform:translateY(-4px)}
-.pricing-card-featured{border-color:var(--red);box-shadow:0 8px 32px rgba(200,16,46,0.15)}
+.pricing-card-featured{border-color:var(--red);box-shadow:0 8px 32px rgba(217,78,78,0.15)}
 .pricing-badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(0,0,0,0.06);color:var(--gray);margin-bottom:12px}
 .pricing-badge-hot{background:var(--red);color:#fff}
-.pricing-badge-premium{background:linear-gradient(135deg,var(--gold),#8B6914);color:#fff}
+.pricing-badge-premium{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#fff}
 .pricing-name{font-size:1.4rem;font-weight:800;margin-bottom:8px;color:var(--dark)}
 .pricing-price{font-size:1.1rem;font-weight:700;color:var(--red);margin-bottom:8px}
 .pricing-desc{font-size:13px;color:var(--gray);margin-bottom:20px;min-height:36px}
@@ -1408,25 +1469,25 @@ html.mobile-view .float-btn span{display:none !important}
 .pricing-cta{width:100%;padding:12px;border:1.5px solid var(--red);background:transparent;color:var(--red);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s}
 .pricing-cta:hover{background:var(--red);color:#fff}
 .pricing-cta-main{background:var(--red);color:#fff}
-.pricing-cta-main:hover{background:#a50d26}
+.pricing-cta-main:hover{background:var(--red-deep)}
 .pricing-breakdown-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .pricing-breakdown-item{background:var(--cream);border-radius:16px;padding:24px;text-align:center}
 .pb-icon{font-size:32px;margin-bottom:10px}
 .pb-title{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--dark)}
 .pb-desc{font-size:12px;color:var(--gray)}
-.pricing-notice{background:linear-gradient(135deg,#fff8f8,#fff);border:1px solid rgba(200,16,46,0.15);border-radius:16px;padding:28px 32px;margin-top:48px}
+.pricing-notice{background:linear-gradient(135deg,#fff8f8,#fff);border:1px solid rgba(217,78,78,0.15);border-radius:16px;padding:28px 32px;margin-top:48px}
 .pricing-notice h4{font-size:15px;font-weight:700;margin-bottom:14px;color:var(--dark)}
 .pricing-notice ul{padding-left:18px;margin:0}
 .pricing-notice ul li{font-size:13px;color:var(--gray);line-height:2;list-style:disc}
 @media(max-width:860px){.pricing-grid{grid-template-columns:1fr}.pricing-breakdown-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.pricing-breakdown-grid{grid-template-columns:1fr}}
 /* ─── 베트남 정보 허브 ─── */
-.vni-tab-bar{display:flex;gap:0;background:#fff;border-bottom:2px solid rgba(200,16,46,0.1);padding:0 7%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:sticky;top:92px;z-index:10}
+.vni-tab-bar{display:flex;gap:0;background:#fff;border-bottom:2px solid rgba(217,78,78,0.1);padding:0 7%;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:sticky;top:92px;z-index:10}
 .vni-tab-bar::-webkit-scrollbar{display:none}
 .vni-tab{background:none;border:none;padding:14px 18px;font-size:13px;font-weight:600;color:var(--gray);cursor:pointer;font-family:'Noto Sans KR',sans-serif;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:.2s}
 .vni-tab.active,.vni-tab:hover{color:var(--red);border-bottom-color:var(--red)}
 .vni-panel{display:block}
-.vni-section-title{font-size:1.3rem;font-weight:800;margin-bottom:28px;color:var(--dark);padding-bottom:12px;border-bottom:2px solid rgba(200,16,46,0.1)}
+.vni-section-title{font-size:1.3rem;font-weight:800;margin-bottom:28px;color:var(--dark);padding-bottom:12px;border-bottom:2px solid rgba(217,78,78,0.1)}
 .vni-info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
 .vni-card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:24px;transition:.2s}
 .vni-card:hover{box-shadow:0 6px 24px rgba(0,0,0,0.1)}
@@ -1436,17 +1497,17 @@ html.mobile-view .float-btn span{display:none !important}
 .vni-list{padding-left:16px;margin:0}
 .vni-list li{font-size:13px;color:var(--gray);line-height:2}
 .vni-timeline{display:flex;align-items:center;gap:6px;margin-top:12px;flex-wrap:wrap}
-.vni-step{background:rgba(200,16,46,0.08);color:var(--red);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.vni-step{background:rgba(217,78,78,0.08);color:var(--red);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
 .vni-arrow{color:var(--gray);font-size:12px}
 .vni-steps-flow{display:flex;flex-direction:column;gap:0}
 .vni-flow-step{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:24px 28px;position:relative;display:flex;gap:20px;align-items:flex-start}
 .vni-flow-num{width:36px;height:36px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
 .vni-flow-step h4{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--dark)}
 .vni-flow-step p{font-size:13px;color:var(--gray);line-height:1.7;margin:0}
-.vni-flow-docs{margin-top:8px;font-size:11px;color:var(--red);background:rgba(200,16,46,0.06);padding:4px 10px;border-radius:6px;display:inline-block}
+.vni-flow-docs{margin-top:8px;font-size:11px;color:var(--red);background:rgba(217,78,78,0.06);padding:4px 10px;border-radius:6px;display:inline-block}
 .vni-flow-arrow{text-align:center;font-size:20px;color:var(--red);padding:8px 0;margin-left:18px}
 .vni-culture-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
-.vni-culture-item{background:linear-gradient(135deg,var(--cream),#fff);border:1px solid rgba(184,134,11,0.15);border-radius:16px;padding:24px}
+.vni-culture-item{background:linear-gradient(135deg,var(--cream),#fff);border:1px solid rgba(212,165,116,0.15);border-radius:16px;padding:24px}
 .vni-culture-item h4{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--dark)}
 .vni-culture-item p{font-size:13px;color:var(--gray);line-height:1.7;margin:0}
 .vni-checklist-sections{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
@@ -1474,7 +1535,7 @@ html.mobile-view .float-btn span{display:none !important}
 .cal-weekday:last-child{color:#2E86AB}
 .cal-days{display:grid;grid-template-columns:repeat(7,1fr);padding:8px}
 .cal-day{text-align:center;padding:9px 4px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;min-height:42px;display:flex;align-items:center;justify-content:center;position:relative;border-radius:8px;margin:2px}
-.cal-day:hover:not(.cal-day-empty):not(.cal-day-past):not(.cal-day-closed):not(.cal-day-full){background:rgba(200,16,46,0.08)}
+.cal-day:hover:not(.cal-day-empty):not(.cal-day-past):not(.cal-day-closed):not(.cal-day-full){background:rgba(217,78,78,0.08)}
 .cal-day.selected{background:var(--red);color:#fff}
 .cal-day.today:not(.selected){color:var(--red);font-weight:800}
 .cal-day-empty,.cal-day-past{color:#d0d0d0;cursor:default}
@@ -1528,7 +1589,7 @@ html.mobile-view .float-btn span{display:none !important}
 .blog-card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:16px;overflow:hidden;cursor:pointer;transition:.25s}
 .blog-card:hover{box-shadow:0 8px 32px rgba(0,0,0,0.12);transform:translateY(-3px)}
 .blog-card-thumb{width:100%;height:180px;object-fit:cover;background:linear-gradient(135deg,var(--cream),#ffe0e0)}
-.blog-card-thumb-placeholder{width:100%;height:180px;background:linear-gradient(135deg,var(--cream),rgba(200,16,46,0.08));display:flex;align-items:center;justify-content:center;font-size:40px}
+.blog-card-thumb-placeholder{width:100%;height:180px;background:linear-gradient(135deg,var(--cream),rgba(217,78,78,0.08));display:flex;align-items:center;justify-content:center;font-size:40px}
 .blog-card-body{padding:16px}
 .blog-card-cat{font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
 .blog-card-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:8px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -1688,7 +1749,7 @@ html.mobile-view .float-btn span{display:none !important}
         </div>
       </div>
       <div class="hero-img-wrap">
-        <img src="hero-woman.jpg" alt="베트남 아오자이 여성" class="hero-woman-img">
+        <img src="mari-hero-couple.jpg" alt="행복한 한국·베트남 국제결혼 커플" class="hero-woman-img">
       </div>
     </div>
   </section>
@@ -1735,33 +1796,33 @@ html.mobile-view .float-btn span{display:none !important}
     <!-- 6단계 이미지 한줄 스트립 -->
     <div class="proc-cards fade-in">
       <div class="proc-card" onclick="navigate('process');setTimeout(()=>document.getElementById('ps1').scrollIntoView({behavior:'smooth'}),320)">
-        <div class="proc-card-num" style="background:#C8102E">1</div>
-        <img src="01_상담.png" alt="1단계 상담">
+        <div class="proc-card-num" style="background:linear-gradient(135deg,#D94E4E,#B83A3A)">1</div>
+        <img src="mari-step-01.jpg" alt="1단계 상담">
         <div class="proc-card-label">상담</div>
       </div>
       <div class="proc-card" onclick="navigate('process');setTimeout(()=>document.getElementById('ps2').scrollIntoView({behavior:'smooth'}),320)">
-        <div class="proc-card-num" style="background:#E08000">2</div>
-        <img src="02_회원등록.png" alt="2단계 회원등록">
+        <div class="proc-card-num" style="background:linear-gradient(135deg,#E8946B,#C97550)">2</div>
+        <img src="mari-step-02.jpg" alt="2단계 회원등록">
         <div class="proc-card-label">회원 등록</div>
       </div>
       <div class="proc-card" onclick="navigate('process');setTimeout(()=>document.getElementById('ps3').scrollIntoView({behavior:'smooth'}),320)">
-        <div class="proc-card-num" style="background:#7B3FBE">3</div>
-        <img src="03_연인매칭.png" alt="3단계 연인매칭">
+        <div class="proc-card-num" style="background:linear-gradient(135deg,#D4A574,#A67C45)">3</div>
+        <img src="mari-step-03.jpg" alt="3단계 연인매칭">
         <div class="proc-card-label">연인 매칭</div>
       </div>
       <div class="proc-card" onclick="navigate('process');setTimeout(()=>document.getElementById('ps4').scrollIntoView({behavior:'smooth'}),320)">
-        <div class="proc-card-num" style="background:#0077B6">4</div>
-        <img src="04_현지맞선.png" alt="4단계 현지맞선">
+        <div class="proc-card-num" style="background:linear-gradient(135deg,#A67C45,#7A5832)">4</div>
+        <img src="mari-step-04.jpg" alt="4단계 현지맞선">
         <div class="proc-card-label">현지 맞선</div>
       </div>
       <div class="proc-card" onclick="navigate('process');setTimeout(()=>document.getElementById('ps5').scrollIntoView({behavior:'smooth'}),320)">
-        <div class="proc-card-num" style="background:#B8860B">5</div>
-        <img src="05_혼인.png" alt="5단계 혼인">
+        <div class="proc-card-num" style="background:linear-gradient(135deg,#D94E4E,#A67C45)">5</div>
+        <img src="mari-step-05.jpg" alt="5단계 혼인">
         <div class="proc-card-label">혼인</div>
       </div>
       <div class="proc-card" onclick="navigate('process');setTimeout(()=>document.getElementById('ps6').scrollIntoView({behavior:'smooth'}),320)">
-        <div class="proc-card-num" style="background:#2E7D32">6</div>
-        <img src="06_각종서류작업.png" alt="6단계 각종서류작업">
+        <div class="proc-card-num" style="background:linear-gradient(135deg,#4A2418,#2D1810)">6</div>
+        <img src="mari-step-06.jpg" alt="6단계 각종서류작업">
         <div class="proc-card-label">서류작업</div>
       </div>
     </div>
@@ -1877,19 +1938,19 @@ html.mobile-view .float-btn span{display:none !important}
   </div>
 
   <!-- 상단 6단계 요약 바 -->
-  <div id="procStepsSticky" style="background:#fff;border-bottom:1px solid rgba(184,134,11,0.15);padding:20px 7%;position:sticky;top:64px;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+  <div id="procStepsSticky" style="background:#fff;border-bottom:1px solid rgba(212,165,116,0.15);padding:20px 7%;position:sticky;top:64px;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
     <div class="proc-steps-bar" style="background:transparent;border:none;box-shadow:none;padding:0">
-      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps1').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:#C8102E">1</span>상담</div>
+      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps1').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:linear-gradient(135deg,#D94E4E,#B83A3A)">1</span>상담</div>
       <span class="proc-arrow">›</span>
-      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps2').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:#E08000">2</span>회원 등록</div>
+      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps2').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:linear-gradient(135deg,#E8946B,#C97550)">2</span>회원 등록</div>
       <span class="proc-arrow">›</span>
-      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps3').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:#7B3FBE">3</span>연인 매칭</div>
+      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps3').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:linear-gradient(135deg,#D4A574,#A67C45)">3</span>연인 매칭</div>
       <span class="proc-arrow">›</span>
-      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps4').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:#0077B6">4</span>현지 맞선</div>
+      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps4').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:linear-gradient(135deg,#A67C45,#7A5832)">4</span>현지 맞선</div>
       <span class="proc-arrow">›</span>
-      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps5').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:#B8860B">5</span>혼인</div>
+      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps5').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:linear-gradient(135deg,#D94E4E,#A67C45)">5</span>혼인</div>
       <span class="proc-arrow">›</span>
-      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps6').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:#2E7D32">6</span>각종 서류작업</div>
+      <div class="proc-step-item" style="cursor:pointer" onclick="document.getElementById('ps6').scrollIntoView({behavior:'smooth'})"><span class="proc-num" style="background:linear-gradient(135deg,#4A2418,#2D1810)">6</span>각종 서류작업</div>
     </div>
   </div>
 
@@ -1898,7 +1959,7 @@ html.mobile-view .float-btn span{display:none !important}
     <!-- STEP 1 -->
     <div id="ps1" class="ps-card fade-in">
       <div class="ps-header">
-        <img src="상담.png" alt="상담">
+        <img src="mari-step-01.jpg" alt="상담">
       </div>
       <div class="ps-body">
         <p class="ps-text">고객님의 현재 상황과 꿈꾸는 이상형에 대해 편안하게 이야기 나눌 수 있는 첫걸음입니다. 전화나 온라인을 통한 상담도 언제나 열려있지만, 가능하시다면 저희 사무실로 <strong>직접 방문해 주시는 것을 적극 권장</strong>해 드립니다.</p>
@@ -1916,7 +1977,7 @@ html.mobile-view .float-btn span{display:none !important}
     <!-- STEP 2 -->
     <div id="ps2" class="ps-card fade-in">
       <div class="ps-header">
-        <img src="회원등록.png" alt="회원등록">
+        <img src="mari-step-02.jpg" alt="회원등록">
       </div>
       <div class="ps-body">
         <p class="ps-text">아름다운 만남의 최우선 조건은 서로에 대한 <strong>'신뢰'</strong>입니다. 저희는 정식으로 허가받은 합법적인 중개업체로서, 남성과 여성 양측 모두에게 동일하고 철저한 서류 검증 과정을 거치고 있습니다.</p>
@@ -1943,7 +2004,7 @@ html.mobile-view .float-btn span{display:none !important}
     <!-- STEP 3 -->
     <div id="ps3" class="ps-card fade-in">
       <div class="ps-header">
-        <img src="연인매칭.png" alt="연인매칭">
+        <img src="mari-step-03.jpg" alt="연인매칭">
       </div>
       <div class="ps-body">
         <p class="ps-text">철저한 서류 인증을 마친 후, 고객님의 조건과 성향에 가장 잘 맞는 현지 여성분들을 찾아드립니다. 현지에 상주하는 베테랑 매니저들이 직접 발로 뛰며 엄선한 분들의 프로필을 소개합니다.</p>
@@ -1960,7 +2021,7 @@ html.mobile-view .float-btn span{display:none !important}
     <!-- STEP 4 -->
     <div id="ps4" class="ps-card fade-in">
       <div class="ps-header">
-        <img src="현지맞선.png" alt="현지맞선">
+        <img src="mari-step-04.jpg" alt="현지맞선">
       </div>
       <div class="ps-body">
         <p class="ps-text">사진과 프로필로 서로의 호감을 확인했다면, 이제 직접 만나 진실한 대화를 나눌 차례입니다. 상호 동의하에 날짜를 정하고 베트남 현지로 출국하여 가슴 뛰는 첫 만남을 가집니다.</p>
@@ -1987,7 +2048,7 @@ html.mobile-view .float-btn span{display:none !important}
     <!-- STEP 5 -->
     <div id="ps5" class="ps-card fade-in">
       <div class="ps-header">
-        <img src="성혼.png" alt="성혼">
+        <img src="mari-step-05.jpg" alt="성혼">
       </div>
       <div class="ps-body">
         <p class="ps-text">두 분의 마음이 하나로 모여 결혼을 약속하시게 되면, 양가 부모님께 정식으로 인사를 드리고 약혼을 진행합니다.</p>
@@ -2016,7 +2077,7 @@ html.mobile-view .float-btn span{display:none !important}
     <!-- STEP 6 -->
     <div id="ps6" class="ps-card fade-in">
       <div class="ps-header">
-        <img src="서류작업.png" alt="서류작업">
+        <img src="mari-step-06.jpg" alt="서류작업">
       </div>
       <div class="ps-body">
         <p class="ps-text">결혼식 이후에도 양국 혼인신고, 신부님의 한국어 교육 기관 등록, 배우자 비자 신청 등 복잡한 행정 절차가 남아있습니다. 이 과정은 고객님께서 직접 진행하실 수 있도록 절차를 상세히 안내해 드립니다.</p>
@@ -2087,7 +2148,7 @@ html.mobile-view .float-btn span{display:none !important}
       <div class="post-loading">⏳ 로딩 중...</div>
     </div>
     <div id="storyAdminBar" style="display:none;text-align:center;margin-top:32px;padding-bottom:8px">
-      <button onclick="toggleStoryWriteForm()" id="storyWriteToggleBtn" style="background:var(--red);color:#fff;border:none;border-radius:12px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 14px rgba(200,16,46,0.3)">✏️ 성공사례 등록</button>
+      <button onclick="toggleStoryWriteForm()" id="storyWriteToggleBtn" style="background:var(--red);color:#fff;border:none;border-radius:12px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;box-shadow:0 4px 14px rgba(217,78,78,0.3)">✏️ 성공사례 등록</button>
     </div>
     <div id="storyWriteForm" style="display:none;background:var(--bg-card);border:1.5px solid var(--border);border-radius:16px;padding:24px;margin-top:16px;margin-bottom:40px">
       <h3 style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:16px">📝 새 성공사례 등록</h3>
@@ -2177,7 +2238,7 @@ html.mobile-view .float-btn span{display:none !important}
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div style="background:rgba(200,16,46,0.06);border-radius:8px;padding:10px;text-align:center">
+          <div style="background:rgba(217,78,78,0.06);border-radius:8px;padding:10px;text-align:center">
             <div style="font-size:11px;color:var(--gray);margin-bottom:4px">KRW → VND 결과</div>
             <div id="calcVndResult" style="font-size:16px;font-weight:700;color:var(--red)">—</div>
           </div>
@@ -2198,9 +2259,9 @@ html.mobile-view .float-btn span{display:none !important}
             </tr></thead>
             <tbody>
               <tr><td style="padding:8px;text-align:center">1,000원</td><td style="padding:8px;text-align:center;font-weight:600">≈ 18,000~19,000₫</td><td style="padding:8px;text-align:center;color:var(--gray)">쌀국수 한 그릇</td></tr>
-              <tr style="background:rgba(200,16,46,0.03)"><td style="padding:8px;text-align:center">5,000원</td><td style="padding:8px;text-align:center;font-weight:600">≈ 92,000~95,000₫</td><td style="padding:8px;text-align:center;color:var(--gray)">거리 음식 2~3인분</td></tr>
+              <tr style="background:rgba(217,78,78,0.03)"><td style="padding:8px;text-align:center">5,000원</td><td style="padding:8px;text-align:center;font-weight:600">≈ 92,000~95,000₫</td><td style="padding:8px;text-align:center;color:var(--gray)">거리 음식 2~3인분</td></tr>
               <tr><td style="padding:8px;text-align:center">1만원</td><td style="padding:8px;text-align:center;font-weight:600">≈ 185,000₫</td><td style="padding:8px;text-align:center;color:var(--gray)">택시 7~10km</td></tr>
-              <tr style="background:rgba(200,16,46,0.03)"><td style="padding:8px;text-align:center">5만원</td><td style="padding:8px;text-align:center;font-weight:600">≈ 925,000₫</td><td style="padding:8px;text-align:center;color:var(--gray)">저가 숙소 1박</td></tr>
+              <tr style="background:rgba(217,78,78,0.03)"><td style="padding:8px;text-align:center">5만원</td><td style="padding:8px;text-align:center;font-weight:600">≈ 925,000₫</td><td style="padding:8px;text-align:center;color:var(--gray)">저가 숙소 1박</td></tr>
               <tr><td style="padding:8px;text-align:center">10만원</td><td style="padding:8px;text-align:center;font-weight:600">≈ 1,850,000₫</td><td style="padding:8px;text-align:center;color:var(--gray)">저렴한 원룸 월세 1/10</td></tr>
             </tbody>
           </table>
@@ -2224,11 +2285,11 @@ html.mobile-view .float-btn span{display:none !important}
             <thead><tr style="background:var(--red);color:#fff"><th style="padding:8px">금액</th><th style="padding:8px">색상</th><th style="padding:8px;text-align:center">한화 환산</th><th style="padding:8px">비고</th></tr></thead>
             <tbody>
               <tr><td style="padding:7px;border-bottom:1px solid var(--border)"><b>1,000₫</b></td><td style="padding:7px;border-bottom:1px solid var(--border)"><span style="background:#8d6e63;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px">갈색</span></td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">약 55원</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">거의 유통 안 됨</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:7px;border-bottom:1px solid var(--border)"><b>5,000₫</b></td><td style="padding:7px;border-bottom:1px solid var(--border)"><span style="background:#78909c;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px">파란회색</span></td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">약 275원</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">서민 식당 기본단위</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:7px;border-bottom:1px solid var(--border)"><b>5,000₫</b></td><td style="padding:7px;border-bottom:1px solid var(--border)"><span style="background:#78909c;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px">파란회색</span></td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">약 275원</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">서민 식당 기본단위</td></tr>
               <tr><td style="padding:7px;border-bottom:1px solid var(--border)"><b>10,000₫</b></td><td style="padding:7px;border-bottom:1px solid var(--border)"><span style="background:#e53935;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px">빨간색</span></td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">약 550원</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">길거리 음식 기본</td></tr>
               <tr style="background:rgba(255,235,59,0.08)"><td style="padding:7px;border-bottom:1px solid var(--border)"><b>20,000₫ ⚠️</b></td><td style="padding:7px;border-bottom:1px solid var(--border)"><span style="background:#1565c0;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px">파란색</span></td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">약 1,100원</td><td style="padding:7px;font-size:11px;color:#c62828;border-bottom:1px solid var(--border)">50만동과 혼동 주의!</td></tr>
               <tr><td style="padding:7px;border-bottom:1px solid var(--border)"><b>50,000₫</b></td><td style="padding:7px;border-bottom:1px solid var(--border)"><span style="background:#7b1fa2;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px">분홍보라</span></td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">약 2,750원</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">쌀국수 5~8그릇 가격</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:7px;border-bottom:1px solid var(--border)"><b>100,000₫</b></td><td style="padding:7px;border-bottom:1px solid var(--border)"><span style="background:#2e7d32;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px">초록색</span></td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">약 5,500원</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">가장 자주 사용</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:7px;border-bottom:1px solid var(--border)"><b>100,000₫</b></td><td style="padding:7px;border-bottom:1px solid var(--border)"><span style="background:#2e7d32;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px">초록색</span></td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">약 5,500원</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">가장 자주 사용</td></tr>
               <tr><td style="padding:7px;border-bottom:1px solid var(--border)"><b>200,000₫</b></td><td style="padding:7px;border-bottom:1px solid var(--border)"><span style="background:#283593;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px">파란남색</span></td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">약 11,000원</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">자주 사용</td></tr>
               <tr style="background:rgba(255,235,59,0.08)"><td style="padding:7px;border-bottom:1px solid var(--border)"><b>500,000₫ ⚠️</b></td><td style="padding:7px;border-bottom:1px solid var(--border)"><span style="background:#4527a0;color:#fff;padding:2px 8px;border-radius:4px;font-size:11px">보라색</span></td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">약 27,500원</td><td style="padding:7px;font-size:11px;color:#c62828;border-bottom:1px solid var(--border)">20만동과 혼동 주의!</td></tr>
             </tbody>
@@ -2245,7 +2306,7 @@ html.mobile-view .float-btn span{display:none !important}
         </div>
         <div style="background:rgba(0,100,200,0.06);border-radius:8px;padding:10px 14px;font-size:12px;color:#1565c0;line-height:1.6">💡 <b>단기 여행자 팁:</b> Grab에 한국 신용카드 등록만 해도 택시·음식 배달 결제 가능. 대형 쇼핑몰·호텔·레스토랑은 VISA/MASTER 카드 직접 결제 가능</div>
       </div>
-      <div class="guide-card" style="background:rgba(200,16,46,0.04);border-color:rgba(200,16,46,0.2)">
+      <div class="guide-card" style="background:rgba(217,78,78,0.04);border-color:rgba(217,78,78,0.2)">
         <h4>💡 현지에서 쓰는 환산 꿀팁</h4>
         <p style="font-size:13px;color:var(--gray);line-height:1.8"><b>간단 공식: VND 가격 ÷ 20 = 대략 KRW</b><br>
         예) 200,000₫ ÷ 20 = 약 10,000원 / 예) 50,000₫ ÷ 20 = 약 2,500원<br><br>
@@ -2309,9 +2370,9 @@ html.mobile-view .float-btn span{display:none !important}
             </tr></thead>
             <tbody>
               <tr><td style="padding:9px;font-weight:600;border-bottom:1px solid var(--border)">소득 요건</td><td style="padding:9px;color:var(--gray);border-bottom:1px solid var(--border)">GNI 기준 60% 이상 (2024년 기준 월 약 200만원 이상 권장)</td></tr>
-              <tr style="background:rgba(200,16,46,0.03)"><td style="padding:9px;font-weight:600;border-bottom:1px solid var(--border)">언어 요건</td><td style="padding:9px;color:var(--gray);border-bottom:1px solid var(--border)">TOPIK 1급 이상 또는 한국어 인터뷰 통과</td></tr>
+              <tr style="background:rgba(217,78,78,0.03)"><td style="padding:9px;font-weight:600;border-bottom:1px solid var(--border)">언어 요건</td><td style="padding:9px;color:var(--gray);border-bottom:1px solid var(--border)">TOPIK 1급 이상 또는 한국어 인터뷰 통과</td></tr>
               <tr><td style="padding:9px;font-weight:600;border-bottom:1px solid var(--border)">필수 서류</td><td style="padding:9px;color:var(--gray);border-bottom:1px solid var(--border)">양국 혼인관계증명서, 여권, 사진, 가족관계증명서, 주민등록등본, 소득서류, 주거증빙</td></tr>
-              <tr style="background:rgba(200,16,46,0.03)"><td style="padding:9px;font-weight:600;border-bottom:1px solid var(--border)">신청 장소</td><td style="padding:9px;color:var(--gray);border-bottom:1px solid var(--border)">베트남 내 한국 대사관·영사관 (하노이·호찌민·다낭)</td></tr>
+              <tr style="background:rgba(217,78,78,0.03)"><td style="padding:9px;font-weight:600;border-bottom:1px solid var(--border)">신청 장소</td><td style="padding:9px;color:var(--gray);border-bottom:1px solid var(--border)">베트남 내 한국 대사관·영사관 (하노이·호찌민·다낭)</td></tr>
               <tr><td style="padding:9px;font-weight:600">체류 경로</td><td style="padding:9px;color:var(--gray)">F-6 1년 → 갱신 → 혼인 2년 후 F-5 영주권 → 5년 후 귀화</td></tr>
             </tbody>
           </table>
@@ -2336,12 +2397,12 @@ html.mobile-view .float-btn span{display:none !important}
         <h4>🗣️ 알아두면 유용한 베트남어</h4>
         <p style="font-size:13px;color:var(--gray);line-height:1.8;margin-bottom:10px">베트남어는 6성조 언어로 발음 하나에 의미가 달라집니다. 기본 인사말만 익혀도 처가 가족에게 큰 호감을 줄 수 있습니다.</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:10px">
-          <div style="background:rgba(200,16,46,0.05);border-radius:8px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--red)">Xin chào</div><div style="font-size:11px;color:var(--gray);margin-top:2px">안녕하세요</div></div>
-          <div style="background:rgba(200,16,46,0.05);border-radius:8px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--red)">Cảm ơn</div><div style="font-size:11px;color:var(--gray);margin-top:2px">감사합니다</div></div>
-          <div style="background:rgba(200,16,46,0.05);border-radius:8px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--red)">Bao nhiêu?</div><div style="font-size:11px;color:var(--gray);margin-top:2px">얼마예요?</div></div>
-          <div style="background:rgba(200,16,46,0.05);border-radius:8px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--red)">Ngon lắm!</div><div style="font-size:11px;color:var(--gray);margin-top:2px">맛있어요!</div></div>
-          <div style="background:rgba(200,16,46,0.05);border-radius:8px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--red)">Không sao</div><div style="font-size:11px;color:var(--gray);margin-top:2px">괜찮아요</div></div>
-          <div style="background:rgba(200,16,46,0.05);border-radius:8px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--red)">Tôi yêu em</div><div style="font-size:11px;color:var(--gray);margin-top:2px">사랑해요</div></div>
+          <div style="background:rgba(217,78,78,0.05);border-radius:8px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--red)">Xin chào</div><div style="font-size:11px;color:var(--gray);margin-top:2px">안녕하세요</div></div>
+          <div style="background:rgba(217,78,78,0.05);border-radius:8px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--red)">Cảm ơn</div><div style="font-size:11px;color:var(--gray);margin-top:2px">감사합니다</div></div>
+          <div style="background:rgba(217,78,78,0.05);border-radius:8px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--red)">Bao nhiêu?</div><div style="font-size:11px;color:var(--gray);margin-top:2px">얼마예요?</div></div>
+          <div style="background:rgba(217,78,78,0.05);border-radius:8px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--red)">Ngon lắm!</div><div style="font-size:11px;color:var(--gray);margin-top:2px">맛있어요!</div></div>
+          <div style="background:rgba(217,78,78,0.05);border-radius:8px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--red)">Không sao</div><div style="font-size:11px;color:var(--gray);margin-top:2px">괜찮아요</div></div>
+          <div style="background:rgba(217,78,78,0.05);border-radius:8px;padding:10px;text-align:center"><div style="font-size:13px;font-weight:700;color:var(--red)">Tôi yêu em</div><div style="font-size:11px;color:var(--gray);margin-top:2px">사랑해요</div></div>
         </div>
         <p style="font-size:12px;color:var(--gray)">💡 파파고·구글 번역 앱 실시간 음성 번역 기능이 매우 유용. 처가 가족과의 소통에 적극 활용하세요. 젊은 베트남인들은 영어로 소통 가능한 경우가 많습니다.</p>
       </div>
@@ -2351,7 +2412,7 @@ html.mobile-view .float-btn span{display:none !important}
         <div style="border-left:3px solid var(--red);padding-left:14px;margin-bottom:10px"><b style="font-size:13px;color:var(--dark)">뗏 전 (D-7~D-1)</b><p style="font-size:12px;color:var(--gray);margin-top:4px;line-height:1.7">대청소, 새 옷 구입, 복숭아꽃(하노이)·매화꽃(호찌민) 장식, 조상 제사상 준비, 가족 선물 구입 (과일 바구니·과자 세트·술)</p></div>
         <div style="border-left:3px solid var(--red);padding-left:14px;margin-bottom:10px"><b style="font-size:13px;color:var(--dark)">뗏 당일 (자정 카운트다운)</b><p style="font-size:12px;color:var(--gray);margin-top:4px;line-height:1.7">불꽃놀이 행사, 조상 제사, 세배(Lì xì — 붉은 봉투 세뱃돈), 어른 먼저 식사 시작</p></div>
         <div style="border-left:3px solid var(--red);padding-left:14px;margin-bottom:10px"><b style="font-size:13px;color:var(--dark)">뗏 기간 (1~7일)</b><p style="font-size:12px;color:var(--gray);margin-top:4px;line-height:1.7">친척 방문, 절(chùa) 방문 기원, 대부분 가게·식당 휴업. 이 기간 여행 계획 시 각별히 주의!</p></div>
-        <div style="background:rgba(200,16,46,0.06);border-radius:8px;padding:10px 14px;font-size:12px;color:#b45309;line-height:1.6">💡 <b>사위 tip:</b> 뗏에 처가 방문 시 과일 바구니(giỏ trái cây)·과자 세트·Hennessy 등 가져가면 아주 좋은 인상. 빈손 방문은 결례입니다</div>
+        <div style="background:rgba(217,78,78,0.06);border-radius:8px;padding:10px 14px;font-size:12px;color:#b45309;line-height:1.6">💡 <b>사위 tip:</b> 뗏에 처가 방문 시 과일 바구니(giỏ trái cây)·과자 세트·Hennessy 등 가져가면 아주 좋은 인상. 빈손 방문은 결례입니다</div>
       </div>
       <div class="guide-card">
         <h4>👨‍👩‍👧‍👦 대가족 문화 &amp; 가족 관계</h4>
@@ -2408,13 +2469,13 @@ html.mobile-view .float-btn span{display:none !important}
             </tr></thead>
             <tbody>
               <tr><td style="padding:8px;font-weight:600;border-bottom:1px solid var(--border)">가족 구조</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">핵가족 보편화</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">대가족 선호</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;font-weight:600;border-bottom:1px solid var(--border)">식사 중시</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">저녁 중심</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">아침 식사 중시</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;font-weight:600;border-bottom:1px solid var(--border)">식사 중시</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">저녁 중심</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">아침 식사 중시</td></tr>
               <tr><td style="padding:8px;font-weight:600;border-bottom:1px solid var(--border)">메신저</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">카카오톡</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">Zalo, Facebook</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;font-weight:600;border-bottom:1px solid var(--border)">결혼 연령</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">평균 30~33세</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">평균 22~26세</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;font-weight:600;border-bottom:1px solid var(--border)">결혼 연령</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">평균 30~33세</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">평균 22~26세</td></tr>
               <tr><td style="padding:8px;font-weight:600;border-bottom:1px solid var(--border)">술 문화</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">소주·회식</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">333맥주·공동잔</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;font-weight:600;border-bottom:1px solid var(--border)">시간 관념</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">매우 엄격</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">다소 유연한 편</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;font-weight:600;border-bottom:1px solid var(--border)">시간 관념</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">매우 엄격</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">다소 유연한 편</td></tr>
               <tr><td style="padding:8px;font-weight:600;border-bottom:1px solid var(--border)">인사</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">90도 인사</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">고개 숙여 미소</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;font-weight:600">기본 종교</td><td style="padding:8px;text-align:center;color:var(--gray)">기독교·불교</td><td style="padding:8px;text-align:center;color:var(--gray)">불교+조상숭배</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;font-weight:600">기본 종교</td><td style="padding:8px;text-align:center;color:var(--gray)">기독교·불교</td><td style="padding:8px;text-align:center;color:var(--gray)">불교+조상숭배</td></tr>
             </tbody>
           </table>
         </div>
@@ -2447,21 +2508,21 @@ html.mobile-view .float-btn span{display:none !important}
             <thead><tr style="background:var(--red);color:#fff"><th style="padding:9px;text-align:left">공휴일</th><th style="padding:9px;text-align:center">날짜</th><th style="padding:9px;text-align:center">기간</th></tr></thead>
             <tbody>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">양력 설날 (Tết Dương Lịch)</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">1월 1일</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">1일</td></tr>
-              <tr style="background:rgba(200,16,46,0.05)"><td style="padding:8px;border-bottom:1px solid var(--border)"><b>🎆 뗏 — 음력 설날</b></td><td style="padding:8px;text-align:center;font-weight:700;border-bottom:1px solid var(--border)">1월 28일~2월 2일</td><td style="padding:8px;text-align:center;color:var(--red);font-weight:700;border-bottom:1px solid var(--border)">공식 9일</td></tr>
+              <tr style="background:rgba(217,78,78,0.05)"><td style="padding:8px;border-bottom:1px solid var(--border)"><b>🎆 뗏 — 음력 설날</b></td><td style="padding:8px;text-align:center;font-weight:700;border-bottom:1px solid var(--border)">1월 28일~2월 2일</td><td style="padding:8px;text-align:center;color:var(--red);font-weight:700;border-bottom:1px solid var(--border)">공식 9일</td></tr>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">훙왕 기일 (Giỗ Tổ Hùng Vương)</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">4월 7일</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">1일</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">통일기념일 (Ngày 30/4)</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">4월 30일</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">1일</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">통일기념일 (Ngày 30/4)</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">4월 30일</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">1일</td></tr>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">노동절 (Ngày Lao Động)</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">5월 1일</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">1일</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px">국경일 (Quốc Khánh)</td><td style="padding:8px;text-align:center;color:var(--gray)">9월 2일</td><td style="padding:8px;text-align:center;color:var(--gray)">4일 연휴</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px">국경일 (Quốc Khánh)</td><td style="padding:8px;text-align:center;color:var(--gray)">9월 2일</td><td style="padding:8px;text-align:center;color:var(--gray)">4일 연휴</td></tr>
             </tbody>
           </table>
         </div>
-        <div style="margin-top:10px;background:rgba(200,16,46,0.06);border-radius:8px;padding:10px 14px;font-size:12px;color:#b45309;line-height:1.6">⚠️ 뗏 전후 약 2주는 가게·식당 대부분 휴업. 여행·업무·이사 계획 시 반드시 고려하세요</div>
+        <div style="margin-top:10px;background:rgba(217,78,78,0.06);border-radius:8px;padding:10px 14px;font-size:12px;color:#b45309;line-height:1.6">⚠️ 뗏 전후 약 2주는 가게·식당 대부분 휴업. 여행·업무·이사 계획 시 반드시 고려하세요</div>
       </div>
     </div>
 
     <div id="guide-marriage" class="guide-section">
       <!-- 전체 타임라인 -->
-      <div class="guide-card" style="background:rgba(200,16,46,0.04);border-color:rgba(200,16,46,0.15)">
+      <div class="guide-card" style="background:rgba(217,78,78,0.04);border-color:rgba(217,78,78,0.15)">
         <h4>📅 전체 법적 절차 타임라인 (평균 12~18개월)</h4>
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center;font-size:12px">
           <span style="background:#555;color:#fff;padding:4px 10px;border-radius:8px;white-space:nowrap">① 한국인 서류 준비</span>
@@ -2494,11 +2555,11 @@ html.mobile-view .float-btn span{display:none !important}
           </tr></thead>
           <tbody>
             <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border);font-weight:600">기본증명서 (상세)</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">주민센터 / 정부24</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">3개월 이내 발급분</td></tr>
-            <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px 10px;border-bottom:1px solid var(--border);font-weight:600">가족관계증명서 (상세)</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">주민센터 / 정부24</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">3개월 이내 발급분</td></tr>
+            <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px 10px;border-bottom:1px solid var(--border);font-weight:600">가족관계증명서 (상세)</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">주민센터 / 정부24</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">3개월 이내 발급분</td></tr>
             <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border);font-weight:600">혼인관계증명서 (상세)</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">주민센터 / 정부24</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">미혼 확인용</td></tr>
-            <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px 10px;border-bottom:1px solid var(--border);font-weight:600">아포스티유 공증</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">외교부 아포스티유센터</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">위 서류 3종 모두 필요</td></tr>
+            <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px 10px;border-bottom:1px solid var(--border);font-weight:600">아포스티유 공증</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">외교부 아포스티유센터</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">위 서류 3종 모두 필요</td></tr>
             <tr><td style="padding:8px 10px;border-bottom:1px solid var(--border);font-weight:600">건강진단서</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">지정 의료기관</td><td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--gray)">베트남 측 요구 항목 포함</td></tr>
-            <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px 10px;font-weight:600">여권 사본</td><td style="padding:8px 10px;color:var(--gray)">본인 소지</td><td style="padding:8px 10px;color:var(--gray)">유효기간 6개월 이상</td></tr>
+            <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px 10px;font-weight:600">여권 사본</td><td style="padding:8px 10px;color:var(--gray)">본인 소지</td><td style="padding:8px 10px;color:var(--gray)">유효기간 6개월 이상</td></tr>
           </tbody>
         </table>
         <p style="font-size:11px;color:var(--gray);margin-top:8px">※ 서류는 베트남어 공증번역본이 함께 필요합니다. 번역은 베트남 현지에서 진행 가능합니다.</p>
@@ -2514,7 +2575,7 @@ html.mobile-view .float-btn span{display:none !important}
           </div>
         </div>
         <p style="font-size:13px;color:var(--gray);line-height:1.7;margin:0 0 10px">베트남 신부의 <b>호적지 관할 인민위원회(UBND)</b>에 신청합니다. 양 당사자가 반드시 직접 출석해야 합니다.</p>
-        <div style="background:rgba(200,16,46,0.03);border-radius:10px;padding:12px;margin-bottom:10px">
+        <div style="background:rgba(217,78,78,0.03);border-radius:10px;padding:12px;margin-bottom:10px">
           <p style="font-size:12px;font-weight:700;color:var(--dark);margin:0 0 6px">📋 절차</p>
           <ol style="padding-left:18px;font-size:12px;color:var(--gray);line-height:1.9;margin:0">
             <li>인민위원회에 혼인신고서 및 서류 제출</li>
@@ -2523,7 +2584,7 @@ html.mobile-view .float-btn span{display:none !important}
             <li>결혼증명서(Giấy chứng nhận kết hôn) 수령</li>
           </ol>
         </div>
-        <div style="background:rgba(200,16,46,0.03);border-radius:10px;padding:12px">
+        <div style="background:rgba(217,78,78,0.03);border-radius:10px;padding:12px">
           <p style="font-size:12px;font-weight:700;color:var(--dark);margin:0 0 6px">📂 베트남 신부 측 필요 서류</p>
           <p style="font-size:12px;color:var(--gray);line-height:1.8;margin:0">신분증(CCCD/여권) · 호구부(Hộ khẩu) 또는 임시거주증 · 미혼증명서 · 건강진단서 · 증명사진</p>
         </div>
@@ -2565,7 +2626,7 @@ html.mobile-view .float-btn span{display:none !important}
           </div>
         </div>
         <p style="font-size:13px;color:var(--gray);line-height:1.7;margin:0 0 10px">양국 혼인신고가 완료된 후 <b>주베트남 한국 대사관·영사관</b>에 F-6 비자를 신청합니다.</p>
-        <div style="background:rgba(200,16,46,0.03);border-radius:10px;padding:12px;margin-bottom:10px">
+        <div style="background:rgba(217,78,78,0.03);border-radius:10px;padding:12px;margin-bottom:10px">
           <p style="font-size:12px;font-weight:700;color:var(--dark);margin:0 0 6px">📋 주요 심사 항목</p>
           <ul style="padding-left:18px;font-size:12px;color:var(--gray);line-height:1.9;margin:0">
             <li><b>언어소통 능력</b> — 부부 인터뷰에서 기초 한국어 또는 베트남어 소통 여부 확인</li>
@@ -2574,7 +2635,7 @@ html.mobile-view .float-btn span{display:none !important}
             <li><b>범죄경력 조회</b> — 양국 무범죄증명서 제출</li>
           </ul>
         </div>
-        <div style="background:rgba(200,16,46,0.03);border-radius:10px;padding:12px">
+        <div style="background:rgba(217,78,78,0.03);border-radius:10px;padding:12px">
           <p style="font-size:12px;font-weight:700;color:var(--dark);margin:0 0 6px">📂 주요 제출 서류</p>
           <p style="font-size:12px;color:var(--gray);line-height:1.9;margin:0">
             사증발급신청서 · 여권(신부) · 양국 혼인관계증명서 · 초청장(한국인 배우자 작성) · 초청자 재직·소득 증명 · 가족관계증명서 · 무범죄증명서(양국) · 건강진단서 · 증명사진
@@ -2594,7 +2655,7 @@ html.mobile-view .float-btn span{display:none !important}
         </div>
         <p style="font-size:13px;color:var(--gray);line-height:1.7;margin:0 0 10px">F-6 비자로 입국 후 90일 이내에 거주지 관할 <b>출입국·외국인청(사무소)</b>을 방문해 외국인등록을 마쳐야 합니다.</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div style="background:rgba(200,16,46,0.03);border-radius:10px;padding:12px">
+          <div style="background:rgba(217,78,78,0.03);border-radius:10px;padding:12px">
             <p style="font-size:12px;font-weight:700;color:var(--dark);margin:0 0 6px">필요 서류</p>
             <ul style="padding-left:16px;font-size:12px;color:var(--gray);line-height:1.8;margin:0">
               <li>여권 원본</li>
@@ -2604,7 +2665,7 @@ html.mobile-view .float-btn span{display:none !important}
               <li>혼인관계증명서</li>
             </ul>
           </div>
-          <div style="background:rgba(200,16,46,0.03);border-radius:10px;padding:12px">
+          <div style="background:rgba(217,78,78,0.03);border-radius:10px;padding:12px">
             <p style="font-size:12px;font-weight:700;color:var(--dark);margin:0 0 6px">등록 후 처리 사항</p>
             <ul style="padding-left:16px;font-size:12px;color:var(--gray);line-height:1.8;margin:0">
               <li>건강보험 지역가입자 등록</li>
@@ -2648,7 +2709,7 @@ html.mobile-view .float-btn span{display:none !important}
       </div>
 
       <!-- 주의사항 -->
-      <div class="guide-card" style="background:rgba(200,16,46,0.04);border-color:rgba(200,16,46,0.15)">
+      <div class="guide-card" style="background:rgba(217,78,78,0.04);border-color:rgba(217,78,78,0.15)">
         <h4>⚠️ 반드시 알아야 할 법적 주의사항</h4>
         <ul style="padding-left:18px;font-size:13px;color:var(--gray);line-height:1.9;margin-top:8px">
           <li>베트남 혼인신고 후 반드시 <b>한국에서도 혼인신고</b>를 해야 법적 부부로 인정됩니다</li>
@@ -2674,10 +2735,10 @@ html.mobile-view .float-btn span{display:none !important}
             </tr></thead>
             <tbody>
               <tr><td style="padding:9px;font-weight:600;border-bottom:1px solid var(--border)">원룸 월세</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">500~900만₫<br><small>(25~45만원)</small></td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">700~1,200만₫<br><small>(35~60만원)</small></td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">400~700만₫<br><small>(20~35만원)</small></td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:9px;font-weight:600;border-bottom:1px solid var(--border)">식비</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">300~500만₫</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">350~600만₫</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">250~400만₫</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:9px;font-weight:600;border-bottom:1px solid var(--border)">식비</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">300~500만₫</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">350~600만₫</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">250~400만₫</td></tr>
               <tr><td style="padding:9px;font-weight:600;border-bottom:1px solid var(--border)">교통 (그랩)</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">100~200만₫</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">150~250만₫</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">80~150만₫</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:9px;font-weight:600;border-bottom:1px solid var(--border)">통신·유틸</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">150~200만₫</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">150~200만₫</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">130~180만₫</td></tr>
-              <tr style="font-weight:700;background:rgba(200,16,46,0.05)"><td style="padding:10px">총합 (약)</td><td style="padding:10px;text-align:center;color:var(--red)">55~100만원</td><td style="padding:10px;text-align:center;color:var(--red)">70~130만원</td><td style="padding:10px;text-align:center;color:var(--red)">40~80만원</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:9px;font-weight:600;border-bottom:1px solid var(--border)">통신·유틸</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">150~200만₫</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">150~200만₫</td><td style="padding:9px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">130~180만₫</td></tr>
+              <tr style="font-weight:700;background:rgba(217,78,78,0.05)"><td style="padding:10px">총합 (약)</td><td style="padding:10px;text-align:center;color:var(--red)">55~100만원</td><td style="padding:10px;text-align:center;color:var(--red)">70~130만원</td><td style="padding:10px;text-align:center;color:var(--red)">40~80만원</td></tr>
             </tbody>
           </table>
         </div>
@@ -2796,11 +2857,11 @@ html.mobile-view .float-btn span{display:none !important}
             <thead><tr style="background:var(--red);color:#fff"><th style="padding:9px;text-align:left">장소</th><th style="padding:9px;text-align:center">가격대</th><th style="padding:9px;text-align:center">한화 환산</th><th style="padding:9px;text-align:center">예시</th></tr></thead>
             <tbody>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">길거리 노점</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">5천~2만₫</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">300~1,000원</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">체, 튀김만두</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">서민 식당</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">3만~7만₫</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">1,500~3,500원</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">퍼, 분짜, 반미</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">서민 식당</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">3만~7만₫</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">1,500~3,500원</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">퍼, 분짜, 반미</td></tr>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">카페</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">2만~5만₫</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">1,000~2,500원</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">연유커피, 에그커피</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">일반 레스토랑</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">10만~30만₫</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">5,000~15,000원</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">해산물 요리</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">일반 레스토랑</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">10만~30만₫</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">5,000~15,000원</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">해산물 요리</td></tr>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">한국 식당</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">20만~60만₫</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">10,000~30,000원</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">삼겹살, 치킨</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px">고급 레스토랑</td><td style="padding:8px;text-align:center;color:var(--gray)">50만₫~</td><td style="padding:8px;text-align:center;color:var(--gray)">25,000원~</td><td style="padding:8px;text-align:center;color:var(--gray)">루프탑·파인다이닝</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px">고급 레스토랑</td><td style="padding:8px;text-align:center;color:var(--gray)">50만₫~</td><td style="padding:8px;text-align:center;color:var(--gray)">25,000원~</td><td style="padding:8px;text-align:center;color:var(--gray)">루프탑·파인다이닝</td></tr>
             </tbody>
           </table>
         </div>
@@ -2837,7 +2898,7 @@ html.mobile-view .float-btn span{display:none !important}
         <p style="font-size:13px;color:var(--gray);line-height:1.8;margin-bottom:10px">유네스코 세계자연유산. 석회암 섬 2,000개 이상. 하노이에서 차로 3.5~4시간. <b>1박 2일 크루즈 투어</b>가 가장 인기.</p>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
           <div style="background:rgba(0,150,136,0.06);border-radius:8px;padding:12px"><div style="font-size:12px;font-weight:700;color:#00695c;margin-bottom:6px">✅ 추천 크루즈</div><ul style="padding-left:14px;font-size:12px;color:var(--gray);line-height:1.8;margin:0"><li>Paradise Elegance</li><li>Bhaya Classic</li><li>Au Co Cruises</li><li>예산형: Starlight</li></ul></div>
-          <div style="background:rgba(200,16,46,0.05);border-radius:8px;padding:12px"><div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:6px">💰 예산 가이드</div><ul style="padding-left:14px;font-size:12px;color:var(--gray);line-height:1.8;margin:0"><li>저가: $80~130/인</li><li>중급: $150~300/인</li><li>럭셔리: $300~500+/인</li><li>성수기 사전예약 필수</li></ul></div>
+          <div style="background:rgba(217,78,78,0.05);border-radius:8px;padding:12px"><div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:6px">💰 예산 가이드</div><ul style="padding-left:14px;font-size:12px;color:var(--gray);line-height:1.8;margin:0"><li>저가: $80~130/인</li><li>중급: $150~300/인</li><li>럭셔리: $300~500+/인</li><li>성수기 사전예약 필수</li></ul></div>
         </div>
       </div>
       <div class="guide-card">
@@ -2857,14 +2918,14 @@ html.mobile-view .float-btn span{display:none !important}
           <div style="border:1px solid var(--border);border-radius:10px;padding:14px"><div style="font-size:16px;margin-bottom:6px">🌿</div><div style="font-weight:700;font-size:13px;color:var(--dark);margin-bottom:4px">무이네 (Mũi Né)</div><div style="font-size:12px;color:var(--gray);line-height:1.6">사막+해변 이색 조합. 화이트·레드 샌드듄 트레킹. 호찌민에서 5시간</div></div>
         </div>
       </div>
-      <div class="guide-card" style="background:rgba(200,16,46,0.04);border-color:rgba(200,16,46,0.15)">
+      <div class="guide-card" style="background:rgba(217,78,78,0.04);border-color:rgba(217,78,78,0.15)">
         <h4>✈️ 한국 → 베트남 항공편</h4>
         <div style="overflow-x:auto">
           <table style="width:100%;border-collapse:collapse;font-size:12px">
             <thead><tr style="background:var(--red);color:#fff"><th style="padding:9px;text-align:left">노선</th><th style="padding:9px;text-align:center">소요시간</th><th style="padding:9px;text-align:center">직항 항공사</th><th style="padding:9px;text-align:center">왕복 최저가</th></tr></thead>
             <tbody>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">인천 → 하노이</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">약 5시간</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">대한항공, 아시아나, VietJet</td><td style="padding:8px;text-align:center;color:var(--red);font-weight:700;border-bottom:1px solid var(--border)">20~40만원~</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">인천 → 호찌민</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">약 5.5시간</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">대한항공, 아시아나, Vietnam Air</td><td style="padding:8px;text-align:center;color:var(--red);font-weight:700;border-bottom:1px solid var(--border)">25~45만원~</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">인천 → 호찌민</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">약 5.5시간</td><td style="padding:8px;text-align:center;color:var(--gray);border-bottom:1px solid var(--border)">대한항공, 아시아나, Vietnam Air</td><td style="padding:8px;text-align:center;color:var(--red);font-weight:700;border-bottom:1px solid var(--border)">25~45만원~</td></tr>
               <tr><td style="padding:8px">인천 → 다낭</td><td style="padding:8px;text-align:center;color:var(--gray)">약 4.5시간</td><td style="padding:8px;text-align:center;color:var(--gray)">제주항공, 진에어, VietJet</td><td style="padding:8px;text-align:center;color:var(--red);font-weight:700">20~35만원~</td></tr>
             </tbody>
           </table>
@@ -2891,9 +2952,9 @@ html.mobile-view .float-btn span{display:none !important}
             <thead><tr style="background:var(--red);color:#fff"><th style="padding:8px">월</th><th style="padding:8px;text-align:center">기온</th><th style="padding:8px;text-align:center">날씨</th><th style="padding:8px;text-align:left">옷차림</th></tr></thead>
             <tbody>
               <tr><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">1~2월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">15~20°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">🌧️ 쌀쌀·이슬비</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">긴팔+가벼운 외투</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">3~4월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">20~26°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">🌤️ 봄·안개비</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">얇은 긴팔·카디건</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">3~4월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">20~26°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">🌤️ 봄·안개비</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">얇은 긴팔·카디건</td></tr>
               <tr><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">5~8월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">30~37°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">⛈️ 여름우기·소나기</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">반팔+우산 필수</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">9~10월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">28~33°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">🌧️ 우기 절정</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">반팔+방수 재킷</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">9~10월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">28~33°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">🌧️ 우기 절정</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">반팔+방수 재킷</td></tr>
               <tr><td style="padding:7px;font-weight:600">11~12월</td><td style="padding:7px;text-align:center;color:var(--gray)">18~24°C</td><td style="padding:7px;text-align:center">☀️ 가을·쾌적</td><td style="padding:7px;font-size:11px;color:var(--gray)">긴팔+얇은 겉옷</td></tr>
             </tbody>
           </table>
@@ -2906,9 +2967,9 @@ html.mobile-view .float-btn span{display:none !important}
             <thead><tr style="background:var(--red);color:#fff"><th style="padding:8px">월</th><th style="padding:8px;text-align:center">기온</th><th style="padding:8px;text-align:center">날씨</th><th style="padding:8px;text-align:left">비고</th></tr></thead>
             <tbody>
               <tr><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">1~2월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">20~24°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">🌧️ 흐리고 비</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">긴팔 필수, 수영 비추</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">3~5월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">26~35°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">☀️ 건기 시작·화창</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">해변 최적, 자외선 주의</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">3~5월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">26~35°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">☀️ 건기 시작·화창</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">해변 최적, 자외선 주의</td></tr>
               <tr><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">6~8월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">32~39°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">🔆 극강 더위</td><td style="padding:7px;font-size:11px;color:var(--red);border-bottom:1px solid var(--border)">자외선 지수 11~12 (극도 위험)</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">9~11월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">22~28°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">🌀 우기·태풍</td><td style="padding:7px;font-size:11px;color:var(--red);border-bottom:1px solid var(--border)">10월 강수량 1,218mm. 여행 비추</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">9~11월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">22~28°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">🌀 우기·태풍</td><td style="padding:7px;font-size:11px;color:var(--red);border-bottom:1px solid var(--border)">10월 강수량 1,218mm. 여행 비추</td></tr>
               <tr><td style="padding:7px;font-weight:600">12월</td><td style="padding:7px;text-align:center;color:var(--gray)">20~24°C</td><td style="padding:7px;text-align:center">🌤️ 건기 전환</td><td style="padding:7px;font-size:11px;color:var(--gray)">쾌적, 가벼운 외투</td></tr>
             </tbody>
           </table>
@@ -2921,7 +2982,7 @@ html.mobile-view .float-btn span{display:none !important}
             <thead><tr style="background:var(--red);color:#fff"><th style="padding:8px">월</th><th style="padding:8px;text-align:center">기온</th><th style="padding:8px;text-align:center">날씨</th><th style="padding:8px;text-align:left">특징</th></tr></thead>
             <tbody>
               <tr><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">1~4월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">27~35°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">☀️ 건기·뜨겁고 건조</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">반팔+모자+선글라스</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">5~10월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">26~33°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">🌦️ 우기·오후 소나기</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">오전 맑음, 오후 1~2시간 집중호우</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:7px;font-weight:600;border-bottom:1px solid var(--border)">5~10월</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">26~33°C</td><td style="padding:7px;text-align:center;border-bottom:1px solid var(--border)">🌦️ 우기·오후 소나기</td><td style="padding:7px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">오전 맑음, 오후 1~2시간 집중호우</td></tr>
               <tr><td style="padding:7px;font-weight:600">11~12월</td><td style="padding:7px;text-align:center;color:var(--gray)">26~32°C</td><td style="padding:7px;text-align:center">☀️ 건기 전환·쾌적</td><td style="padding:7px;font-size:11px;color:var(--gray)">여행 최적기 시작</td></tr>
             </tbody>
           </table>
@@ -2931,7 +2992,7 @@ html.mobile-view .float-btn span{display:none !important}
       <div class="guide-card">
         <h4>👗 계절별 옷차림 &amp; 필수 준비물</h4>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div style="background:rgba(200,16,46,0.04);border-radius:10px;padding:14px">
+          <div style="background:rgba(217,78,78,0.04);border-radius:10px;padding:14px">
             <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:8px">🌞 더운 계절 (하절기)</div>
             <ul style="padding-left:14px;font-size:12px;color:var(--gray);line-height:1.9;margin:0">
               <li>반팔·반바지 위주</li>
@@ -3062,9 +3123,9 @@ html.mobile-view .float-btn span{display:none !important}
             <thead><tr style="background:var(--red);color:#fff"><th style="padding:9px;text-align:left">쇼핑몰</th><th style="padding:9px;text-align:center">도시</th><th style="padding:9px;text-align:left">특징</th></tr></thead>
             <tbody>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)"><b>Vincom 체인</b></td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">전국</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">베트남 최대 쇼핑몰 체인. WinMart 입점</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)"><b>롯데센터 (Lotte)</b></td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">하노이</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">롯데마트+롯데시네마+한국 식품</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)"><b>롯데센터 (Lotte)</b></td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">하노이</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">롯데마트+롯데시네마+한국 식품</td></tr>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)"><b>이마트 (Emart)</b></td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">호찌민</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">한국 이마트. 한국 상품 대량. 고밥구</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)"><b>AEON Mall</b></td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">하노이·호찌민</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">일본계 대형. 영화관·푸드코트 완비</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)"><b>AEON Mall</b></td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);color:var(--gray)">하노이·호찌민</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">일본계 대형. 영화관·푸드코트 완비</td></tr>
               <tr><td style="padding:8px">사이공 센터</td><td style="padding:8px;text-align:center;color:var(--gray)">호찌민 1군</td><td style="padding:8px;font-size:11px;color:var(--gray)">명품 브랜드 밀집. 중심가 위치</td></tr>
             </tbody>
           </table>
@@ -3077,13 +3138,13 @@ html.mobile-view .float-btn span{display:none !important}
             <thead><tr style="background:var(--red);color:#fff"><th style="padding:9px;text-align:left">품목</th><th style="padding:9px;text-align:center">가격대</th><th style="padding:9px;text-align:left">팁</th></tr></thead>
             <tbody>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">☕ G7 믹스커피 (박스)</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);font-weight:700">30~50만₫</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">한국인 선물 1순위. 공항·롯데마트</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">☕ 콘삭 커피 (족제비)</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);font-weight:700">50~200만₫</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">고급 선물용. 달랏 커피숍·롯데마트</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">☕ 콘삭 커피 (족제비)</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);font-weight:700">50~200만₫</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">고급 선물용. 달랏 커피숍·롯데마트</td></tr>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">🥜 캐슈넛 (100g)</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);font-weight:700">3~5만₫</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">LangFarm 브랜드 추천. 산지 직송</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">🧣 실크 스카프</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);font-weight:700">10~30만₫</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">호이안 올드타운. 흥정 가능</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">🧣 실크 스카프</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);font-weight:700">10~30만₫</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">호이안 올드타운. 흥정 가능</td></tr>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">👗 아오자이 (맞춤)</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);font-weight:700">50~300만₫</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">호이안 재단점. 제작 1~2일 소요</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">🎨 옻칠 제품</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);font-weight:700">10~500만₫</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">하노이 수공예거리. 진품 여부 확인</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">🎨 옻칠 제품</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);font-weight:700">10~500만₫</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">하노이 수공예거리. 진품 여부 확인</td></tr>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">🥥 코코넛 캐슈넛 초콜릿</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border);font-weight:700">5~15만₫</td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">Almond House 브랜드 추천</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px">🐞 피시소스 (느억맘)</td><td style="padding:8px;text-align:center;font-weight:700">2~5만₫</td><td style="padding:8px;font-size:11px;color:var(--gray)">Phú Quốc 산 Chin-su 브랜드 추천</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px">🐞 피시소스 (느억맘)</td><td style="padding:8px;text-align:center;font-weight:700">2~5만₫</td><td style="padding:8px;font-size:11px;color:var(--gray)">Phú Quốc 산 Chin-su 브랜드 추천</td></tr>
             </tbody>
           </table>
         </div>
@@ -3118,7 +3179,7 @@ html.mobile-view .float-btn span{display:none !important}
 
     <!-- ── 건강 탭 ── -->
     <div id="guide-health" class="guide-section">
-      <div class="guide-card" style="background:rgba(200,16,46,0.04);border-color:rgba(200,16,46,0.2)">
+      <div class="guide-card" style="background:rgba(217,78,78,0.04);border-color:rgba(217,78,78,0.2)">
         <h4>⚠️ 출국 전 필수 확인사항</h4>
         <p style="font-size:13px;color:var(--gray);line-height:1.8">베트남 방문·거주 전 건강 준비가 필요합니다. 특히 장기 체류자와 처가 방문 예정자는 사전 접종과 건강 체크를 권장합니다.</p>
       </div>
@@ -3129,11 +3190,11 @@ html.mobile-view .float-btn span{display:none !important}
             <thead><tr style="background:var(--red);color:#fff"><th style="padding:9px;text-align:left">질병</th><th style="padding:9px;text-align:center">우선순위</th><th style="padding:9px;text-align:left">비고</th></tr></thead>
             <tbody>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">A형 간염</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border)"><span style="background:#c62828;color:#fff;padding:2px 8px;border-radius:8px;font-size:11px">강력 권장</span></td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">오염된 음식·물 전파. 2회 접종 필요</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">장티푸스</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border)"><span style="background:#c62828;color:#fff;padding:2px 8px;border-radius:8px;font-size:11px">강력 권장</span></td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">길거리 음식 자주 먹는 경우 필수</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">장티푸스</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border)"><span style="background:#c62828;color:#fff;padding:2px 8px;border-radius:8px;font-size:11px">강력 권장</span></td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">길거리 음식 자주 먹는 경우 필수</td></tr>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">B형 간염</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border)"><span style="background:#e65100;color:#fff;padding:2px 8px;border-radius:8px;font-size:11px">미접종자만</span></td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">한국에서 대부분 접종 완료. 확인 필요</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">일본뇌염</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border)"><span style="background:#1565c0;color:#fff;padding:2px 8px;border-radius:8px;font-size:11px">장기체류 권장</span></td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">모기 매개. 농촌 지역 특히 주의</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px;border-bottom:1px solid var(--border)">일본뇌염</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border)"><span style="background:#1565c0;color:#fff;padding:2px 8px;border-radius:8px;font-size:11px">장기체류 권장</span></td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">모기 매개. 농촌 지역 특히 주의</td></tr>
               <tr><td style="padding:8px;border-bottom:1px solid var(--border)">파상풍·디프테리아</td><td style="padding:8px;text-align:center;border-bottom:1px solid var(--border)"><span style="background:#2e7d32;color:#fff;padding:2px 8px;border-radius:8px;font-size:11px">확인 필요</span></td><td style="padding:8px;font-size:11px;color:var(--gray);border-bottom:1px solid var(--border)">10년마다 추가접종. 마지막 접종일 확인</td></tr>
-              <tr style="background:rgba(200,16,46,0.02)"><td style="padding:8px">공수병 (광견병)</td><td style="padding:8px;text-align:center"><span style="background:#555;color:#fff;padding:2px 8px;border-radius:8px;font-size:11px">동물 접촉 시</span></td><td style="padding:8px;font-size:11px;color:var(--gray)">3회 접종. 농촌 이동견·야생동물 주의</td></tr>
+              <tr style="background:rgba(217,78,78,0.02)"><td style="padding:8px">공수병 (광견병)</td><td style="padding:8px;text-align:center"><span style="background:#555;color:#fff;padding:2px 8px;border-radius:8px;font-size:11px">동물 접촉 시</span></td><td style="padding:8px;font-size:11px;color:var(--gray)">3회 접종. 농촌 이동견·야생동물 주의</td></tr>
             </tbody>
           </table>
         </div>
@@ -3395,7 +3456,7 @@ html.mobile-view .float-btn span{display:none !important}
           <textarea id="bookMsg" rows="3" placeholder="궁금하신 점이나 희망 조건을 간략히 적어주세요." style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Noto Sans KR',sans-serif;box-sizing:border-box;resize:vertical;background:var(--bg);color:var(--dark)"></textarea>
         </div>
         <!-- 선택 요약 -->
-        <div id="bookSummary" style="background:linear-gradient(135deg,rgba(200,16,46,0.05),rgba(184,134,11,0.05));border:1px solid rgba(200,16,46,0.15);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;line-height:1.9"></div>
+        <div id="bookSummary" style="background:linear-gradient(135deg,rgba(217,78,78,0.05),rgba(212,165,116,0.05));border:1px solid rgba(217,78,78,0.15);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;line-height:1.9"></div>
         <button onclick="submitBooking()" style="width:100%;padding:14px;background:var(--red);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s">📅 예약 신청하기</button>
       </div>
 
@@ -3647,7 +3708,7 @@ html.mobile-view .float-btn span{display:none !important}
 <!-- PAGE: 쪽지함                          -->
 <!-- ══════════════════════════════════════ -->
 <div id="page-messages" class="page">
-  <div class="page-hero" style="background:linear-gradient(135deg,#1A0A0A,#3D1A00)">
+  <div class="page-hero" style="background:linear-gradient(135deg,var(--dark),#4A2418)">
     <div class="page-hero-inner">
       <div class="breadcrumb"><a onclick="navigate('home')">홈</a><span>›</span>쪽지함</div>
       <h1>쪽지함 ✉️</h1>
@@ -3861,7 +3922,7 @@ html.mobile-view .float-btn span{display:none !important}
     <!-- 프로필 상단 -->
     <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:24px">
       <div style="position:relative;cursor:pointer" onclick="document.getElementById('profilePhotoInput').click()">
-        <div id="profilePhotoCircle" style="width:80px;height:80px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;font-weight:700;overflow:hidden;border:3px solid rgba(200,16,46,0.15)"></div>
+        <div id="profilePhotoCircle" style="width:80px;height:80px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;font-weight:700;overflow:hidden;border:3px solid rgba(217,78,78,0.15)"></div>
         <div style="position:absolute;bottom:2px;right:2px;width:22px;height:22px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid #fff">✏️</div>
       </div>
       <input type="file" id="profilePhotoInput" accept="image/*" style="display:none" onchange="uploadProfilePhoto(this)">
@@ -3899,7 +3960,7 @@ html.mobile-view .float-btn span{display:none !important}
     </div>
     <!-- 회원 탈퇴 -->
     <div id="profileTabDelete" style="display:none">
-      <div style="background:rgba(200,16,46,0.06);border:1px solid rgba(200,16,46,0.15);border-radius:10px;padding:16px;font-size:13px;line-height:1.9;margin-bottom:20px">
+      <div style="background:rgba(217,78,78,0.06);border:1px solid rgba(217,78,78,0.15);border-radius:10px;padding:16px;font-size:13px;line-height:1.9;margin-bottom:20px">
         ⚠️ 탈퇴 시 계정 정보가 삭제되며 복구가 불가능합니다.<br>
         작성한 게시글·댓글은 유지됩니다.
       </div>
@@ -3926,7 +3987,7 @@ html.mobile-view .float-btn span{display:none !important}
       </div>
       <button class="auth-submit" onclick="submitFindId()">아이디 찾기</button>
     </div>
-    <div id="findIdResult" style="display:none;margin-top:20px;padding:18px;background:#fff8f8;border:1px solid rgba(200,16,46,0.2);border-radius:10px;text-align:center">
+    <div id="findIdResult" style="display:none;margin-top:20px;padding:18px;background:#fff8f8;border:1px solid rgba(217,78,78,0.2);border-radius:10px;text-align:center">
       <p style="font-size:13px;color:var(--gray);margin-bottom:8px">가입된 이메일(아이디)</p>
       <p id="findIdResultEmail" style="font-size:16px;font-weight:700;color:var(--dark)"></p>
       <button class="auth-submit" style="margin-top:16px;padding:10px" onclick="closeFindId();openLogin()">로그인 하기</button>
@@ -4000,7 +4061,7 @@ html.mobile-view .float-btn span{display:none !important}
         <button id="postPinBtn" class="pin-toggle-btn" style="display:none" onclick="">📌 공지등록</button>
         <button id="postReportBtn" class="post-back-btn" style="background:transparent;border:1px solid #ddd;color:var(--gray);font-size:12px;display:none" onclick="openReport('post',null)">🚨 신고</button>
         <button id="postEditBtn" class="post-back-btn" style="display:none;background:transparent;border:1px solid rgba(0,100,200,0.3);color:#0064c8;font-size:12px" onclick="">✏️ 수정</button>
-        <button id="postDeleteBtn" class="post-back-btn" style="display:none;background:transparent;border:1px solid rgba(200,16,46,0.3);color:var(--red);font-size:12px" onclick="">🗑 삭제</button>
+        <button id="postDeleteBtn" class="post-back-btn" style="display:none;background:transparent;border:1px solid rgba(217,78,78,0.3);color:var(--red);font-size:12px" onclick="">🗑 삭제</button>
         <button class="post-back-btn" onclick="backToBoard()">← 목록으로</button>
       </div>
     </div>
@@ -4589,7 +4650,7 @@ html.mobile-view .float-btn span{display:none !important}
   <div class="auth-modal" style="max-width:400px">
     <button class="modal-close" onclick="document.getElementById('changePwModal').classList.remove('open')">✕</button>
     <h3>비밀번호 변경</h3>
-    <p class="modal-sub" style="background:rgba(200,16,46,0.06);border:1px solid rgba(200,16,46,0.15);border-radius:8px;padding:12px;font-size:13px;line-height:1.7;margin-bottom:20px">
+    <p class="modal-sub" style="background:rgba(217,78,78,0.06);border:1px solid rgba(217,78,78,0.15);border-radius:8px;padding:12px;font-size:13px;line-height:1.7;margin-bottom:20px">
       🔐 임시 비밀번호로 로그인하셨습니다.<br>보안을 위해 새 비밀번호로 변경해 주세요.
     </p>
     <div class="form-group"><label class="form-label">새 비밀번호 (6자 이상)</label><input type="password" class="auth-input" id="newPw1" placeholder="새 비밀번호"></div>
@@ -4615,7 +4676,7 @@ html.mobile-view .float-btn span{display:none !important}
                style="margin-bottom:0">
         <div id="msgToResults" style="display:none;position:absolute;top:calc(100% + 2px);left:0;right:0;background:#fff;border:1px solid #ddd;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.12);max-height:220px;overflow-y:auto;z-index:500"></div>
       </div>
-      <div id="msgToSelected" style="display:none;margin-top:8px;padding:9px 14px;background:#fff8f0;border:1.5px solid rgba(200,16,46,0.2);border-radius:8px;align-items:center;gap:10px">
+      <div id="msgToSelected" style="display:none;margin-top:8px;padding:9px 14px;background:#fff8f0;border:1.5px solid rgba(217,78,78,0.2);border-radius:8px;align-items:center;gap:10px">
         <span style="font-size:15px">💌</span>
         <span id="msgToSelectedText" style="flex:1;font-size:14px;font-weight:700;color:var(--dark)"></span>
         <button type="button" onclick="clearMsgRecipient()" style="background:none;border:none;cursor:pointer;color:#aaa;font-size:18px;line-height:1;padding:0" title="다시 선택">✕</button>
@@ -4937,7 +4998,7 @@ function openBlogDetail(id) {
         <span>✍️ ${p.authorName||'관리자'}</span>
         <span>📅 ${p.createdAt?.toDate?p.createdAt.toDate().toLocaleDateString('ko-KR'):''}</span>
         ${canEdit?`<button onclick="closeBlogDetail();openBlogWrite('${id}')" style="margin-left:auto;background:none;border:1px solid rgba(0,0,0,0.15);color:var(--gray);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">✏️ 수정</button>
-        <button onclick="deleteBlogPost('${id}')" style="background:none;border:1px solid rgba(200,16,46,0.3);color:var(--red);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">🗑️ 삭제</button>`:''}
+        <button onclick="deleteBlogPost('${id}')" style="background:none;border:1px solid rgba(217,78,78,0.3);color:var(--red);padding:4px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">🗑️ 삭제</button>`:''}
       </div>
     </div>
     <div class="blog-detail-body">${(p.content||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
@@ -5700,7 +5761,7 @@ function renderProfileTab() {
         </div>
         <div class="form-group">
           <div class="form-label">대표 프로필 사진 <span style="font-weight:400;color:#aaa">(1장)</span></div>
-          <div id="pfPhotoPreview" style="width:90px;height:90px;border-radius:50%;background:#f0e6d6;display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:10px;overflow:hidden;border:2px solid rgba(184,134,11,0.2)">👤</div>
+          <div id="pfPhotoPreview" style="width:90px;height:90px;border-radius:50%;background:#f0e6d6;display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:10px;overflow:hidden;border:2px solid rgba(212,165,116,0.2)">👤</div>
           <input id="pfPhoto" type="file" accept="image/*" onchange="previewProfilePhoto(this)" style="font-size:13px">
         </div>
         <div class="form-group">
@@ -5863,7 +5924,7 @@ function loadProfileList() {
       const lifeLabel = Array.isArray(p.lifePhotos) && p.lifePhotos.length
         ? `<span style="font-size:10px;color:var(--gold)">📷 일상사진 ${p.lifePhotos.length}장</span>` : '';
       const badge = p._source === 'sample'
-        ? `<span style="font-size:10px;background:#f0e6d6;color:#8B6309;padding:1px 6px;border-radius:4px;border:1px solid rgba(184,134,11,0.2)">샘플</span>` : '';
+        ? `<span style="font-size:10px;background:#f0e6d6;color:#8B6309;padding:1px 6px;border-radius:4px;border:1px solid rgba(212,165,116,0.2)">샘플</span>` : '';
       const delBtn = p._source === 'firestore'
         ? `<button onclick="deleteProfile('${p.id}')" style="background:none;border:1px solid #eee;border-radius:6px;padding:3px 7px;font-size:11px;color:#aaa;cursor:pointer;font-family:'Noto Sans KR',sans-serif">삭제</button>` : '';
       return `<div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid rgba(0,0,0,0.07);border-radius:10px;margin-bottom:7px;background:#fff">
@@ -6009,7 +6070,7 @@ async function renderAdminForbidden() {
     const words = doc.exists ? (doc.data().words || []) : [];
     _forbiddenWords = words;
     const chips = words.length
-      ? words.map(w => `<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#fff3f3;border:1px solid rgba(200,16,46,0.2);border-radius:20px;font-size:13px;font-weight:600;color:var(--dark)">${sanitizeText(w)}<button onclick="removeForbiddenWord('${w.replace(/'/g,"\\'")}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;line-height:1;padding:0">✕</button></span>`).join('')
+      ? words.map(w => `<span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#fff3f3;border:1px solid rgba(217,78,78,0.2);border-radius:20px;font-size:13px;font-weight:600;color:var(--dark)">${sanitizeText(w)}<button onclick="removeForbiddenWord('${w.replace(/'/g,"\\'")}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px;line-height:1;padding:0">✕</button></span>`).join('')
       : '<p style="color:var(--gray);font-size:13px">등록된 금칙어가 없습니다.</p>';
     el.innerHTML = `
       <div>
@@ -6273,7 +6334,7 @@ function _buildMemberTable(users, q) {
       </td>
     </tr>
     <tr id="medit-${i}" style="display:none">
-      <td colspan="13" style="padding:0;background:#f7f7f8;border-bottom:2px solid rgba(200,16,46,0.1)">
+      <td colspan="13" style="padding:0;background:#f7f7f8;border-bottom:2px solid rgba(217,78,78,0.1)">
         <div id="meditForm-${i}" style="padding:18px 20px"></div>
       </td>
     </tr>`;
@@ -6375,7 +6436,7 @@ function openMemberEdit(email, idx) {
       </div>
     </div>
     ${['admin','manager','vn_manager'].includes(u.memberType) ? `
-    <div style="margin-top:16px;padding:14px;background:rgba(200,16,46,0.04);border:1px dashed rgba(200,16,46,0.2);border-radius:10px">
+    <div style="margin-top:16px;padding:14px;background:rgba(217,78,78,0.04);border:1px dashed rgba(217,78,78,0.2);border-radius:10px">
       <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:10px">👥 매니저 소개 페이지 정보</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
         ${inp(`me-area-${idx}`,'담당 지역',u.area,'text','예: 호치민, 하노이')}
@@ -6565,17 +6626,17 @@ function _showWelcomeToast(user) {
   t.id = 'welcomeToast';
   t.style.cssText = `position:fixed;top:76px;left:50%;transform:translateX(-50%) translateY(-20px);opacity:0;
     background:linear-gradient(135deg,#fff 0%,#fff8f8 100%);
-    border:1.5px solid rgba(200,16,46,0.15);
+    border:1.5px solid rgba(217,78,78,0.15);
     color:#1a1a1a;padding:20px 28px 18px;border-radius:20px;
     font-family:'Noto Sans KR',sans-serif;z-index:10000;
-    box-shadow:0 8px 40px rgba(200,16,46,0.18),0 2px 12px rgba(0,0,0,0.08);
+    box-shadow:0 8px 40px rgba(217,78,78,0.18),0 2px 12px rgba(0,0,0,0.08);
     text-align:center;min-width:260px;max-width:320px;
     transition:opacity .35s ease,transform .35s ease`;
   t.innerHTML = `
     <div style="font-size:28px;margin-bottom:6px">🌸</div>
     <div style="font-size:15px;font-weight:700;color:#C8102E;margin-bottom:4px">${name}님, 환영합니다!</div>
     <div style="font-size:12px;color:#666;margin-bottom:10px">${badge} ${label}</div>
-    <div style="font-size:12px;color:#999;border-top:1px solid rgba(200,16,46,0.1);padding-top:10px">마리 국제결혼에 오신 것을 환영합니다 ❤</div>`;
+    <div style="font-size:12px;color:#999;border-top:1px solid rgba(217,78,78,0.1);padding-top:10px">마리 국제결혼에 오신 것을 환영합니다 ❤</div>`;
   document.body.appendChild(t);
   requestAnimationFrame(() => {
     t.style.opacity = '1';
@@ -7897,7 +7958,7 @@ function _renderBoardTable(colName) {
         const dt = p.createdAt ? new Date(p.createdAt.seconds*1000) : null;
         const date = dt ? dt.toLocaleDateString('ko-KR') : '';
         const timeStr = dt ? dt.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}) : '';
-        const prefixTag = p.prefix ? `<span style="display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:700;background:rgba(200,16,46,0.08);color:var(--red);border:1px solid rgba(200,16,46,0.15);margin-right:5px">${sanitizeText(p.prefix)}</span>` : '';
+        const prefixTag = p.prefix ? `<span style="display:inline-block;padding:1px 7px;border-radius:4px;font-size:11px;font-weight:700;background:rgba(217,78,78,0.08);color:var(--red);border:1px solid rgba(217,78,78,0.15);margin-right:5px">${sanitizeText(p.prefix)}</span>` : '';
         const firstImg = extractFirstImg(p.content || '');
         const thumbHtml = firstImg
           ? `<img class="pc-thumb" src="${firstImg}" alt="" loading="lazy">`
@@ -8435,7 +8496,7 @@ function renderAdminAddVN() {
             </label>
             <div style="display:flex;gap:8px;align-items:center">
               <input type="text" class="auth-input" id="vnTempPw" placeholder="자동생성됨" style="flex:1;font-family:monospace;font-size:15px;letter-spacing:0.08em">
-              <button onclick="genTempPw()" style="padding:11px 14px;border:1px solid rgba(184,134,11,0.35);background:rgba(184,134,11,0.06);border-radius:8px;cursor:pointer;font-size:13px;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;transition:.2s" onmouseover="this.style.background='rgba(184,134,11,0.14)'" onmouseout="this.style.background='rgba(184,134,11,0.06)'">🔀 자동생성</button>
+              <button onclick="genTempPw()" style="padding:11px 14px;border:1px solid rgba(212,165,116,0.35);background:rgba(212,165,116,0.06);border-radius:8px;cursor:pointer;font-size:13px;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;transition:.2s" onmouseover="this.style.background='rgba(212,165,116,0.14)'" onmouseout="this.style.background='rgba(212,165,116,0.06)'">🔀 자동생성</button>
             </div>
             <p style="font-size:11px;color:var(--gray);margin-top:5px">생성된 임시 비밀번호를 회원에게 직접 전달하세요. 최초 로그인 시 변경됩니다.</p>
           </div>
@@ -8487,7 +8548,7 @@ function selectNationality(nat) {
   cardVN.style.border = nat === 'vn' ? '2px solid #006994' : '2px solid rgba(0,0,0,0.1)';
   cardVN.style.background = nat === 'vn' ? 'rgba(0,105,148,0.06)' : '#fff';
   cardKR.style.border = nat === 'kr' ? '2px solid #C8102E' : '2px solid rgba(0,0,0,0.1)';
-  cardKR.style.background = nat === 'kr' ? 'rgba(200,16,46,0.05)' : '#fff';
+  cardKR.style.background = nat === 'kr' ? 'rgba(217,78,78,0.05)' : '#fff';
 
   // 폼 활성화
   formBody.style.opacity = '1';
@@ -8615,7 +8676,7 @@ async function renderAdminSettings() {
       </div>
 
       <h4 style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(0,0,0,0.08)">🪪 실명인증 (한국 회원)</h4>
-      <div style="background:rgba(184,134,11,0.06);border:1px solid rgba(184,134,11,0.2);border-radius:10px;padding:16px;font-size:13px;color:var(--gray);line-height:1.8;margin-bottom:24px">
+      <div style="background:rgba(212,165,116,0.06);border:1px solid rgba(212,165,116,0.2);border-radius:10px;padding:16px;font-size:13px;color:var(--gray);line-height:1.8;margin-bottom:24px">
         📌 현재: 실명인증 API 연동 전 단계입니다.<br>
         향후 SMS 본인인증 서비스(PASS 등)와 연동 예정.<br>
         한국 회원 가입 시 <b>nationality: 'kr'</b> 자동 태그되어 관리됩니다.<br>
@@ -9053,7 +9114,7 @@ async function renderAdminAllMsgs() {
         </td>
         <td style="padding:10px 8px;text-align:center">${isRead}</td>
         <td style="padding:10px 8px;text-align:center">
-          <button onclick="adminDeleteMsg('${d.id}')" style="padding:4px 10px;border:1px solid rgba(200,16,46,0.3);border-radius:6px;background:transparent;color:var(--red);font-size:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">삭제</button>
+          <button onclick="adminDeleteMsg('${d.id}')" style="padding:4px 10px;border:1px solid rgba(217,78,78,0.3);border-radius:6px;background:transparent;color:var(--red);font-size:12px;cursor:pointer;font-family:'Noto Sans KR',sans-serif">삭제</button>
         </td>
       </tr>`;
     }).join('');
@@ -9554,7 +9615,7 @@ async function renderAdminBroadcast() {
   const emails = users.filter(u => u.email && u.email !== 'admin').map(u => u.email).join(', ');
   el.innerHTML = `
     <div style="max-width:560px">
-      <div style="background:rgba(200,16,46,0.04);border:1px solid rgba(200,16,46,0.12);border-radius:10px;padding:14px;font-size:13px;color:var(--gray);margin-bottom:20px;line-height:1.7">
+      <div style="background:rgba(217,78,78,0.04);border:1px solid rgba(217,78,78,0.12);border-radius:10px;padding:14px;font-size:13px;color:var(--gray);margin-bottom:20px;line-height:1.7">
         📧 이메일 발송: 아래 이메일 목록을 복사해서 메일 클라이언트(Gmail 등)에 붙여넣으세요.<br>
         📱 문자 발송: 실명인증 시스템 연동 후 자동으로 전화번호 수집이 가능해집니다.
       </div>
@@ -9562,7 +9623,7 @@ async function renderAdminBroadcast() {
       <h4 style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:10px">📬 전체 회원 이메일 (${users.length - 1}명)</h4>
       <div style="position:relative;margin-bottom:20px">
         <textarea id="emailListArea" style="width:100%;border:1px solid rgba(0,0,0,0.12);border-radius:8px;padding:12px 14px;font-size:12px;font-family:monospace;resize:none;min-height:80px;color:var(--text);box-sizing:border-box" readonly>${emails}</textarea>
-        <button onclick="copyEmails()" style="margin-top:6px;padding:8px 18px;border:1px solid rgba(184,134,11,0.3);border-radius:8px;background:rgba(184,134,11,0.06);font-family:'Noto Sans KR',sans-serif;font-size:13px;cursor:pointer">📋 이메일 목록 복사</button>
+        <button onclick="copyEmails()" style="margin-top:6px;padding:8px 18px;border:1px solid rgba(212,165,116,0.3);border-radius:8px;background:rgba(212,165,116,0.06);font-family:'Noto Sans KR',sans-serif;font-size:13px;cursor:pointer">📋 이메일 목록 복사</button>
       </div>
 
       <h4 style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:10px">✏️ 공지 쪽지 발송 (전체 회원)</h4>
@@ -9691,7 +9752,7 @@ function openMsgDetail(msgId, tab) {
       <div style="font-size:15px;line-height:1.9;white-space:pre-wrap;min-height:80px">${m.body.replace(/</g,'&lt;')}</div>
       <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
         ${tab==='inbox'?`<button class="board-write-btn" onclick="openComposeMsgModal('${m.from}','${m.fromName}');document.getElementById('msgDetailModal').classList.remove('open')">↩ 답장하기</button>`:''}
-        <button onclick="deleteMsg('${msgId}','${tab}')" style="padding:9px 18px;border:1px solid rgba(200,16,46,0.3);border-radius:8px;background:transparent;color:var(--red);font-family:'Noto Sans KR',sans-serif;font-size:13px;cursor:pointer">🗑 삭제</button>
+        <button onclick="deleteMsg('${msgId}','${tab}')" style="padding:9px 18px;border:1px solid rgba(217,78,78,0.3);border-radius:8px;background:transparent;color:var(--red);font-family:'Noto Sans KR',sans-serif;font-size:13px;cursor:pointer">🗑 삭제</button>
       </div>`;
     document.getElementById('msgDetailModal').classList.add('open');
     if (tab === 'inbox' && !m.read) {
@@ -10153,7 +10214,7 @@ function _renderMgrPanel() {
     }
     const panelEl = document.getElementById('mgrPanel');
     if (panelEl) {
-      panelEl.style.boxShadow = '0 0 0 3px var(--red), 0 6px 32px rgba(200,16,46,0.4)';
+      panelEl.style.boxShadow = '0 0 0 3px var(--red), 0 6px 32px rgba(217,78,78,0.4)';
       setTimeout(() => { panelEl.style.boxShadow = '0 6px 32px rgba(0,0,0,0.18)'; }, 2000);
     }
   }
