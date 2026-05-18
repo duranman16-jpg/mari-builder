@@ -226,7 +226,8 @@ body.dark-mode .dark-toggle{border-color:rgba(255,255,255,0.2);background:rgba(2
 .exchange-widget{background:linear-gradient(135deg,#C8102E,#8B0A1E);border-radius:14px;padding:24px;color:#fff;text-align:center}
 .exchange-rate{font-size:36px;font-weight:800;margin:8px 0}
 html{scroll-behavior:smooth}
-body{font-family:'Noto Sans KR',sans-serif;color:var(--text);background:var(--white);overflow-x:hidden}
+body{font-family:'Noto Sans KR',sans-serif;color:var(--text);background:#FDF6E8;overflow-x:hidden;position:relative}
+body::before{content:'';position:fixed;inset:0;background:url('mari-bg-hanji-rich.jpg') center center / cover no-repeat;opacity:0.35;mix-blend-mode:multiply;pointer-events:none;z-index:-1}
 
 /* ─── 페이지 시스템 ─── */
 .page{display:none}
@@ -288,9 +289,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 .author-avatar{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;overflow:hidden;flex-shrink:0;vertical-align:middle;font-weight:700;color:#fff;font-size:11px}
 
 /* ─── 서브 페이지 헤더 ─── */
-.page-hero{margin-top:64px;background:linear-gradient(135deg,var(--dark) 0%,#4A2418 55%,#6B3520 100%);padding:68px 7% 56px;position:relative;overflow:hidden}
-.page-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 8 L46 28 L66 28 L50 40 L56 60 L40 48 L24 60 L30 40 L14 28 L34 28Z' fill='rgba(212,165,116,0.045)'/%3E%3C/svg%3E") repeat;opacity:0.7;pointer-events:none}
-.page-hero::after{content:'';position:absolute;top:50%;right:5%;width:200px;height:200px;background:url('mari-lotus.jpg') center center / contain no-repeat;opacity:0.10;transform:translateY(-50%);pointer-events:none;mix-blend-mode:lighten}
+.page-hero{margin-top:64px;background:linear-gradient(135deg,var(--dark) 0%,#4A2418 55%,#6B3520 100%);padding:84px 7% 64px;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:url('mari-bg-atmosphere.jpg') center center / cover no-repeat;opacity:0.30;mix-blend-mode:soft-light;pointer-events:none}
+.page-hero::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 8 L46 28 L66 28 L50 40 L56 60 L40 48 L24 60 L30 40 L14 28 L34 28Z' fill='rgba(212,165,116,0.05)'/%3E%3C/svg%3E") repeat;pointer-events:none}
+.page-hero-deco{position:absolute;top:50%;right:5%;width:180px;height:180px;background:url('mari-lotus.jpg') center center / contain no-repeat;opacity:0.12;transform:translateY(-50%);pointer-events:none;mix-blend-mode:lighten;z-index:0}
 .page-hero-inner{position:relative;z-index:1}
 .breadcrumb{font-size:13px;color:rgba(253,246,232,0.55);margin-bottom:16px;display:flex;align-items:center;gap:8px;letter-spacing:0.02em}
 .breadcrumb a{color:var(--gold-light);text-decoration:none;cursor:pointer;transition:.2s}
@@ -298,16 +300,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,
 .page-hero h1{font-family:var(--font-serif-kr);color:#fff;font-size:clamp(2.1rem,4vw,3.2rem);font-weight:700;margin-bottom:14px;line-height:1.25;letter-spacing:-0.01em}
 .page-hero h1 em{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;color:var(--gold-light)}
 .page-hero p{color:rgba(253,246,232,0.72);font-size:15px;line-height:1.85;max-width:580px;font-weight:300}
-/* ─── 서브 페이지 개별 배경 SVG ─── */
-#page-process .page-hero{background-image:url('page-bg-process.svg');background-size:cover;background-position:center}
-#page-profiles .page-hero{background-image:url('page-bg-profiles.svg');background-size:cover;background-position:center}
-#page-success .page-hero{background-image:url('page-bg-success.svg');background-size:cover;background-position:center}
-#page-faq .page-hero{background-image:url('page-bg-faq.svg');background-size:cover;background-position:center}
-#page-board-life .page-hero{background-image:url('page-bg-life.svg');background-size:cover;background-position:center}
-#page-board-free .page-hero{background-image:url('page-bg-free.svg');background-size:cover;background-position:center}
-#page-board-travel .page-hero{background-image:url('page-bg-travel.svg');background-size:cover;background-position:center}
-#page-board-food .page-hero{background-image:url('page-bg-food.svg');background-size:cover;background-position:center}
-#page-board-trade .page-hero{background-image:url('page-bg-trade.svg');background-size:cover;background-position:center}
+/* 서브 페이지는 .page-hero 공통 디자인 사용 (개별 SVG 오버라이드 제거) */
 
 /* ─── 히어로 ─── */
 .hero{margin-top:64px;min-height:62vh;background:var(--grad-hero);position:relative;display:flex;align-items:center;overflow:hidden}
@@ -378,7 +371,9 @@ section{padding:84px 7%}
 .trust-divider{color:rgba(212,165,116,0.4);font-size:18px}
 
 /* ─── 절차 ─── */
-.process{background:var(--cream)}
+.process{background:linear-gradient(135deg,#FDF6E8 0%,#F8E8D5 50%,#FDF6E8 100%);position:relative;overflow:hidden}
+.process::before{content:'';position:absolute;inset:0;background:url('mari-bg-floral.jpg') center center / cover no-repeat;opacity:0.5;mix-blend-mode:multiply;pointer-events:none}
+.process>*{position:relative;z-index:1}
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
 .step{background:var(--white);border-radius:var(--radius);padding:28px 24px;position:relative;border:1px solid rgba(212,165,116,0.12);transition:.25s}
 .step:hover{border-color:var(--gold);box-shadow:0 8px 32px rgba(212,165,116,0.1);transform:translateY(-3px)}
@@ -389,7 +384,9 @@ section{padding:84px 7%}
 .step-arrow{position:absolute;right:-14px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--gold);z-index:1}
 
 /* ─── 프로필 ─── */
-.profiles{background:var(--light)}
+.profiles{background:linear-gradient(180deg,#FBF7EF 0%,#F5E8D3 100%);position:relative;overflow:hidden}
+.profiles::before{content:'';position:absolute;inset:0;background:url('mari-bg-watercolor.jpg') center center / cover no-repeat;opacity:0.4;mix-blend-mode:multiply;pointer-events:none}
+.profiles>*{position:relative;z-index:1}
 .profile-tabs{display:flex;gap:8px;margin-bottom:36px}
 .tab{padding:8px 20px;border-radius:99px;border:1px solid rgba(217,78,78,0.2);background:transparent;color:var(--gray);font-size:13px;font-weight:500;cursor:pointer;transition:.2s;font-family:'Noto Sans KR',sans-serif}
 .tab.active,.tab:hover{background:var(--red);color:#fff;border-color:var(--red)}
@@ -409,7 +406,10 @@ section{padding:84px 7%}
 .profile-btn:hover{background:var(--red-deep)}
 
 /* ─── 성공사례 ─── */
-.success{background:var(--white)}
+.success{background:#FDF6E8;position:relative;overflow:hidden}
+.success::before{content:'';position:absolute;inset:0;background:url('mari-bg-hanji-rich.jpg') center center / cover no-repeat;opacity:0.55;mix-blend-mode:multiply;pointer-events:none}
+.success::after{content:'';position:absolute;top:-50px;left:-50px;width:300px;height:300px;background:url('mari-lotus.jpg') center center / contain no-repeat;opacity:0.08;pointer-events:none;mix-blend-mode:multiply}
+.success>*{position:relative;z-index:1}
 .story-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
 .story-card{border-radius:var(--radius);overflow:hidden;border:1px solid rgba(212,165,116,0.18);background:var(--cream);transition:.3s;box-shadow:var(--shadow-sm)}
 .story-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:rgba(212,165,116,0.45)}
@@ -425,7 +425,9 @@ section{padding:84px 7%}
 .story-flag{position:absolute;bottom:12px;right:12px;font-size:20px}
 
 /* ─── FAQ ─── */
-.faq{background:var(--light)}
+.faq{background:linear-gradient(180deg,#FBF7EF 0%,#F5E8D3 100%);position:relative;overflow:hidden}
+.faq::before{content:'';position:absolute;inset:0;background:url('mari-bg-watercolor.jpg') center center / cover no-repeat;opacity:0.4;mix-blend-mode:multiply;pointer-events:none}
+.faq>*{position:relative;z-index:1}
 .faq-list{max-width:720px}
 .faq-item{border-bottom:1px solid rgba(0,0,0,0.08);overflow:hidden}
 .faq-q{display:flex;align-items:center;justify-content:space-between;padding:20px 0;cursor:pointer;gap:16px}
@@ -436,7 +438,10 @@ section{padding:84px 7%}
 .faq-icon.open{transform:rotate(45deg)}
 
 /* ─── 문의 ─── */
-.inquiry{background:linear-gradient(135deg,var(--dark),#6B3520)}
+.inquiry{background:linear-gradient(135deg,var(--dark) 0%,#4A2418 55%,#6B3520 100%);position:relative;overflow:hidden}
+.inquiry::before{content:'';position:absolute;inset:0;background:url('mari-bg-atmosphere.jpg') center center / cover no-repeat;opacity:0.25;mix-blend-mode:soft-light;pointer-events:none}
+.inquiry::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 8 L46 28 L66 28 L50 40 L56 60 L40 48 L24 60 L30 40 L14 28 L34 28Z' fill='rgba(212,165,116,0.04)'/%3E%3C/svg%3E") repeat;pointer-events:none}
+.inquiry>*{position:relative;z-index:1}
 .inquiry-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
 .inquiry h2{font-family:'Playfair Display',serif;color:#fff;font-size:clamp(1.6rem,2.5vw,2.2rem);margin-bottom:12px}
 .inquiry-sub{color:rgba(255,255,255,0.6);font-size:14px;line-height:1.8;margin-bottom:28px}
@@ -752,17 +757,27 @@ footer::after{content:'';position:absolute;bottom:-100px;right:-50px;width:300px
 }
 
 /* ─── 섹션 구분선 ─── */
-.section-divider{display:flex;align-items:center;gap:20px;padding:36px 7%;margin:0}
+.section-divider{display:flex;align-items:center;gap:20px;padding:36px 7%;margin:0;position:relative}
 .section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent 10%,rgba(212,165,116,0.35) 50%,transparent 90%)}
-.section-divider-icon{font-size:18px;color:var(--gold-deep);opacity:0.75;position:relative;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:rgba(212,165,116,0.06);border:1px solid rgba(212,165,116,0.20)}
-.section-divider-icon::before{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid rgba(212,165,116,0.12)}
+.section-divider-icon{font-size:18px;color:var(--gold-deep);opacity:0.75;position:relative;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:rgba(253,246,232,0.9);border:1px solid rgba(212,165,116,0.35);box-shadow:0 4px 14px rgba(166,124,69,0.10);backdrop-filter:blur(4px)}
+.section-divider-icon::before{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(212,165,116,0.18)}
+.section-divider-icon::after{content:'';position:absolute;inset:-10px;border-radius:50%;border:1px solid rgba(212,165,116,0.08)}
+/* ─── 단청 보더 디바이더 ─── */
+.dancheong-divider{height:36px;background:url('mari-bg-border.jpg') center center / auto 100% repeat-x;opacity:0.55;mix-blend-mode:multiply;position:relative;margin:0;border-top:1px solid rgba(212,165,116,0.15);border-bottom:1px solid rgba(212,165,116,0.15)}
+.dancheong-divider.compact{height:24px;opacity:0.45}
+.dancheong-divider.faded{opacity:0.30}
 
 /* ─── 홈 프리뷰 공통 ─── */
-.home-preview{padding:72px 7%}
-.home-preview.bg-cream{background:var(--cream)}
-.home-preview.bg-light{background:var(--light)}
-.home-preview.bg-white{background:var(--white)}
+.home-preview{padding:84px 7%;position:relative;overflow:hidden}
+.home-preview>*{position:relative;z-index:1}
+.home-preview.bg-cream{background:linear-gradient(135deg,#FDF6E8 0%,#F8E8D5 50%,#FDF6E8 100%);position:relative}
+.home-preview.bg-cream::before{content:'';position:absolute;inset:0;background:url('mari-bg-floral.jpg') center center / cover no-repeat;opacity:0.55;mix-blend-mode:multiply;pointer-events:none;z-index:0}
+.home-preview.bg-light{background:linear-gradient(180deg,#FBF7EF 0%,#F5E8D3 100%);position:relative}
+.home-preview.bg-light::before{content:'';position:absolute;inset:0;background:url('mari-bg-watercolor.jpg') center center / cover no-repeat;opacity:0.45;mix-blend-mode:multiply;pointer-events:none;z-index:0}
+.home-preview.bg-white{background:#FDF6E8;position:relative}
+.home-preview.bg-white::before{content:'';position:absolute;inset:0;background:url('mari-bg-hanji-rich.jpg') center center / cover no-repeat;opacity:0.6;mix-blend-mode:multiply;pointer-events:none;z-index:0}
 .home-preview.bg-dark{background:linear-gradient(135deg,var(--dark),#4A2418)}
+.home-preview.bg-cream::after,.home-preview.bg-light::after,.home-preview.bg-white::after{content:'';position:absolute;top:-50px;right:-50px;width:300px;height:300px;background:url('mari-lotus.jpg') center center / contain no-repeat;opacity:0.07;pointer-events:none;mix-blend-mode:multiply;z-index:0}
 .section-header-row{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px;flex-wrap:wrap;gap:16px}
 .preview-more-btn{background:transparent;color:var(--red);border:1.5px solid var(--red);border-radius:8px;padding:9px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:.2s;white-space:nowrap}
 .preview-more-btn:hover{background:var(--red);color:#fff}
@@ -4545,6 +4560,8 @@ html.mobile-view .float-btn span{display:none !important}
     <div id="blogDetailContent"></div>
   </div>
 </div>
+
+<div class="dancheong-divider"></div>
 
 <!-- ─── 푸터 ─── -->
 <footer id="site-footer">
